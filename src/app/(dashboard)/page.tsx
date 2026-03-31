@@ -1,16 +1,9 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { SidebarWrapper } from "@/app/(dashboard)/sidebar-wrapper";
-import { DashboardClient } from "@/app/(dashboard)/dashboard-client";
+import { DashboardClient } from "./dashboard-client";
 
-export default async function RootPage() {
+export default async function DashboardPage() {
   const session = await auth();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
-
   const user = session!.user as any;
 
   const [totalAudits, recentAudits, projects, pendingTasks] = await Promise.all([
@@ -35,30 +28,21 @@ export default async function RootPage() {
     .map((a) => ({ date: a.createdAt.toISOString(), score: a.score, agent: a.agent }))
     .reverse();
 
-  const userObj = {
-    name: user.name || "User",
-    role: user.role,
-    image: user.image,
-    id: user.id,
-  };
-
   return (
-    <SidebarWrapper user={userObj}>
-      <DashboardClient
-        user={{ name: userObj.name, role: userObj.role }}
-        stats={{ totalAudits, avgScore, projects, pendingTasks }}
-        recentAudits={recentAudits.map((a) => ({
-          id: a.id,
-          url: a.url,
-          agent: a.agent,
-          score: a.score,
-          grade: a.grade,
-          createdAt: a.createdAt.toISOString(),
-          userName: a.user.name,
-          projectName: a.project?.name || null,
-        }))}
-        chartData={chartData}
-      />
-    </SidebarWrapper>
+    <DashboardClient
+      user={{ name: user.name || "User", role: user.role }}
+      stats={{ totalAudits, avgScore, projects, pendingTasks }}
+      recentAudits={recentAudits.map((a) => ({
+        id: a.id,
+        url: a.url,
+        agent: a.agent,
+        score: a.score,
+        grade: a.grade,
+        createdAt: a.createdAt.toISOString(),
+        userName: a.user.name,
+        projectName: a.project?.name || null,
+      }))}
+      chartData={chartData}
+    />
   );
 }

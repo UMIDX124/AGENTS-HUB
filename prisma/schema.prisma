@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  name         String
+  email        String          @unique
+  password     String
+  role         String          @default("SPECIALIST")
+  avatar       String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  audits       Audit[]
+  tasks        Task[]          @relation("AssignedTasks")
+  createdTasks Task[]          @relation("CreatedTasks")
+  pins         Pin[]
+  projects     ProjectMember[]
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  name        String
+  url         String
+  description String?
+  status      String          @default("ACTIVE")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  audits      Audit[]
+  tasks       Task[]
+  members     ProjectMember[]
+}
+
+model ProjectMember {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  role      String  @default("member")
+
+  @@unique([userId, projectId])
+}
+
+model Audit {
+  id        String   @id @default(cuid())
+  url       String
+  agent     String
+  score     Int
+  grade     String
+  summary   String
+  data      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+  tasks     Task[]
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("TODO")
+  priority    String   @default("MEDIUM")
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  assignee    User?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  assigneeId  String?
+  creator     User     @relation("CreatedTasks", fields: [creatorId], references: [id])
+  creatorId   String
+  project     Project? @relation(fields: [projectId], references: [id])
+  projectId   String?
+  audit       Audit?   @relation(fields: [auditId], references: [id])
+  auditId     String?
+  agentSource String?
+}
+
+model Pin {
+  id        String   @id @default(cuid())
+  title     String
+  detail    String
+  agent     String
+  severity  String?
+  impact    String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+}
