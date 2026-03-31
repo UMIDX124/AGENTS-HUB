@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Topbar } from "@/components/topbar";
 import { AgentCard } from "@/components/agent-card";
 import { AuditHistoryChart } from "@/components/audit-history-chart";
+import { AutoScheduler } from "@/components/auto-scheduler";
 import { ScoreRing } from "@/components/score-ring";
 import { getGrade, formatDate } from "@/lib/utils";
 import { AGENTS } from "@/lib/agents";
@@ -119,6 +120,9 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
             </div>
           </div>
         </div>
+
+        {/* ── 24/7 Auto-Scheduler ── */}
+        {showFullDashboard && <AutoScheduler />}
 
         {/* ── Agent cards ── */}
         {!showFullDashboard && (
