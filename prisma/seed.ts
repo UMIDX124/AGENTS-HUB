@@ -7,19 +7,21 @@ async function main() {
   console.log("Seeding database...");
 
   // Create users
+  // FIXED IDs — never change these, JWT tokens reference them
   const users = [
-    { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "OWNER" as const, password: "faizi13579" },
-    { name: "Umi", email: "umidx932@gmail.com", role: "OWNER" as const, password: "umi84268" },
-    { name: "Ali Hassan", email: "ali@digitalpointllc.com", role: "SPECIALIST" as const, password: "specialist123" },
-    { name: "Client Demo", email: "client@example.com", role: "CLIENT" as const, password: "viewer123" },
+    { id: "user-faizan-owner-001", name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "OWNER" as const, password: "faizi13579" },
+    { id: "user-umi-owner-002", name: "Umi", email: "umidx932@gmail.com", role: "OWNER" as const, password: "umi84268" },
+    { id: "user-ali-specialist-003", name: "Ali Hassan", email: "ali@digitalpointllc.com", role: "SPECIALIST" as const, password: "specialist123" },
+    { id: "user-client-demo-004", name: "Client Demo", email: "client@example.com", role: "CLIENT" as const, password: "viewer123" },
   ];
 
   for (const u of users) {
     const hashed = await hash(u.password, 12);
     await prisma.user.upsert({
       where: { email: u.email },
-      update: {},
+      update: { role: u.role },
       create: {
+        id: u.id,
         name: u.name,
         email: u.email,
         password: hashed,
