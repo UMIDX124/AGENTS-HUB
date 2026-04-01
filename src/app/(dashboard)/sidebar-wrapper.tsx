@@ -35,7 +35,7 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
 
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-[240px] transform transition-transform duration-300 ease-in-out ${
+          className={`fixed inset-y-0 left-0 z-50 w-[240px] h-screen overflow-hidden transform transition-transform duration-300 ease-in-out ${
             open ? "translate-x-0" : "-translate-x-full"
           } lg:translate-x-0`}
         >

@@ -73,7 +73,7 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
   const isAuditActive = pathname === "/audit";
 
   return (
-    <aside className="flex h-screen w-[240px] flex-col border-r border-white/[0.06] bg-[#04050b]">
+    <aside className="flex h-full w-full flex-col overflow-hidden border-r border-white/[0.06] bg-[#04050b]">
 
       {/* ── Brand ── */}
       <Link
