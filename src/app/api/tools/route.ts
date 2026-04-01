@@ -400,14 +400,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Auto-add https:// if missing
+    let validUrl = url.trim();
+    if (!validUrl.startsWith("http://") && !validUrl.startsWith("https://")) {
+      validUrl = "https://" + validUrl;
+    }
+
     try {
-      new URL(url);
+      new URL(validUrl);
     } catch {
       return NextResponse.json(
-        {
-          error:
-            "Invalid URL format. Provide a full URL (e.g., https://example.com)",
-        },
+        { error: "Invalid URL. Try: example.com" },
         { status: 400 }
       );
     }
@@ -416,8 +419,8 @@ export async function POST(req: NextRequest) {
     const systemPrompt = TOOL_SYSTEM_PROMPTS[toolName];
 
     // Scrape real website content first
-    const scrapedContent = await scrapeWebsite(url);
-    const userPrompt = buildUserPrompt(toolName, url, context, scrapedContent);
+    const scrapedContent = await scrapeWebsite(validUrl);
+    const userPrompt = buildUserPrompt(toolName, validUrl, context, scrapedContent);
 
     const result = await callGitHubModels(systemPrompt, userPrompt);
 

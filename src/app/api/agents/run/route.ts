@@ -26,6 +26,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Auto-add https://
+    let validUrl = url.trim();
+    if (!validUrl.startsWith("http://") && !validUrl.startsWith("https://")) {
+      validUrl = "https://" + validUrl;
+    }
+
     const validAgents: AgentTypeName[] = [
       "ONPAGE", "TECHNICAL", "OFFSITE", "CONTENT", "COMPETITOR",
     ];
@@ -36,11 +42,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await runAgent(agent, url, user.id);
+    const result = await runAgent(agent, validUrl, user.id);
 
     const audit = await prisma.audit.create({
       data: {
-        url,
+        url: validUrl,
         agent,
         score: result.score,
         grade: result.grade,
