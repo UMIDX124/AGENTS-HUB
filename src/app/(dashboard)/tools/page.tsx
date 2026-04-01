@@ -106,7 +106,7 @@ export default function ToolsPage() {
         subtitle={`${TOOLS.length} Tools Available`}
       />
 
-      <div className="p-6 space-y-5">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
 
         {/* Category tabs */}
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -129,7 +129,7 @@ export default function ToolsPage() {
         </div>
 
         {/* Tool selector grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
           {filteredTools.map((tool) => {
             const Icon = tool.icon;
             const isActive = selectedTool === tool.id;
@@ -232,7 +232,7 @@ export default function ToolsPage() {
                 {copied ? "Copied!" : "Copy All"}
               </button>
             </div>
-            <pre className="p-5 text-xs text-white/70 font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-[500px] overflow-y-auto">
+            <pre className="p-3 sm:p-5 text-[11px] sm:text-xs text-white/70 font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-[60vh] overflow-y-auto break-safe">
               {result}
             </pre>
           </div>

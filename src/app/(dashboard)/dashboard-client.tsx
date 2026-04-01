@@ -37,16 +37,16 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
     <div className="min-h-screen">
       <Topbar user={user} title="Dashboard" />
 
-      <div className="p-6 space-y-8">
+      <div className="p-4 sm:p-6 space-y-5 sm:space-y-8">
 
         {/* ── Stats grid ── */}
         {showFullDashboard && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {getStatConfig(stats).map(({ key, label, icon: Icon, color, grad, trend, href }) => (
               <Link
                 key={key}
                 href={href}
-                className="card-hover relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 cursor-pointer transition-all hover:border-white/[0.15] hover:bg-white/[0.04]"
+                className="card-hover relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-5 cursor-pointer transition-all hover:border-white/[0.15] hover:bg-white/[0.04]"
               >
                 {/* Gradient blob */}
                 <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${grad} blur-2xl`} />
@@ -61,7 +61,7 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
                       {trend}
                     </span>
                   </div>
-                  <p className="text-3xl font-bold tracking-tight text-white">
+                  <p className="text-xl sm:text-3xl font-bold tracking-tight text-white">
                     {stats[key as keyof typeof stats]}
                   </p>
                   <p className="mt-1 text-xs font-medium text-white/40">{label}</p>

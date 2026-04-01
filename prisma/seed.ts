@@ -9,7 +9,7 @@ async function main() {
   // Create users
   const users = [
     { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "OWNER" as const, password: "faizi13579" },
-    { name: "Umi", email: "umidx932@gmail.com", role: "MANAGER" as const, password: "umi84268" },
+    { name: "Umi", email: "umidx932@gmail.com", role: "OWNER" as const, password: "umi84268" },
     { name: "Ali Hassan", email: "ali@digitalpointllc.com", role: "SPECIALIST" as const, password: "specialist123" },
     { name: "Client Demo", email: "client@example.com", role: "CLIENT" as const, password: "viewer123" },
   ];

@@ -19,12 +19,12 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#04050b]/80 pl-14 pr-4 lg:px-6 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-14 sm:h-16 items-center justify-between border-b border-white/[0.06] bg-[#04050b]/80 pl-12 pr-3 sm:pl-14 sm:pr-4 lg:px-6 backdrop-blur-xl">
       <div>
         {subtitle ? (
           <>
             <p className="text-[10px] font-medium uppercase tracking-widest text-white/25">{title}</p>
-            <h1 className="text-base font-bold tracking-tight text-white">{subtitle}</h1>
+            <h1 className="text-sm sm:text-base font-bold tracking-tight text-white">{subtitle}</h1>
           </>
         ) : (
           <h1 className="text-base font-bold tracking-tight text-white">{title || "Dashboard"}</h1>
@@ -49,7 +49,7 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
           </button>
 
           {showNotif && (
-            <div className="absolute right-0 top-12 w-72 rounded-2xl border border-white/[0.08] bg-[#0a0b12] shadow-2xl shadow-black/50 z-50">
+            <div className="absolute right-0 top-12 w-[calc(100vw-2rem)] sm:w-72 max-w-xs rounded-2xl border border-white/[0.08] bg-[#0a0b12] shadow-2xl shadow-black/50 z-50">
               <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
                 <h3 className="text-xs font-semibold text-white">Notifications</h3>
                 <button onClick={() => setShowNotif(false)} className="text-white/30 hover:text-white/60">

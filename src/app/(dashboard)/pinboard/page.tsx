@@ -64,12 +64,12 @@ export default function PinboardPage() {
     <div className="min-h-screen">
       <Topbar user={{ name: user?.name || "User", role: user?.role || "SPECIALIST" }} title="Pinboard" subtitle="Saved Findings" />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
         {pins.length > 0 && (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {[
                 { label: "Critical", count: criticalCount, color: "#f87171", severity: "critical" },
                 { label: "Warnings", count: warningCount, color: "#fbbf24", severity: "warning" },

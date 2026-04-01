@@ -66,23 +66,23 @@ export default function ReportsPage() {
     <div className="min-h-screen">
       <Topbar user={{ name: user?.name || "User", role: user?.role || "SPECIALIST" }} title="Reports" subtitle="Audit History" />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
         {/* Stats row */}
         {audits.length > 0 && (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
               { label: "Total Reports", value: audits.length, icon: FileText, color: "#818cf8" },
               { label: "Avg. SEO Score", value: `${avgScore}/100`, icon: TrendingUp, color: "#34d399" },
               { label: "Agents Used", value: new Set(audits.map((a) => a.agent)).size, icon: Filter, color: "#fbbf24" },
             ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0"
+              <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-4 flex items-center gap-3">
+                <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl flex-shrink-0"
                   style={{ backgroundColor: `${color}18`, color }}>
                   <Icon className="h-4.5 w-4.5" />
                 </div>
                 <div>
-                  <p className="text-lg font-bold text-white">{value}</p>
+                  <p className="text-base sm:text-lg font-bold text-white">{value}</p>
                   <p className="text-xs text-white/30">{label}</p>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default function ReportsPage() {
                 const agentConfig = AGENTS[audit.agent as AgentTypeName];
                 const color = AGENT_COLORS[audit.agent] || "#94a3b8";
                 return (
-                  <div key={audit.id} className="flex items-center justify-between px-5 py-4 transition-all hover:bg-white/[0.02] group">
+                  <div key={audit.id} className="flex items-center justify-between px-3 sm:px-5 py-3 sm:py-4 transition-all hover:bg-white/[0.02] group">
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                       <ScoreRing score={audit.score} grade={audit.grade} size={52} />
                       <div className="min-w-0">

@@ -115,10 +115,10 @@ export default function AuditPage() {
     <div className="min-h-screen">
       <Topbar user={{ name: user?.name || "User", role: user?.role || "SPECIALIST" }} title="AI Audit" subtitle="SEO Intelligence" />
 
-      <div className="p-6 space-y-6">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
 
         {/* URL Input Card */}
-        <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-5">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
           <div className="relative">
             <div className="mb-3 flex items-center gap-2">

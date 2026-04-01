@@ -61,7 +61,7 @@ export default function SettingsPage() {
     <div className="min-h-screen">
       <Topbar user={{ name: user?.name || "User", role: user?.role || "SPECIALIST" }} title="Settings" subtitle="Account & Config" />
 
-      <div className="p-6 space-y-5 max-w-2xl">
+      <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 max-w-2xl">
 
         {/* Profile info (read-only) */}
         <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">

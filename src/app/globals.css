@@ -215,3 +215,15 @@ input:focus {
   background: rgba(99, 102, 241, 0.3);
   color: white;
 }
+
+/* ── Mobile Responsive ─────────────────────── */
+@media (max-width: 640px) {
+  .card-hover:hover { transform: none; box-shadow: none; }
+}
+
+/* Safe text overflow everywhere */
+.break-safe {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+}

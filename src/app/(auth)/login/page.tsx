@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const TEAM_ACCOUNTS = [
   { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "Owner", color: "#818cf8" },
-  { name: "Umi",                  email: "umidx932@gmail.com",             role: "Manager", color: "#34d399" },
+  { name: "Umi",                  email: "umidx932@gmail.com",             role: "Owner", color: "#818cf8" },
   { name: "Ali Hassan",           email: "ali@digitalpointllc.com",        role: "Specialist", color: "#22d3ee" },
   { name: "Client Demo",          email: "client@example.com",            role: "Client", color: "#fbbf24" },
 ];
