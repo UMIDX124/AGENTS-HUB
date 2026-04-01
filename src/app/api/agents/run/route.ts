@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { url, agent, projectId } = await req.json();
+    const { url, agent, projectId, provider } = await req.json();
 
     if (!url || !agent) {
       return NextResponse.json(
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = await runAgent(agent, validUrl, user.id);
+    const result = await runAgent(agent, validUrl, user.id, provider || "github");
 
     const audit = await prisma.audit.create({
       data: {

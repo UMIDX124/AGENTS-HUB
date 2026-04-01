@@ -1,4 +1,5 @@
 import { type AgentTypeName, type AgentConfig, type AgentResult } from "@/types";
+import { callAI, type AIProvider } from "@/lib/ai-providers";
 
 export const AGENTS: Record<AgentTypeName, AgentConfig> = {
   ONPAGE: {
@@ -43,12 +44,6 @@ export const AGENTS: Record<AgentTypeName, AgentConfig> = {
   },
 };
 
-// GitHub Models — FREE with GitHub PAT
-const GITHUB_MODELS = [
-  "openai/gpt-5",
-  "deepseek/DeepSeek-V3-0324",
-  "meta/Llama-4-Scout-17B-16E-Instruct",
-];
 
 function getSystemPrompt(agent: AgentTypeName, url: string): string {
   const config = AGENTS[agent];
@@ -121,39 +116,6 @@ function checkRateLimit(userId: string): boolean {
   return true;
 }
 
-async function callGitHubModels(model: string, systemPrompt: string, userMessage: string): Promise<string> {
-  const token = process.env.GITHUB_MODELS_TOKEN;
-  if (!token) {
-    throw new Error("GITHUB_MODELS_TOKEN is not configured.");
-  }
-
-  const res = await fetch("https://models.github.ai/inference/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-      "X-GitHub-Api-Version": "2026-03-10",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage },
-      ],
-      max_tokens: 4096,
-      temperature: 0.7,
-    }),
-  });
-
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(`GitHub Models ${model} failed (${res.status}): ${errBody}`);
-  }
-
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || "";
-}
-
 async function scrapeWebsite(url: string): Promise<string> {
   try {
     const res = await fetch(url, {
@@ -179,7 +141,8 @@ async function scrapeWebsite(url: string): Promise<string> {
 export async function runAgent(
   agentType: AgentTypeName,
   url: string,
-  userId: string
+  userId: string,
+  provider: AIProvider = "github"
 ): Promise<AgentResult> {
   if (!checkRateLimit(userId)) {
     throw new Error("Rate limit exceeded. Max 10 requests per minute.");
@@ -189,27 +152,20 @@ export async function runAgent(
   const scraped = await scrapeWebsite(url);
   const userMessage = `Perform a comprehensive ${AGENTS[agentType].name} audit for ${url}. ${scraped ? `\n\nHere is the REAL scraped data from the website — use this for accurate analysis:\n${scraped}\n\nBase your analysis on this REAL data, not assumptions.` : ""} Provide detailed, actionable SEO analysis as JSON.`;
 
-  let lastError = "";
+  try {
+    console.log(`[Agent] Running ${agentType} with provider: ${provider}`);
+    const text = await callAI(provider, systemPrompt, userMessage);
 
-  for (const model of GITHUB_MODELS) {
-    try {
-      console.log(`[Agent] Trying GitHub Models: ${model} for ${agentType}...`);
-      const text = await callGitHubModels(model, systemPrompt, userMessage);
-
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error("No JSON found in response");
-      }
-
-      const parsed: AgentResult = JSON.parse(jsonMatch[0]);
-      console.log(`[Agent] Success with ${model} — Score: ${parsed.score}`);
-      return parsed;
-    } catch (err: any) {
-      lastError = err.message;
-      console.warn(`[Agent] Model ${model} failed: ${err.message}. Trying next...`);
-      continue;
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("No JSON found in response");
     }
-  }
 
-  throw new Error(`All models failed. Last error: ${lastError}`);
+    const parsed: AgentResult = JSON.parse(jsonMatch[0]);
+    console.log(`[Agent] Success — Score: ${parsed.score}`);
+    return parsed;
+  } catch (err: any) {
+    console.error(`[Agent] ${provider} failed:`, err.message);
+    throw new Error(`Agent failed (${provider}): ${err.message}`);
+  }
 }

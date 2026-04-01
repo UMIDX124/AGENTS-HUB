@@ -378,10 +378,11 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { tool, url, context } = body as {
+    const { tool, url, context, provider } = body as {
       tool: string;
       url: string;
       context?: string;
+      provider?: string;
     };
 
     if (!tool || !url) {
@@ -422,7 +423,9 @@ export async function POST(req: NextRequest) {
     const scrapedContent = await scrapeWebsite(validUrl);
     const userPrompt = buildUserPrompt(toolName, validUrl, context, scrapedContent);
 
-    const result = await callGitHubModels(systemPrompt, userPrompt);
+    const { callAI } = await import("@/lib/ai-providers");
+    const aiProvider = (provider === "claude" || provider === "openrouter" || provider === "github") ? provider : "github";
+    const result = await callAI(aiProvider as any, systemPrompt, userPrompt);
 
     return NextResponse.json({ result, tool: toolName });
   } catch (error: any) {

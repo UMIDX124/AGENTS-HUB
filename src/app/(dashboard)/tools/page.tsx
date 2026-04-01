@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { MarkdownView } from "@/components/markdown-view";
 import { ErrorState } from "@/components/error-state";
+import { ProviderSelect, useProvider } from "@/components/provider-select";
 import {
   Code2, Globe, Sparkles, Loader2, Copy, Check,
   Tag, Braces, PenTool, Bot, ListOrdered, MapPin,
@@ -52,6 +53,7 @@ export default function ToolsPage() {
   const [url, setUrl] = useState("");
   const [context, setContext] = useState("");
   const [loading, setLoading] = useState(false);
+  const [provider, setProvider] = useProvider();
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -80,7 +82,7 @@ export default function ToolsPage() {
       const res = await fetch("/api/tools", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tool: selectedTool, url, context }),
+        body: JSON.stringify({ tool: selectedTool, url, context, provider }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -165,9 +167,14 @@ export default function ToolsPage() {
         {/* Tool input area */}
         {selectedTool && activeTool && (
           <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 space-y-4">
-            <div className="flex items-center gap-2 mb-1">
-              <Sparkles className="h-4 w-4 text-indigo-400" />
-              <h3 className="text-sm font-semibold text-white">{activeTool.name}</h3>
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-indigo-400" />
+                <h3 className="text-sm font-semibold text-white">{activeTool.name}</h3>
+              </div>
+              <ProviderSelect value={provider} onChange={setProvider} />
+            </div>
+            <div>
               {loading && (
                 <span className="ml-auto flex items-center gap-1.5 text-xs text-white/40">
                   <div className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />

@@ -12,6 +12,7 @@ import { FindingsList } from "@/components/findings-list";
 import { KeywordCards } from "@/components/keyword-cards";
 import { CompetitorCards } from "@/components/competitor-cards";
 import { AGENTS } from "@/lib/agents";
+import { ProviderSelect, useProvider } from "@/components/provider-select";
 import type { AgentTypeName, AgentResult } from "@/types";
 import { useSession } from "next-auth/react";
 import { Loader2, Zap, Globe, CheckCircle2, ListTodo, Pin } from "lucide-react";
@@ -22,6 +23,7 @@ export default function AuditPage() {
   const searchParams = useSearchParams();
   const initialAgent = searchParams.get("agent") as AgentTypeName | null;
 
+  const [provider, setProvider] = useProvider();
   const [url, setUrl] = useState("");
   const [activeAgent, setActiveAgent] = useState<AgentTypeName | null>(initialAgent);
   const [results, setResults] = useState<Record<string, AgentResult>>({});
@@ -48,7 +50,7 @@ export default function AuditPage() {
       const res = await fetch("/api/agents/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, agent: agentType }),
+        body: JSON.stringify({ url, agent: agentType, provider }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -121,9 +123,12 @@ export default function AuditPage() {
         <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-5">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
           <div className="relative">
-            <div className="mb-3 flex items-center gap-2">
-              <Globe className="h-4 w-4 text-indigo-400" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-white/30">Target Website</span>
+            <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-indigo-400" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-white/30">Target Website</span>
+              </div>
+              <ProviderSelect value={provider} onChange={setProvider} />
             </div>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <input
