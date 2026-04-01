@@ -21,12 +21,14 @@ interface DashboardClientProps {
   chartData: { date: string; score: number; agent?: string }[];
 }
 
-const statConfig = [
-  { key: "totalAudits",  label: "Total Audits",     icon: BarChart3,   color: "#818cf8", grad: "from-indigo-500/20 to-indigo-500/0",  trend: "+12%" },
-  { key: "avgScore",     label: "Avg SEO Score",     icon: TrendingUp,  color: "#34d399", grad: "from-emerald-500/20 to-emerald-500/0", trend: "+5 pts" },
-  { key: "projects",     label: "Active Projects",   icon: FolderOpen,  color: "#a78bfa", grad: "from-purple-500/20 to-purple-500/0",  trend: "Stable" },
-  { key: "pendingTasks", label: "Pending Tasks",     icon: ListTodo,    color: "#fbbf24", grad: "from-amber-500/20 to-amber-500/0",   trend: "4 due" },
-];
+function getStatConfig(stats: DashboardClientProps["stats"]) {
+  return [
+    { key: "totalAudits",  label: "Total Audits",     icon: BarChart3,   color: "#818cf8", grad: "from-indigo-500/20 to-indigo-500/0",  trend: stats.totalAudits > 0 ? `${stats.totalAudits} total` : "Run first audit", href: "/reports" },
+    { key: "avgScore",     label: "Avg SEO Score",     icon: TrendingUp,  color: "#34d399", grad: "from-emerald-500/20 to-emerald-500/0", trend: stats.avgScore > 0 ? `${stats.avgScore}/100` : "No data yet", href: "/audit" },
+    { key: "projects",     label: "Active Projects",   icon: FolderOpen,  color: "#a78bfa", grad: "from-purple-500/20 to-purple-500/0",  trend: stats.projects > 0 ? "Active" : "Add one", href: "/projects" },
+    { key: "pendingTasks", label: "Pending Tasks",     icon: ListTodo,    color: "#fbbf24", grad: "from-amber-500/20 to-amber-500/0",   trend: stats.pendingTasks > 0 ? `${stats.pendingTasks} due` : "All clear", href: "/tasks" },
+  ];
+}
 
 export function DashboardClient({ user, stats, recentAudits, chartData }: DashboardClientProps) {
   const showFullDashboard = user.role === "OWNER" || user.role === "MANAGER";
@@ -40,10 +42,11 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
         {/* ── Stats grid ── */}
         {showFullDashboard && (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {statConfig.map(({ key, label, icon: Icon, color, grad, trend }) => (
-              <div
+            {getStatConfig(stats).map(({ key, label, icon: Icon, color, grad, trend, href }) => (
+              <Link
                 key={key}
-                className="card-hover relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5"
+                href={href}
+                className="card-hover relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 cursor-pointer transition-all hover:border-white/[0.15] hover:bg-white/[0.04]"
               >
                 {/* Gradient blob */}
                 <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${grad} blur-2xl`} />
@@ -63,7 +66,7 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
                   </p>
                   <p className="mt-1 text-xs font-medium text-white/40">{label}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
