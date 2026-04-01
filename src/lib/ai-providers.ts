@@ -1,57 +1,76 @@
-// AI Provider configuration — user selects in Settings, stored in cookie
+// AI Provider configuration
 export type AIProvider = "github" | "openrouter" | "claude";
 
 export const AI_PROVIDERS: Record<AIProvider, {
   name: string;
-  description: string;
   models: string[];
   color: string;
   badge: string;
-  endpoint: string;
 }> = {
   github: {
     name: "GitHub Models",
-    description: "GPT-5, DeepSeek V3, Llama 4 — Free via GitHub PAT",
-    models: ["openai/gpt-5", "deepseek/DeepSeek-V3-0324", "meta/Llama-4-Scout-17B-16E-Instruct"],
+    models: ["openai/gpt-4o", "deepseek/DeepSeek-V3-0324", "meta/Llama-4-Scout-17B-16E-Instruct"],
     color: "#34d399",
     badge: "FREE",
-    endpoint: "https://models.github.ai/inference/chat/completions",
   },
   openrouter: {
     name: "OpenRouter",
-    description: "Nemotron, Qwen 3.6, GPT-OSS — Free tier",
-    models: ["nvidia/nemotron-3-super:free", "qwen/qwen-3.6-plus-preview:free", "openai/gpt-oss-120b:free"],
+    models: ["deepseek/deepseek-chat-v3-0324:free", "meta-llama/llama-4-scout:free", "qwen/qwen3-235b-a22b:free"],
     color: "#818cf8",
     badge: "FREE",
-    endpoint: "https://openrouter.ai/api/v1/chat/completions",
   },
   claude: {
     name: "Claude (Anthropic)",
-    description: "Claude Sonnet 4.6 — Best quality, paid",
     models: ["claude-sonnet-4-20250514"],
     color: "#fbbf24",
     badge: "PREMIUM",
-    endpoint: "https://api.anthropic.com/v1/messages",
   },
 };
+
+// ALL providers fallback order
+const FALLBACK_ORDER: AIProvider[] = ["github", "openrouter"];
 
 export async function callAI(
   provider: AIProvider,
   systemPrompt: string,
   userMessage: string
 ): Promise<string> {
-  const config = AI_PROVIDERS[provider];
-  let lastError = "";
-
+  // Claude is direct — no fallback
   if (provider === "claude") {
     return callClaude(systemPrompt, userMessage);
   }
 
+  // Try selected provider first
+  try {
+    return await callProvider(provider, systemPrompt, userMessage);
+  } catch (primaryErr: any) {
+    console.warn(`[AI] Primary ${provider} failed: ${primaryErr.message}`);
+
+    // Auto-fallback to other free providers
+    for (const fallback of FALLBACK_ORDER) {
+      if (fallback === provider) continue;
+      try {
+        console.log(`[AI] Falling back to ${fallback}...`);
+        return await callProvider(fallback, systemPrompt, userMessage);
+      } catch (err: any) {
+        console.warn(`[AI] Fallback ${fallback} also failed: ${err.message}`);
+        continue;
+      }
+    }
+
+    throw new Error(`All providers failed. Try again in 1 minute.`);
+  }
+}
+
+async function callProvider(provider: AIProvider, system: string, user: string): Promise<string> {
+  const config = AI_PROVIDERS[provider];
+  let lastError = "";
+
   for (const model of config.models) {
     try {
       const text = provider === "github"
-        ? await callGitHub(model, systemPrompt, userMessage)
-        : await callOpenRouter(model, systemPrompt, userMessage);
+        ? await callGitHub(model, system, user)
+        : await callOpenRouter(model, system, user);
       if (text) return text;
     } catch (err: any) {
       lastError = err.message;
@@ -61,6 +80,8 @@ export async function callAI(
 
   throw new Error(`All ${config.name} models failed: ${lastError}`);
 }
+
+const NO_CHAT_SUFFIX = "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases like 'let me know' or 'hope this helps'.";
 
 async function callGitHub(model: string, system: string, user: string): Promise<string> {
   const token = process.env.GITHUB_MODELS_TOKEN;
@@ -76,7 +97,7 @@ async function callGitHub(model: string, system: string, user: string): Promise<
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: system + "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases." },
+        { role: "system", content: system + NO_CHAT_SUFFIX },
         { role: "user", content: user },
       ],
       max_tokens: 4096,
@@ -98,13 +119,13 @@ async function callOpenRouter(model: string, system: string, user: string): Prom
     headers: {
       "Authorization": `Bearer ${key}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXTAUTH_URL || "https://agents-hub-fawn.vercel.app",
+      "HTTP-Referer": "https://agents-hub-fawn.vercel.app",
       "X-Title": "SEO Agents Hub",
     },
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: system + "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases." },
+        { role: "system", content: system + NO_CHAT_SUFFIX },
         { role: "user", content: user },
       ],
       max_tokens: 4096,
@@ -131,12 +152,12 @@ async function callClaude(system: string, user: string): Promise<string> {
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
-      system: system + "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases.",
+      system: system + NO_CHAT_SUFFIX,
       messages: [{ role: "user", content: user }],
     }),
   });
 
-  if (!res.ok) throw new Error(`Claude: ${res.status} ${await res.text()}`);
+  if (!res.ok) throw new Error(`Claude: ${res.status}`);
   const data = await res.json();
   return data.content?.[0]?.text || "";
 }
