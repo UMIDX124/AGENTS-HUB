@@ -174,7 +174,7 @@ export default function AuditPage() {
               <AgentCard
                 key={key}
                 agentType={key}
-                onClick={() => runSingleAgent(key)}
+                onClick={() => results[key] ? setActiveAgent(key) : runSingleAgent(key)}
                 isActive={activeAgent === key}
                 hasResults={!!results[key]}
               />
