@@ -4,11 +4,11 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const DEMO_ACCOUNTS = [
-  { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", password: "faizi13579", role: "Owner", color: "#818cf8" },
-  { name: "Umi",                  email: "umidx932@gmail.com",             password: "umi84268",   role: "Manager", color: "#34d399" },
-  { name: "Ali Hassan",           email: "ali@digitalpointllc.com",        password: "specialist123", role: "Specialist", color: "#22d3ee" },
-  { name: "Client Demo",          email: "client@example.com",            password: "viewer123",  role: "Client", color: "#fbbf24" },
+const TEAM_ACCOUNTS = [
+  { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "Owner", color: "#818cf8" },
+  { name: "Umi",                  email: "umidx932@gmail.com",             role: "Manager", color: "#34d399" },
+  { name: "Ali Hassan",           email: "ali@digitalpointllc.com",        role: "Specialist", color: "#22d3ee" },
+  { name: "Client Demo",          email: "client@example.com",            role: "Client", color: "#fbbf24" },
 ];
 
 export default function LoginPage() {
@@ -138,10 +138,10 @@ export default function LoginPage() {
 
             {showDemo && (
               <div className="mt-3 space-y-2 animate-slide-up">
-                {DEMO_ACCOUNTS.map((account) => (
+                {TEAM_ACCOUNTS.map((account) => (
                   <button
                     key={account.email}
-                    onClick={() => { setEmail(account.email); setPassword(account.password); }}
+                    onClick={() => { setEmail(account.email); setPassword(""); }}
                     className="flex w-full items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-left transition-all hover:border-white/[0.1] hover:bg-white/[0.04]"
                   >
                     <div

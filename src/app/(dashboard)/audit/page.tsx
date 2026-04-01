@@ -31,8 +31,16 @@ export default function AuditPage() {
   const [pinSuccess, setPinSuccess] = useState(false);
   const [taskSuccess, setTaskSuccess] = useState(false);
 
+  function validateUrl(input: string): string | null {
+    let u = input.trim();
+    if (!u) return null;
+    if (!u.startsWith("http")) u = "https://" + u;
+    try { new URL(u); return u; } catch { return null; }
+  }
+
   async function runSingleAgent(agentType: AgentTypeName) {
-    if (!url) { setError("Please enter a website URL first"); return; }
+    const validUrl = validateUrl(url);
+    if (!validUrl) { setError("Please enter a valid URL (e.g. example.com)"); return; }
     setError(null);
     setLoading((prev) => ({ ...prev, [agentType]: true }));
     setActiveAgent(agentType);

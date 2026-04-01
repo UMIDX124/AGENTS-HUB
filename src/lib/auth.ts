@@ -5,7 +5,7 @@ import { prisma } from "./prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
-  secret: process.env.NEXTAUTH_SECRET || "seo-agents-hub-secret-key-2024-ultra-secure",
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",
@@ -14,17 +14,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("[AUTH] Attempting login for:", credentials?.email);
-        if (!credentials?.email || !credentials?.password) {
-          console.log("[AUTH] Missing email or password");
-          return null;
-        }
+        if (!credentials?.email || !credentials?.password) return null;
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         });
 
-        console.log("[AUTH] User found:", !!user, user?.email);
         if (!user) return null;
 
         const isValid = await compare(
@@ -32,7 +27,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.password
         );
 
-        console.log("[AUTH] Password valid:", isValid);
         if (!isValid) return null;
 
         return {

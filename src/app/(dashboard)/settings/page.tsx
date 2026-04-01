@@ -158,24 +158,24 @@ export default function SettingsPage() {
           </form>
         </div>
 
-        {/* OpenRouter API Key */}
+        {/* GitHub Models API */}
         <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15">
               <Key className="h-4 w-4 text-amber-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">OpenRouter API Key</h2>
-              <p className="text-xs text-white/30">3 FREE models with auto-fallback</p>
+              <h2 className="text-sm font-semibold text-white">GitHub Models API</h2>
+              <p className="text-xs text-white/30">GPT-5, DeepSeek V3, Llama 4 — via GitHub PAT</p>
             </div>
           </div>
 
           <div className="mb-4 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-white/40 font-mono">OPENROUTER_API_KEY</span>
+              <span className="text-xs text-white/40 font-mono">GITHUB_MODELS_TOKEN</span>
               <span className="text-xs text-white/20">.env.local</span>
             </div>
-            <p className="mt-1 text-sm text-white/50">sk-ant-••••••••••••••••••••••</p>
+            <p className="mt-1 text-sm text-white/50">github_pat_••••••••••••••••••••••</p>
           </div>
 
           <div className="flex items-center gap-3">
