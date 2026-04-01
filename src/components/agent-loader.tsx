@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Progress } from "@/components/ui/progress";
 
 const PHASES = [
   "Initiating crawl...",
@@ -17,7 +18,11 @@ interface AgentLoaderProps {
   agentName: string;
 }
 
-export function AgentLoader({ agentIcon, agentColor, agentName }: AgentLoaderProps) {
+export function AgentLoader({
+  agentIcon,
+  agentColor,
+  agentName,
+}: AgentLoaderProps) {
   const [phase, setPhase] = useState(0);
   const [progress, setProgress] = useState(0);
 
@@ -39,14 +44,17 @@ export function AgentLoader({ agentIcon, agentColor, agentName }: AgentLoaderPro
   return (
     <div className="flex flex-col items-center gap-6 py-12">
       {/* Dual spinning rings */}
-      <div className="relative flex h-24 w-24 items-center justify-center">
+      <div className="relative flex size-24 items-center justify-center">
         <div
           className="animate-spin-slow absolute inset-0 rounded-full border-2 border-transparent"
           style={{ borderTopColor: agentColor, borderRightColor: agentColor }}
         />
         <div
           className="animate-spin-reverse absolute inset-2 rounded-full border-2 border-transparent"
-          style={{ borderBottomColor: agentColor, borderLeftColor: `${agentColor}60` }}
+          style={{
+            borderBottomColor: agentColor,
+            borderLeftColor: `${agentColor}60`,
+          }}
         />
         <span className="text-3xl">{agentIcon}</span>
       </div>
@@ -55,14 +63,21 @@ export function AgentLoader({ agentIcon, agentColor, agentName }: AgentLoaderPro
         <p className="text-sm font-medium" style={{ color: agentColor }}>
           {agentName}
         </p>
-        <p className="mt-1 text-sm text-[#94a3b8] animate-pulse">{PHASES[phase]}</p>
+        <p className="mt-1 text-sm text-muted-foreground animate-pulse">
+          {PHASES[phase]}
+        </p>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1 w-48 overflow-hidden rounded-full bg-[rgba(255,255,255,0.06)]">
-        <div
-          className="h-full rounded-full transition-all duration-300"
-          style={{ width: `${progress}%`, backgroundColor: agentColor }}
+      <div className="w-48">
+        <Progress
+          value={progress}
+          className="h-1"
+          style={
+            {
+              "--progress-color": agentColor,
+            } as React.CSSProperties
+          }
         />
       </div>
     </div>

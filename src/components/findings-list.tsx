@@ -1,7 +1,14 @@
 "use client";
 
-import { Pin } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Pin } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Finding {
   title: string;
@@ -14,47 +21,55 @@ interface FindingsListProps {
   onPin?: (finding: Finding) => void;
 }
 
-const severityConfig = {
-  critical: { color: "#f87171", bg: "rgba(248,113,113,0.1)", label: "Critical" },
-  warning: { color: "#fbbf24", bg: "rgba(251,191,36,0.1)", label: "Warning" },
-  good: { color: "#34d399", bg: "rgba(52,211,153,0.1)", label: "Good" },
+const severityVariant: Record<string, "destructive" | "warning" | "success"> = {
+  critical: "destructive",
+  warning: "warning",
+  good: "success",
+};
+
+const severityLabel: Record<string, string> = {
+  critical: "Critical",
+  warning: "Warning",
+  good: "Good",
 };
 
 export function FindingsList({ findings, onPin }: FindingsListProps) {
   return (
-    <div className="space-y-3">
-      {findings.map((finding, i) => {
-        const config = severityConfig[finding.severity];
-        return (
-          <div
-            key={i}
-            className="flex items-start justify-between gap-4 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-4"
-          >
-            <div className="flex-1">
+    <div className="space-y-2">
+      {findings.map((finding, i) => (
+        <Card key={i} className="transition-colors hover:bg-accent/20">
+          <CardContent className="flex items-start justify-between gap-4 p-4">
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span
-                  className="rounded px-2 py-0.5 text-xs font-medium"
-                  style={{ backgroundColor: config.bg, color: config.color }}
-                >
-                  {config.label}
+                <Badge variant={severityVariant[finding.severity]}>
+                  {severityLabel[finding.severity]}
+                </Badge>
+                <span className="text-sm font-medium text-foreground">
+                  {finding.title}
                 </span>
-                <span className="text-sm font-medium">{finding.title}</span>
               </div>
-              <p className="mt-1 text-sm text-[#94a3b8]">{finding.detail}</p>
+              <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
+                {finding.detail}
+              </p>
             </div>
             {onPin && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onPin(finding)}
-                className="h-8 w-8 shrink-0 text-[#64748b] hover:text-[#818cf8]"
-              >
-                <Pin className="h-4 w-4" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => onPin(finding)}
+                    className="text-muted-foreground hover:text-primary shrink-0"
+                  >
+                    <Pin className="size-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Pin finding</TooltipContent>
+              </Tooltip>
             )}
-          </div>
-        );
-      })}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }

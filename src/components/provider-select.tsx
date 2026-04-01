@@ -1,45 +1,84 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bot, Cpu, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Bot, Cpu, Sparkles, Flame } from "lucide-react";
 
-export type AIProvider = "github" | "openrouter" | "claude";
+export type AIProvider = "gemini" | "github" | "openrouter" | "claude";
 
-const PROVIDERS: { id: AIProvider; name: string; badge: string; color: string; icon: any; desc: string }[] = [
-  { id: "github", name: "GitHub Models", badge: "FREE", color: "#34d399", icon: Bot, desc: "GPT-5, DeepSeek V3" },
-  { id: "openrouter", name: "OpenRouter", badge: "FREE", color: "#818cf8", icon: Cpu, desc: "Nemotron, Qwen 3.6" },
-  { id: "claude", name: "Claude", badge: "PREMIUM", color: "#fbbf24", icon: Sparkles, desc: "Best quality" },
+const PROVIDERS: {
+  id: AIProvider;
+  name: string;
+  badge: string;
+  badgeVariant: "success" | "default" | "warning";
+  icon: React.ElementType;
+  desc: string;
+}[] = [
+  {
+    id: "gemini",
+    name: "Gemini",
+    badge: "FREE",
+    badgeVariant: "success",
+    icon: Flame,
+    desc: "Fast & generous limits",
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    badge: "FREE",
+    badgeVariant: "success",
+    icon: Bot,
+    desc: "GPT-4o, DeepSeek V3",
+  },
+  {
+    id: "openrouter",
+    name: "OpenRouter",
+    badge: "FREE",
+    badgeVariant: "default",
+    icon: Cpu,
+    desc: "DeepSeek, Llama 4",
+  },
+  {
+    id: "claude",
+    name: "Claude",
+    badge: "PAID",
+    badgeVariant: "warning",
+    icon: Sparkles,
+    desc: "Best quality",
+  },
 ];
 
-export function ProviderSelect({ value, onChange }: { value: AIProvider; onChange: (v: AIProvider) => void }) {
+export function ProviderSelect({
+  value,
+  onChange,
+}: {
+  value: AIProvider;
+  onChange: (v: AIProvider) => void;
+}) {
   return (
-    <div className="flex gap-1.5 rounded-xl border border-white/[0.07] bg-white/[0.02] p-1">
+    <div className="flex gap-1 rounded-lg border border-border bg-muted/30 p-1">
       {PROVIDERS.map((p) => {
         const Icon = p.icon;
         const active = value === p.id;
         return (
-          <button
+          <Button
             key={p.id}
             type="button"
+            variant={active ? "secondary" : "ghost"}
+            size="sm"
             onClick={() => onChange(p.id)}
-            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition-all ${
-              active
-                ? "bg-white/[0.08] text-white shadow-sm"
-                : "text-white/30 hover:text-white/50"
-            }`}
+            className="gap-1.5 text-xs"
           >
-            <Icon className="h-3 w-3" style={{ color: active ? p.color : undefined }} />
+            <Icon className="size-3" />
             <span className="hidden sm:inline">{p.name}</span>
-            <span
-              className="rounded px-1 py-0.5 text-[9px] font-bold"
-              style={{
-                backgroundColor: active ? `${p.color}20` : "transparent",
-                color: active ? p.color : "inherit",
-              }}
+            <Badge
+              variant={active ? p.badgeVariant : "outline"}
+              className="h-4 px-1 text-[9px]"
             >
               {p.badge}
-            </span>
-          </button>
+            </Badge>
+          </Button>
         );
       })}
     </div>
@@ -47,11 +86,11 @@ export function ProviderSelect({ value, onChange }: { value: AIProvider; onChang
 }
 
 export function useProvider(): [AIProvider, (v: AIProvider) => void] {
-  const [provider, setProvider] = useState<AIProvider>("github");
+  const [provider, setProvider] = useState<AIProvider>("gemini");
 
   useEffect(() => {
     const saved = localStorage.getItem("seo-ai-provider") as AIProvider;
-    if (saved && ["github", "openrouter", "claude"].includes(saved)) {
+    if (saved && ["gemini", "github", "openrouter", "claude"].includes(saved)) {
       setProvider(saved);
     }
   }, []);

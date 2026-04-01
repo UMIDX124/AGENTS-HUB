@@ -1,5 +1,8 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+
 interface Keyword {
   keyword: string;
   volume: number;
@@ -12,19 +15,48 @@ interface KeywordCardsProps {
 }
 
 export function KeywordCards({ keywords }: KeywordCardsProps) {
-  if (!keywords?.length) return <p className="text-sm text-[#64748b]">No keyword data available.</p>;
+  if (!keywords?.length) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        No keyword data available.
+      </p>
+    );
+  }
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {keywords.map((kw, i) => (
-        <div key={i} className="rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-4">
-          <p className="text-sm font-medium text-white">{kw.keyword}</p>
-          <div className="mt-2 flex items-center gap-4 text-xs text-[#94a3b8]">
-            <span>Vol: <span className="text-white">{kw.volume?.toLocaleString()}</span></span>
-            <span>Diff: <span className={kw.difficulty > 70 ? "text-red-400" : kw.difficulty > 40 ? "text-yellow-400" : "text-green-400"}>{kw.difficulty}</span></span>
-          </div>
-          <p className="mt-1 text-xs text-[#64748b]">{kw.opportunity}</p>
-        </div>
+        <Card key={i} className="transition-colors hover:bg-accent/20">
+          <CardContent className="p-4">
+            <p className="text-sm font-medium text-foreground">{kw.keyword}</p>
+            <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+              <span>
+                Vol:{" "}
+                <span className="font-medium text-foreground/80">
+                  {kw.volume?.toLocaleString()}
+                </span>
+              </span>
+              <span>
+                Diff:{" "}
+                <Badge
+                  variant={
+                    kw.difficulty > 70
+                      ? "destructive"
+                      : kw.difficulty > 40
+                        ? "warning"
+                        : "success"
+                  }
+                  className="ml-0.5"
+                >
+                  {kw.difficulty}
+                </Badge>
+              </span>
+            </div>
+            <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
+              {kw.opportunity}
+            </p>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

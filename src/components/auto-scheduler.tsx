@@ -1,7 +1,35 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Bot, Play, Square, Clock, CheckCircle2, AlertCircle, Loader2, Zap, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  Bot,
+  Play,
+  Square,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  Zap,
+  RefreshCw,
+} from "lucide-react";
 
 interface SchedulerLog {
   id: string;
@@ -11,12 +39,12 @@ interface SchedulerLog {
 }
 
 const INTERVAL_OPTIONS = [
-  { value: 30, label: "Every 30 min" },
-  { value: 60, label: "Every 1 hour" },
-  { value: 180, label: "Every 3 hours" },
-  { value: 360, label: "Every 6 hours" },
-  { value: 720, label: "Every 12 hours" },
-  { value: 1440, label: "Every 24 hours" },
+  { value: "30", label: "Every 30 min" },
+  { value: "60", label: "Every 1 hour" },
+  { value: "180", label: "Every 3 hours" },
+  { value: "360", label: "Every 6 hours" },
+  { value: "720", label: "Every 12 hours" },
+  { value: "1440", label: "Every 24 hours" },
 ];
 
 export function AutoScheduler() {
@@ -32,12 +60,20 @@ export function AutoScheduler() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
 
-  const addLog = useCallback((type: SchedulerLog["type"], message: string) => {
-    setLogs((prev) => [
-      { id: Date.now().toString(), time: new Date().toLocaleTimeString(), type, message },
-      ...prev.slice(0, 49),
-    ]);
-  }, []);
+  const addLog = useCallback(
+    (type: SchedulerLog["type"], message: string) => {
+      setLogs((prev) => [
+        {
+          id: Date.now().toString(),
+          time: new Date().toLocaleTimeString(),
+          type,
+          message,
+        },
+        ...prev.slice(0, 49),
+      ]);
+    },
+    []
+  );
 
   const runAutoAudit = useCallback(async () => {
     setRunningNow(true);
@@ -60,9 +96,15 @@ export function AutoScheduler() {
         setTotalFailed((p) => p + data.failed);
 
         if (data.completed > 0) {
-          addLog("success", `Completed ${data.completed} audits across ${new Set(data.results.map((r: any) => r.projectName)).size} projects`);
+          addLog(
+            "success",
+            `Completed ${data.completed} audits across ${new Set(data.results.map((r: any) => r.projectName)).size} projects`
+          );
           data.results.forEach((r: any) => {
-            addLog("success", `  ${r.projectName} → ${r.agent}: ${r.grade} (${r.score}/100)`);
+            addLog(
+              "success",
+              `  ${r.projectName} → ${r.agent}: ${r.grade} (${r.score}/100)`
+            );
           });
         }
         if (data.failed > 0) {
@@ -86,14 +128,9 @@ export function AutoScheduler() {
   function startScheduler() {
     setRunning(true);
     addLog("info", `Scheduler started — running every ${interval} minutes`);
-
-    // Run immediately on start
     runAutoAudit();
-
-    // Set next run
     const next = new Date(Date.now() + interval * 60 * 1000);
     setNextRun(next);
-
     timerRef.current = setInterval(() => {
       runAutoAudit();
       const nextTime = new Date(Date.now() + interval * 60 * 1000);
@@ -110,13 +147,11 @@ export function AutoScheduler() {
     addLog("info", "Scheduler stopped");
   }
 
-  // Countdown timer
   useEffect(() => {
     if (!nextRun || !running) {
       if (countdownRef.current) clearInterval(countdownRef.current);
       return;
     }
-
     countdownRef.current = setInterval(() => {
       const diff = nextRun.getTime() - Date.now();
       if (diff <= 0) {
@@ -127,13 +162,11 @@ export function AutoScheduler() {
         setCountdown(`${m}m ${s}s`);
       }
     }, 1000);
-
     return () => {
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
   }, [nextRun, running]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -142,110 +175,160 @@ export function AutoScheduler() {
   }, []);
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+    <Card>
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/[0.05] px-5 py-4">
+      <CardHeader className="flex-row items-center justify-between space-y-0">
         <div className="flex items-center gap-3">
-          <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${running ? "bg-emerald-500/15" : "bg-indigo-500/15"}`}>
-            <Bot className={`h-5 w-5 ${running ? "text-emerald-400 animate-pulse" : "text-indigo-400"}`} />
+          <div
+            className={`flex size-10 items-center justify-center rounded-lg ${running ? "bg-emerald-500/15" : "bg-primary/10"}`}
+          >
+            <Bot
+              className={`size-5 ${running ? "text-emerald-400 animate-pulse" : "text-primary"}`}
+            />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">24/7 Auto-Audit Scheduler</h3>
-            <p className="text-xs text-white/30">
+            <CardTitle className="text-sm">
+              24/7 Auto-Audit Scheduler
+            </CardTitle>
+            <CardDescription>
               {running ? (
                 <span className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Running — next audit in {countdown}
                 </span>
-              ) : "Automatically audit all active projects on schedule"}
-            </p>
+              ) : (
+                "Automatically audit all active projects on schedule"
+              )}
+            </CardDescription>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           {!running && (
-            <select
-              value={interval}
-              onChange={(e) => setIntervalMin(Number(e.target.value))}
-              className="h-9 rounded-lg border border-white/10 bg-[#08090f] px-3 text-xs text-white outline-none"
+            <Select
+              value={String(interval)}
+              onValueChange={(v) => setIntervalMin(Number(v))}
             >
-              {INTERVAL_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
+              <SelectTrigger className="h-8 w-[140px] text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {INTERVAL_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           )}
           {running ? (
-            <button
-              onClick={stopScheduler}
-              className="flex items-center gap-1.5 rounded-xl bg-red-500/15 border border-red-500/25 px-4 py-2 text-xs font-semibold text-red-400 transition-all hover:bg-red-500/25"
-            >
-              <Square className="h-3.5 w-3.5" /> Stop
-            </button>
+            <Button variant="destructive" size="sm" onClick={stopScheduler}>
+              <Square className="size-3.5" /> Stop
+            </Button>
           ) : (
-            <button
+            <Button
+              size="sm"
               onClick={startScheduler}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-500/20 transition-all hover:brightness-110"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              <Play className="h-3.5 w-3.5" /> Start 24/7
-            </button>
+              <Play className="size-3.5" /> Start 24/7
+            </Button>
           )}
           {!running && (
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               onClick={runAutoAudit}
               disabled={runningNow}
-              className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white disabled:opacity-40"
             >
-              {runningNow ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Zap className="h-3.5 w-3.5" />}
+              {runningNow ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Zap className="size-3.5" />
+              )}
               Run Once
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
       {/* Stats row */}
       {(totalRuns > 0 || running) && (
-        <div className="grid grid-cols-3 gap-px bg-white/[0.04] border-b border-white/[0.05]">
-          {[
-            { label: "Cycles", value: totalRuns, color: "text-indigo-400" },
-            { label: "Passed", value: totalSuccess, color: "text-emerald-400" },
-            { label: "Failed", value: totalFailed, color: "text-red-400" },
-          ].map(({ label, value, color }) => (
-            <div key={label} className="bg-[#04050b] px-5 py-3">
-              <p className={`text-base font-bold ${color}`}>{value}</p>
-              <p className="text-[10px] text-white/25">{label}</p>
-            </div>
-          ))}
-        </div>
+        <>
+          <Separator />
+          <div className="grid grid-cols-3">
+            {[
+              { label: "Cycles", value: totalRuns, color: "text-primary" },
+              {
+                label: "Passed",
+                value: totalSuccess,
+                color: "text-emerald-400",
+              },
+              { label: "Failed", value: totalFailed, color: "text-destructive" },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="px-5 py-3 text-center">
+                <p className={`text-base font-bold tabular-nums ${color}`}>
+                  {value}
+                </p>
+                <p className="text-[10px] text-muted-foreground">{label}</p>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Logs */}
       {logs.length > 0 && (
-        <div className="max-h-[250px] overflow-y-auto">
-          <div className="divide-y divide-white/[0.03]">
-            {logs.map((log) => (
-              <div key={log.id} className="flex items-start gap-2.5 px-5 py-2.5">
-                <span className="mt-0.5 flex-shrink-0">
-                  {log.type === "success" && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
-                  {log.type === "error" && <AlertCircle className="h-3 w-3 text-red-400" />}
-                  {log.type === "info" && <RefreshCw className="h-3 w-3 text-white/30" />}
-                </span>
-                <p className={`text-xs leading-relaxed ${log.type === "success" ? "text-white/60" : log.type === "error" ? "text-red-400/80" : "text-white/30"}`}>
-                  {log.message}
-                </p>
-                <span className="ml-auto text-[10px] text-white/15 flex-shrink-0">{log.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <>
+          <Separator />
+          <ScrollArea className="max-h-[250px]">
+            <div className="divide-y divide-border/50">
+              {logs.map((log) => (
+                <div
+                  key={log.id}
+                  className="flex items-start gap-2.5 px-5 py-2.5"
+                >
+                  <span className="mt-0.5 shrink-0">
+                    {log.type === "success" && (
+                      <CheckCircle2 className="size-3 text-emerald-400" />
+                    )}
+                    {log.type === "error" && (
+                      <AlertCircle className="size-3 text-destructive" />
+                    )}
+                    {log.type === "info" && (
+                      <RefreshCw className="size-3 text-muted-foreground" />
+                    )}
+                  </span>
+                  <p
+                    className={`text-xs leading-relaxed ${
+                      log.type === "success"
+                        ? "text-foreground/60"
+                        : log.type === "error"
+                          ? "text-destructive/80"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    {log.message}
+                  </p>
+                  <span className="ml-auto text-[10px] text-muted-foreground/50 shrink-0 font-mono">
+                    {log.time}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </>
       )}
 
       {/* Empty state */}
       {logs.length === 0 && !running && (
-        <div className="px-5 py-8 text-center">
-          <Clock className="mx-auto h-8 w-8 text-white/10 mb-2" />
-          <p className="text-xs text-white/25">Start the scheduler to automatically audit all your active projects</p>
-        </div>
+        <CardContent className="py-8 text-center">
+          <Clock className="mx-auto size-8 text-muted-foreground/30 mb-2" />
+          <p className="text-xs text-muted-foreground">
+            Start the scheduler to automatically audit all your active projects
+          </p>
+        </CardContent>
       )}
-    </div>
+    </Card>
   );
 }

@@ -1,6 +1,14 @@
 "use client";
 
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 interface AuditHistoryChartProps {
   data: { date: string; score: number; agent?: string }[];
@@ -8,35 +16,58 @@ interface AuditHistoryChartProps {
 
 export function AuditHistoryChart({ data }: AuditHistoryChartProps) {
   if (!data.length) {
-    return <p className="text-sm text-[#64748b]">No audit history yet.</p>;
+    return (
+      <p className="text-sm text-muted-foreground">No audit history yet.</p>
+    );
   }
 
   const formatted = data.map((d) => ({
     ...d,
-    date: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    date: new Date(d.date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    }),
   }));
 
   return (
     <div className="h-64 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={formatted}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-          <XAxis dataKey="date" tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} />
-          <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 12 }} axisLine={false} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="oklch(1 0 0 / 6%)"
+          />
+          <XAxis
+            dataKey="date"
+            tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            domain={[0, 100]}
+            tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+            axisLine={false}
+            tickLine={false}
+          />
           <Tooltip
             contentStyle={{
-              backgroundColor: "#0d0f1a",
-              border: "1px solid rgba(255,255,255,0.1)",
+              backgroundColor: "oklch(0.14 0.005 270)",
+              border: "1px solid oklch(1 0 0 / 10%)",
               borderRadius: "8px",
               color: "white",
+              fontSize: "12px",
             }}
           />
           <Line
             type="monotone"
             dataKey="score"
-            stroke="#818cf8"
+            stroke="oklch(0.488 0.243 264.376)"
             strokeWidth={2}
-            dot={{ fill: "#818cf8", r: 4 }}
+            dot={{
+              fill: "oklch(0.488 0.243 264.376)",
+              r: 4,
+              strokeWidth: 0,
+            }}
             activeDot={{ r: 6 }}
           />
         </LineChart>

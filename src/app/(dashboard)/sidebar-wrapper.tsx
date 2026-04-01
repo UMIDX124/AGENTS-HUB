@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { SessionProvider } from "next-auth/react";
 import { Sidebar } from "@/components/sidebar";
-import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
 import type { RoleName } from "@/types";
 
 interface SidebarWrapperProps {
@@ -18,41 +20,31 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
     <SessionProvider>
       <div className="flex min-h-screen">
         {/* Mobile hamburger */}
-        <button
+        <Button
+          variant="outline"
+          size="icon"
           onClick={() => setOpen(true)}
           aria-label="Open navigation menu"
-          className="fixed left-3 top-3.5 z-50 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-[#04050b]/90 text-white/60 backdrop-blur-sm lg:hidden"
+          className="fixed left-3 top-3.5 z-50 lg:hidden"
         >
-          <Menu className="h-4 w-4" />
-        </button>
+          <Menu className="size-4" />
+        </Button>
 
-        {/* Mobile overlay */}
-        {open && (
-          <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
-            onClick={() => setOpen(false)}
-          />
-        )}
+        {/* Mobile sidebar sheet */}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetContent side="left" className="w-[260px] p-0 border-r border-border bg-sidebar">
+            <SheetTitle className="sr-only">Navigation</SheetTitle>
+            <Sidebar user={user} onNavigate={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
 
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 z-50 w-[240px] h-screen overflow-hidden transform transition-transform duration-300 ease-in-out ${
-            open ? "translate-x-0" : "-translate-x-full"
-          } lg:translate-x-0`}
-        >
-          <Sidebar user={user} onNavigate={() => setOpen(false)} />
-          {open && (
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute right-2 top-4 flex h-7 w-7 items-center justify-center rounded-lg text-white/30 hover:text-white/60 lg:hidden"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+        {/* Desktop sidebar */}
+        <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-[260px]">
+          <Sidebar user={user} />
         </div>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 lg:ml-[240px]">{children}</main>
+        <main className="flex-1 min-w-0 lg:ml-[260px]">{children}</main>
       </div>
     </SessionProvider>
   );

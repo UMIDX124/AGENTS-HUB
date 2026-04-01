@@ -1,5 +1,5 @@
 // AI Provider configuration
-export type AIProvider = "github" | "openrouter" | "claude";
+export type AIProvider = "gemini" | "github" | "openrouter" | "claude";
 
 export const AI_PROVIDERS: Record<AIProvider, {
   name: string;
@@ -7,6 +7,12 @@ export const AI_PROVIDERS: Record<AIProvider, {
   color: string;
   badge: string;
 }> = {
+  gemini: {
+    name: "Gemini",
+    models: ["gemini-2.5-flash", "gemini-3.1-flash-lite", "gemini-3-flash"],
+    color: "#4285f4",
+    badge: "FREE",
+  },
   github: {
     name: "GitHub Models",
     models: ["openai/gpt-4o", "deepseek/DeepSeek-V3-0324", "meta/Llama-4-Scout-17B-16E-Instruct"],
@@ -20,22 +26,21 @@ export const AI_PROVIDERS: Record<AIProvider, {
     badge: "FREE",
   },
   claude: {
-    name: "Claude (Anthropic)",
+    name: "Claude",
     models: ["claude-sonnet-4-20250514"],
     color: "#fbbf24",
-    badge: "PREMIUM",
+    badge: "PAID",
   },
 };
 
-// ALL providers fallback order
-const FALLBACK_ORDER: AIProvider[] = ["github", "openrouter"];
+// Auto-fallback order
+const FALLBACK_ORDER: AIProvider[] = ["gemini", "github", "openrouter"];
 
 export async function callAI(
   provider: AIProvider,
   systemPrompt: string,
   userMessage: string
 ): Promise<string> {
-  // Claude is direct — no fallback
   if (provider === "claude") {
     return callClaude(systemPrompt, userMessage);
   }
@@ -53,12 +58,12 @@ export async function callAI(
         console.log(`[AI] Falling back to ${fallback}...`);
         return await callProvider(fallback, systemPrompt, userMessage);
       } catch (err: any) {
-        console.warn(`[AI] Fallback ${fallback} also failed: ${err.message}`);
+        console.warn(`[AI] Fallback ${fallback} failed: ${err.message}`);
         continue;
       }
     }
 
-    throw new Error(`All providers failed. Try again in 1 minute.`);
+    throw new Error("All providers failed. Try again in 1 minute.");
   }
 }
 
@@ -68,10 +73,9 @@ async function callProvider(provider: AIProvider, system: string, user: string):
 
   for (const model of config.models) {
     try {
-      const text = provider === "github"
-        ? await callGitHub(model, system, user)
-        : await callOpenRouter(model, system, user);
-      if (text) return text;
+      if (provider === "gemini") return await callGemini(model, system, user);
+      if (provider === "github") return await callGitHub(model, system, user);
+      return await callOpenRouter(model, system, user);
     } catch (err: any) {
       lastError = err.message;
       continue;
@@ -81,7 +85,29 @@ async function callProvider(provider: AIProvider, system: string, user: string):
   throw new Error(`All ${config.name} models failed: ${lastError}`);
 }
 
-const NO_CHAT_SUFFIX = "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases like 'let me know' or 'hope this helps'.";
+const NO_CHAT = "\n\nIMPORTANT: Output ONLY the requested content. No conversational phrases.";
+
+async function callGemini(model: string, system: string, user: string): Promise<string> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY not set");
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system + NO_CHAT }] },
+        contents: [{ parts: [{ text: user }] }],
+        generationConfig: { maxOutputTokens: 4096, temperature: 0.7 },
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error(`Gemini ${model}: ${res.status}`);
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
 
 async function callGitHub(model: string, system: string, user: string): Promise<string> {
   const token = process.env.GITHUB_MODELS_TOKEN;
@@ -97,7 +123,7 @@ async function callGitHub(model: string, system: string, user: string): Promise<
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: system + NO_CHAT_SUFFIX },
+        { role: "system", content: system + NO_CHAT },
         { role: "user", content: user },
       ],
       max_tokens: 4096,
@@ -125,7 +151,7 @@ async function callOpenRouter(model: string, system: string, user: string): Prom
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: system + NO_CHAT_SUFFIX },
+        { role: "system", content: system + NO_CHAT },
         { role: "user", content: user },
       ],
       max_tokens: 4096,
@@ -140,7 +166,7 @@ async function callOpenRouter(model: string, system: string, user: string): Prom
 
 async function callClaude(system: string, user: string): Promise<string> {
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error("ANTHROPIC_API_KEY not set");
+  if (!key) throw new Error("ANTHROPIC_API_KEY not set — add credits at console.anthropic.com");
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -152,7 +178,7 @@ async function callClaude(system: string, user: string): Promise<string> {
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4096,
-      system: system + NO_CHAT_SUFFIX,
+      system: system + NO_CHAT,
       messages: [{ role: "user", content: user }],
     }),
   });

@@ -8,133 +8,216 @@ import { AutoScheduler } from "@/components/auto-scheduler";
 import { ScoreRing } from "@/components/score-ring";
 import { getGrade, formatDate } from "@/lib/utils";
 import { AGENTS } from "@/lib/agents";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import type { RoleName, AgentTypeName } from "@/types";
-import { BarChart3, FolderOpen, ListTodo, Zap, TrendingUp, ArrowUpRight } from "lucide-react";
+import {
+  BarChart3,
+  FolderOpen,
+  ListTodo,
+  Zap,
+  TrendingUp,
+  ArrowUpRight,
+} from "lucide-react";
 
 interface DashboardClientProps {
   user: { name: string; role: RoleName };
-  stats: { totalAudits: number; avgScore: number; projects: number; pendingTasks: number };
+  stats: {
+    totalAudits: number;
+    avgScore: number;
+    projects: number;
+    pendingTasks: number;
+  };
   recentAudits: {
-    id: string; url: string; agent: string; score: number; grade: string;
-    createdAt: string; userName: string; projectName: string | null;
+    id: string;
+    url: string;
+    agent: string;
+    score: number;
+    grade: string;
+    createdAt: string;
+    userName: string;
+    projectName: string | null;
   }[];
   chartData: { date: string; score: number; agent?: string }[];
 }
 
 function getStatConfig(stats: DashboardClientProps["stats"]) {
   return [
-    { key: "totalAudits",  label: "Total Audits",     icon: BarChart3,   color: "#818cf8", grad: "from-indigo-500/20 to-indigo-500/0",  trend: stats.totalAudits > 0 ? `${stats.totalAudits} total` : "Run first audit", href: "/reports" },
-    { key: "avgScore",     label: "Avg SEO Score",     icon: TrendingUp,  color: "#34d399", grad: "from-emerald-500/20 to-emerald-500/0", trend: stats.avgScore > 0 ? `${stats.avgScore}/100` : "No data yet", href: "/audit" },
-    { key: "projects",     label: "Active Projects",   icon: FolderOpen,  color: "#a78bfa", grad: "from-purple-500/20 to-purple-500/0",  trend: stats.projects > 0 ? "Active" : "Add one", href: "/projects" },
-    { key: "pendingTasks", label: "Pending Tasks",     icon: ListTodo,    color: "#fbbf24", grad: "from-amber-500/20 to-amber-500/0",   trend: stats.pendingTasks > 0 ? `${stats.pendingTasks} due` : "All clear", href: "/tasks" },
+    {
+      key: "totalAudits",
+      label: "Total Audits",
+      icon: BarChart3,
+      color: "#818cf8",
+      trend: stats.totalAudits > 0 ? `${stats.totalAudits} total` : "Run first audit",
+      href: "/reports",
+    },
+    {
+      key: "avgScore",
+      label: "Avg SEO Score",
+      icon: TrendingUp,
+      color: "#34d399",
+      trend: stats.avgScore > 0 ? `${stats.avgScore}/100` : "No data yet",
+      href: "/audit",
+    },
+    {
+      key: "projects",
+      label: "Active Projects",
+      icon: FolderOpen,
+      color: "#a78bfa",
+      trend: stats.projects > 0 ? "Active" : "Add one",
+      href: "/projects",
+    },
+    {
+      key: "pendingTasks",
+      label: "Pending Tasks",
+      icon: ListTodo,
+      color: "#fbbf24",
+      trend: stats.pendingTasks > 0 ? `${stats.pendingTasks} due` : "All clear",
+      href: "/tasks",
+    },
   ];
 }
 
-export function DashboardClient({ user, stats, recentAudits, chartData }: DashboardClientProps) {
+const agentAccentColors: Record<string, string> = {
+  ONPAGE: "#818cf8",
+  TECHNICAL: "#22d3ee",
+  OFFSITE: "#a78bfa",
+  CONTENT: "#34d399",
+  COMPETITOR: "#fbbf24",
+};
+
+export function DashboardClient({
+  user,
+  stats,
+  recentAudits,
+  chartData,
+}: DashboardClientProps) {
   const showFullDashboard = user.role === "OWNER" || user.role === "MANAGER";
 
   return (
     <div className="min-h-screen">
       <Topbar user={user} title="Dashboard" />
 
-      <div className="p-4 sm:p-6 space-y-5 sm:space-y-8">
-
-        {/* ── Stats grid ── */}
+      <div className="p-4 sm:p-6 space-y-6">
+        {/* Stats grid */}
         {showFullDashboard && (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {getStatConfig(stats).map(({ key, label, icon: Icon, color, grad, trend, href }) => (
-              <Link
-                key={key}
-                href={href}
-                className="card-hover relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-5 cursor-pointer transition-all hover:border-white/[0.15] hover:bg-white/[0.04]"
-              >
-                {/* Gradient blob */}
-                <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${grad} blur-2xl`} />
-
-                <div className="relative">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="rounded-xl p-2.5" style={{ backgroundColor: `${color}18` }}>
-                      <Icon className="h-5 w-5" style={{ color }} />
-                    </div>
-                    <span className="flex items-center gap-1 text-xs font-medium text-white/30">
-                      <ArrowUpRight className="h-3 w-3" />
-                      {trend}
-                    </span>
-                  </div>
-                  <p className="text-xl sm:text-3xl font-bold tracking-tight text-white">
-                    {stats[key as keyof typeof stats]}
-                  </p>
-                  <p className="mt-1 text-xs font-medium text-white/40">{label}</p>
-                </div>
-              </Link>
-            ))}
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {getStatConfig(stats).map(
+              ({ key, label, icon: Icon, color, trend, href }) => (
+                <Link key={key} href={href}>
+                  <Card className="card-hover relative overflow-hidden transition-colors hover:bg-accent/30">
+                    {/* Gradient accent blob */}
+                    <div
+                      className="absolute -right-6 -top-6 size-24 rounded-full blur-2xl opacity-20"
+                      style={{ backgroundColor: color }}
+                    />
+                    <CardContent className="relative p-4 sm:p-5">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div
+                          className="rounded-lg p-2"
+                          style={{ backgroundColor: `${color}15` }}
+                        >
+                          <Icon className="size-4" style={{ color }} />
+                        </div>
+                        <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
+                          <ArrowUpRight className="size-3" />
+                          {trend}
+                        </span>
+                      </div>
+                      <p className="text-2xl font-bold tracking-tight text-foreground tabular-nums">
+                        {stats[key as keyof typeof stats]}
+                      </p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {label}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              )
+            )}
           </div>
         )}
 
-        {/* ── Chart + Quick Launch ── */}
-        <div className={showFullDashboard && chartData.length > 0 ? "grid gap-6 lg:grid-cols-3" : ""}>
-
+        {/* Chart + Quick Launch */}
+        <div
+          className={
+            showFullDashboard && chartData.length > 0
+              ? "grid gap-4 lg:grid-cols-3"
+              : ""
+          }
+        >
           {/* Chart */}
           {showFullDashboard && chartData.length > 0 && (
-            <div className="lg:col-span-2 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
-              <div className="mb-4 flex items-center justify-between">
+            <Card className="lg:col-span-2">
+              <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
                 <div>
-                  <h3 className="text-sm font-semibold text-white">Score Trends</h3>
-                  <p className="text-xs text-white/30 mt-0.5">Audit performance over time</p>
+                  <CardTitle className="text-sm">Score Trends</CardTitle>
+                  <CardDescription>
+                    Audit performance over time
+                  </CardDescription>
                 </div>
-                <span className="rounded-lg border border-indigo-500/25 bg-indigo-500/10 px-2.5 py-1 text-xs font-medium text-indigo-400">
+                <Badge variant="secondary">
                   Last {chartData.length} audits
-                </span>
-              </div>
-              <AuditHistoryChart data={chartData} />
-            </div>
+                </Badge>
+              </CardHeader>
+              <CardContent>
+                <AuditHistoryChart data={chartData} />
+              </CardContent>
+            </Card>
           )}
 
           {/* Quick launch agents */}
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold text-white">Quick Launch</h3>
-              <p className="text-xs text-white/30 mt-0.5">Run an AI agent instantly</p>
-            </div>
-            <div className="space-y-2">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">Quick Launch</CardTitle>
+              <CardDescription>Run an AI agent instantly</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-1.5">
               {(Object.keys(AGENTS) as AgentTypeName[]).map((key) => {
                 const agent = AGENTS[key];
-                const colors: Record<string, string> = {
-                  ONPAGE: "#818cf8", TECHNICAL: "#22d3ee", OFFSITE: "#a78bfa",
-                  CONTENT: "#34d399", COMPETITOR: "#fbbf24",
-                };
-                const color = colors[key];
+                const color = agentAccentColors[key];
                 return (
                   <Link
                     key={key}
                     href={`/audit?agent=${key}`}
-                    className="flex items-center gap-3 rounded-xl border border-white/[0.05] bg-white/[0.02] px-3 py-2.5 transition-all hover:border-white/[0.1] hover:bg-white/[0.04] group"
+                    className="flex items-center gap-3 rounded-md border border-border/50 bg-muted/20 px-3 py-2.5 transition-all hover:border-border hover:bg-accent/50 group"
                   >
-                    <span className="text-xl">{agent.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-white/80 group-hover:text-white transition-colors">
-                        {agent.name}
-                      </p>
-                    </div>
-                    <Zap className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" style={{ color }} />
+                    <span className="text-lg">{agent.icon}</span>
+                    <span className="flex-1 text-xs font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
+                      {agent.name}
+                    </span>
+                    <Zap
+                      className="size-3.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ color }}
+                    />
                   </Link>
                 );
               })}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* ── 24/7 Auto-Scheduler ── */}
+        {/* 24/7 Auto-Scheduler */}
         {showFullDashboard && <AutoScheduler />}
 
-        {/* ── Agent cards ── */}
+        {/* Agent cards (non-owner/manager) */}
         {!showFullDashboard && (
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-white">AI Agents</h3>
-              <Link href="/audit" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
-                Run audit →
-              </Link>
+              <h3 className="text-sm font-semibold text-foreground">
+                AI Agents
+              </h3>
+              <Button variant="link" asChild className="h-auto p-0 text-xs">
+                <Link href="/audit">Run audit &rarr;</Link>
+              </Button>
             </div>
             <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
               {(Object.keys(AGENTS) as AgentTypeName[]).map((key) => (
@@ -146,63 +229,74 @@ export function DashboardClient({ user, stats, recentAudits, chartData }: Dashbo
           </div>
         )}
 
-        {/* ── Recent audits ── */}
+        {/* Recent audits */}
         {recentAudits.length > 0 && (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.05]">
+          <Card>
+            <CardHeader className="flex-row items-center justify-between space-y-0">
               <div>
-                <h3 className="text-sm font-semibold text-white">Recent Audits</h3>
-                <p className="text-xs text-white/30 mt-0.5">{recentAudits.length} total</p>
+                <CardTitle className="text-sm">Recent Audits</CardTitle>
+                <CardDescription>{recentAudits.length} total</CardDescription>
               </div>
-              <Link href="/reports" className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
-                View all →
-              </Link>
-            </div>
-
-            <div className="divide-y divide-white/[0.04]">
-              {recentAudits.slice(0, 6).map((audit) => (
-                <Link
-                  key={audit.id}
-                  href={`/audit/${audit.id}`}
-                  className="flex items-center gap-4 px-5 py-3.5 transition-all hover:bg-white/[0.02] group"
-                >
-                  <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-white/[0.04] text-xl">
-                    {AGENTS[audit.agent as AgentTypeName]?.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm font-medium text-white/80 group-hover:text-white transition-colors">
-                      {audit.url}
-                    </p>
-                    <p className="text-xs text-white/30 mt-0.5">
-                      {AGENTS[audit.agent as AgentTypeName]?.name}
-                      {audit.projectName && <> · <span className="text-indigo-400/60">{audit.projectName}</span></>}
-                      <> · {formatDate(audit.createdAt)}</>
-                    </p>
-                  </div>
-                  <ScoreRing score={audit.score} grade={audit.grade} size={44} />
-                </Link>
-              ))}
-            </div>
-          </div>
+              <Button variant="link" asChild className="h-auto p-0 text-xs">
+                <Link href="/reports">View all &rarr;</Link>
+              </Button>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="divide-y divide-border">
+                {recentAudits.slice(0, 6).map((audit) => (
+                  <Link
+                    key={audit.id}
+                    href={`/audit/${audit.id}`}
+                    className="flex items-center gap-4 px-5 py-3 transition-colors hover:bg-accent/30 group"
+                  >
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-lg">
+                      {AGENTS[audit.agent as AgentTypeName]?.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+                        {audit.url}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        {AGENTS[audit.agent as AgentTypeName]?.name}
+                        {audit.projectName && (
+                          <>
+                            {" "}
+                            &middot;{" "}
+                            <span className="text-primary/60">
+                              {audit.projectName}
+                            </span>
+                          </>
+                        )}
+                        {" "}&middot; {formatDate(audit.createdAt)}
+                      </p>
+                    </div>
+                    <ScoreRing score={audit.score} grade={audit.grade} size={44} />
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Empty state */}
         {recentAudits.length === 0 && (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] py-16 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <Zap className="h-8 w-8 text-indigo-400" />
-            </div>
-            <h3 className="text-base font-semibold text-white">No audits yet</h3>
-            <p className="mt-1 text-sm text-white/30">Run your first AI audit to get started</p>
-            <Link
-              href="/audit"
-              className="mt-5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110"
-            >
-              Launch Audit
-            </Link>
-          </div>
+          <Card className="border-dashed">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
+              <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+                <Zap className="size-8 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground">
+                No audits yet
+              </h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Run your first AI audit to get started
+              </p>
+              <Button asChild className="mt-5">
+                <Link href="/audit">Launch Audit</Link>
+              </Button>
+            </CardContent>
+          </Card>
         )}
-
       </div>
     </div>
   );

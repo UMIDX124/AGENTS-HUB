@@ -1,5 +1,6 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 interface Highlight {
@@ -13,30 +14,45 @@ interface HealthGridProps {
 }
 
 const statusConfig = {
-  pass: { icon: CheckCircle, color: "#34d399", bg: "rgba(52,211,153,0.1)" },
-  warn: { icon: AlertTriangle, color: "#fbbf24", bg: "rgba(251,191,36,0.1)" },
-  fail: { icon: XCircle, color: "#f87171", bg: "rgba(248,113,113,0.1)" },
+  pass: {
+    icon: CheckCircle,
+    color: "#34d399",
+    bgClass: "bg-emerald-500/10",
+  },
+  warn: {
+    icon: AlertTriangle,
+    color: "#fbbf24",
+    bgClass: "bg-amber-500/10",
+  },
+  fail: {
+    icon: XCircle,
+    color: "#f87171",
+    bgClass: "bg-red-500/10",
+  },
 };
 
 export function HealthGrid({ highlights }: HealthGridProps) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {highlights.map((h, i) => {
         const config = statusConfig[h.status];
         const Icon = config.icon;
         return (
-          <div
-            key={i}
-            className="flex items-start gap-3 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.02)] p-4"
-          >
-            <div className="rounded-lg p-2" style={{ backgroundColor: config.bg }}>
-              <Icon className="h-4 w-4" style={{ color: config.color }} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium">{h.metric}</p>
-              <p className="mt-0.5 truncate text-xs text-[#94a3b8]">{h.value}</p>
-            </div>
-          </div>
+          <Card key={i} className="transition-colors hover:bg-accent/20">
+            <CardContent className="flex items-start gap-3 p-4">
+              <div className={`rounded-lg p-2 ${config.bgClass}`}>
+                <Icon className="size-4" style={{ color: config.color }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">
+                  {h.metric}
+                </p>
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                  {h.value}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         );
       })}
     </div>
