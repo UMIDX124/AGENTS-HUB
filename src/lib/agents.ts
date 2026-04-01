@@ -45,9 +45,9 @@ export const AGENTS: Record<AgentTypeName, AgentConfig> = {
 
 // 3 FREE models — auto-fallback chain
 const FREE_MODELS = [
-  "nvidia/nvidia-nemotron-3-super",
-  "qwen/qwen-3.6-plus-preview",
-  "openai/gpt-oss-120b",
+  "nvidia/nemotron-3-super:free",
+  "qwen/qwen-3.6-plus-preview:free",
+  "openai/gpt-oss-120b:free",
 ];
 
 function getSystemPrompt(agent: AgentTypeName, url: string): string {

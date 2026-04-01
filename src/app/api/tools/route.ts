@@ -1,121 +1,178 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-const FREE_MODELS = [
-  "nvidia/nvidia-nemotron-3-super",
-  "qwen/qwen-3.6-plus-preview",
-  "openai/gpt-oss-120b",
+const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+
+const MODELS_FALLBACK_CHAIN = [
+  "nvidia/nemotron-3-super:free",
+  "qwen/qwen-3.6-plus-preview:free",
+  "openai/gpt-oss-120b:free",
 ];
 
-const TOOL_PROMPTS: Record<string, (url: string, context?: string) => string> = {
-  "meta-tags": (url) => `You are an SEO expert. Generate perfect meta tags for the website: ${url}
+const VALID_TOOLS = [
+  "meta-tags",
+  "schema-markup",
+  "content-writer",
+  "robots-txt",
+  "headlines",
+  "sitemap-fix",
+] as const;
 
-Generate the following HTML code ready to paste into the <head> section:
-1. <title> tag (50-60 chars, include primary keyword)
-2. <meta name="description"> (150-160 chars, compelling CTA)
-3. Open Graph tags (og:title, og:description, og:type, og:url, og:image placeholder)
-4. Twitter Card tags
-5. Canonical URL tag
-6. Viewport and charset tags
+type ToolName = (typeof VALID_TOOLS)[number];
 
-Output ONLY the HTML code, no explanations. Make it professional and optimized for CTR.`,
+const TOOL_SYSTEM_PROMPTS: Record<ToolName, string> = {
+  "meta-tags": `You are an expert SEO specialist. Given a website URL, generate production-ready HTML meta tags.
 
-  "schema-markup": (url) => `You are a structured data expert. Generate JSON-LD schema markup for: ${url}
+Output the following as valid HTML code ready to paste into the <head> section:
+- <title> tag (50-60 characters, includes primary keyword)
+- <meta name="description"> (150-160 characters, compelling with CTA)
+- Open Graph tags: og:title, og:description, og:type, og:url, og:image (use a placeholder URL for image)
+- Twitter Card tags: twitter:card, twitter:title, twitter:description, twitter:image
+- Canonical URL tag
+- <meta name="robots" content="index, follow">
 
-Generate multiple schema types that are appropriate:
-1. Organization schema (name, url, logo, social profiles)
-2. WebSite schema (with SearchAction)
-3. WebPage schema for the homepage
-4. BreadcrumbList schema
-5. If it looks like a business: LocalBusiness schema
+Output ONLY the HTML code block. No explanations before or after the code.`,
 
-Output ONLY the <script type="application/ld+json"> blocks, ready to paste into HTML. Use realistic data based on the URL.`,
+  "schema-markup": `You are a structured data expert. Given a website URL, generate comprehensive JSON-LD structured data.
 
-  "content-writer": (url, context) => `You are a senior SEO content writer. Write an SEO-optimized article for: ${url}
-${context ? `Target keyword/topic: ${context}` : "Write about the main topic of this website."}
+Output multiple <script type="application/ld+json"> blocks for:
+1. Organization schema (name, url, logo, sameAs for social profiles)
+2. WebPage schema (name, description, url, isPartOf)
+3. BreadcrumbList schema (with logical breadcrumb items based on the URL path)
+4. FAQPage schema (generate 3-5 relevant FAQs based on the website niche)
 
-Write a complete article with:
-1. SEO-optimized H1 title (include keyword naturally)
-2. Meta description suggestion
-3. Table of contents
-4. 800-1200 word article with H2/H3 subheadings
-5. Internal linking suggestions
-6. FAQ section (3-5 questions)
-7. Call-to-action conclusion
+Each schema block must be valid JSON-LD that passes Google's Rich Results Test.
+Output ONLY the HTML script blocks. No explanations before or after the code.`,
 
-Format in clean Markdown. Make it engaging, informative, and naturally keyword-rich. E-E-A-T compliant.`,
+  "content-writer": `You are a senior SEO content writer. Given a website URL and optional context, write a fully optimized blog post.
 
-  "robots-txt": (url) => `You are a technical SEO expert. Generate an optimized robots.txt file for: ${url}
+Requirements:
+- H1 title with primary keyword (60-70 characters)
+- Meta description suggestion (150-160 characters)
+- 800-1200 word article with proper heading hierarchy (H2, H3)
+- Natural keyword placement (1-2% density)
+- Internal linking suggestions marked as [INTERNAL LINK: anchor text -> /suggested-path]
+- External authority link suggestions marked as [EXTERNAL LINK: anchor text -> domain]
+- Include a compelling introduction with hook
+- Add a clear conclusion with CTA
+- Use short paragraphs (2-3 sentences max)
+- Include bullet points or numbered lists where appropriate
 
-Include:
-1. User-agent directives (for all bots + specific ones like Googlebot)
-2. Disallow rules for admin, private, duplicate content paths
-3. Allow rules for important content
-4. Crawl-delay if appropriate
-5. Sitemap reference
-6. Clean comments explaining each section
+Output the content in clean Markdown format.`,
 
-Output ONLY the robots.txt content, ready to save as a file.`,
+  "robots-txt": `You are a technical SEO expert specializing in crawl optimization. Given a website URL, generate an optimal robots.txt file.
 
-  "headlines": (url, context) => `You are a headline copywriting expert. Generate 10 SEO-optimized headlines for: ${url}
-${context ? `Target keyword: ${context}` : "Based on the website's niche."}
+Requirements:
+- Separate rules for major bots (Googlebot, Bingbot, general User-agent: *)
+- Block common non-public paths (/admin, /api, /private, /tmp, /cgi-bin)
+- Block duplicate content paths and URL parameters
+- Allow critical resources (CSS, JS, images) for rendering
+- Include Sitemap directive pointing to /sitemap.xml
+- Add crawl-delay for non-Google bots
+- Add comments explaining each section
 
-For each headline provide:
-- The headline text (power words, numbers, emotion)
-- Target keyword placement
-- Estimated search intent match (informational/transactional/navigational)
-- Suggested use (blog post / landing page / ad / email subject)
+Output ONLY the robots.txt content. No explanations before or after the code.`,
 
-Make headlines clickable, honest, and optimized for both search engines and humans. Format as a numbered list.`,
+  headlines: `You are a headline optimization specialist with deep SEO and copywriting expertise. Given a website URL, generate 10 keyword-optimized headlines.
 
-  "sitemap-fix": (url) => `You are a technical SEO expert. Generate an optimized sitemap.xml for: ${url}
+Requirements for each headline:
+- Include a primary keyword naturally
+- 50-65 characters in length
+- Use power words that drive clicks (Ultimate, Essential, Proven, etc.)
+- Mix headline types: How-to, Listicle, Question, Statement, Comparison
+- Include numbers where appropriate
+- Optimize for both search engines and human readers
 
-Generate:
-1. A proper XML sitemap structure
-2. Include common pages (home, about, contact, services, blog, etc.)
-3. Set appropriate <priority> values
-4. Set appropriate <changefreq> values
-5. Include <lastmod> dates
-6. Add comments explaining the structure
+Output format (numbered list):
+1. [Headline] - Type: [type] | Characters: [count] | Target keyword: [keyword]
 
-Also provide:
-- Instructions on where to place the sitemap
-- How to submit it to Google Search Console
-- Common sitemap mistakes to avoid
+Output ONLY the numbered list. No explanations before or after.`,
 
-Output the complete sitemap.xml code first, then the instructions.`,
+  "sitemap-fix": `You are a technical SEO expert specializing in XML sitemaps. Given a website URL, generate sitemap.xml recommendations and a template.
+
+Provide:
+1. A valid XML sitemap template with proper namespace declarations
+2. Priority values based on page importance (homepage 1.0, main pages 0.8, blog posts 0.6, etc.)
+3. Recommended changefreq values per page type
+4. A sitemap index file template if the site likely needs multiple sitemaps
+5. Common sitemap issues to check (broken URLs, non-canonical URLs, blocked-by-robots pages)
+6. Image sitemap extension example if applicable
+
+Output valid XML code blocks with comments explaining the structure.`,
 };
 
-async function callOpenRouter(model: string, prompt: string, userMessage: string): Promise<string> {
+function buildUserPrompt(
+  tool: ToolName,
+  url: string,
+  context?: string
+): string {
+  const base = `Website URL: ${url}`;
+  if (context) {
+    return `${base}\n\nAdditional context: ${context}`;
+  }
+  return base;
+}
+
+async function callOpenRouter(
+  systemPrompt: string,
+  userPrompt: string
+): Promise<string> {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error("OPENROUTER_API_KEY not configured");
-
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3011",
-      "X-Title": "SEO Agents Hub - Tools",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: prompt },
-        { role: "user", content: userMessage },
-      ],
-      max_tokens: 4096,
-      temperature: 0.7,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Model ${model} failed (${res.status}): ${err}`);
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured");
   }
 
-  const data = await res.json();
-  return data.choices?.[0]?.message?.content || "";
+  let lastError: Error | null = null;
+
+  for (const model of MODELS_FALLBACK_CHAIN) {
+    try {
+      const response = await fetch(OPENROUTER_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3000",
+          "X-Title": "SEO Agents Hub - Tools",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+          temperature: 0.7,
+          max_tokens: 4096,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(
+          `OpenRouter API error (${response.status}): ${errorBody}`
+        );
+      }
+
+      const data = await response.json();
+      const content = data?.choices?.[0]?.message?.content;
+
+      if (!content) {
+        throw new Error("Empty response from model");
+      }
+
+      return content;
+    } catch (error: any) {
+      lastError = error;
+      console.warn(
+        `Model ${model} failed, trying next fallback:`,
+        error.message
+      );
+      continue;
+    }
+  }
+
+  throw new Error(
+    `All models failed. Last error: ${lastError?.message || "Unknown error"}`
+  );
 }
 
 export async function POST(req: NextRequest) {
@@ -125,35 +182,53 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { tool, url, context } = await req.json();
+    const body = await req.json();
+    const { tool, url, context } = body as {
+      tool: string;
+      url: string;
+      context?: string;
+    };
 
     if (!tool || !url) {
-      return NextResponse.json({ error: "Tool and URL are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Both 'tool' and 'url' fields are required" },
+        { status: 400 }
+      );
     }
 
-    const promptFn = TOOL_PROMPTS[tool];
-    if (!promptFn) {
-      return NextResponse.json({ error: "Invalid tool" }, { status: 400 });
+    if (!VALID_TOOLS.includes(tool as ToolName)) {
+      return NextResponse.json(
+        {
+          error: `Invalid tool. Must be one of: ${VALID_TOOLS.join(", ")}`,
+        },
+        { status: 400 }
+      );
     }
 
-    const systemPrompt = promptFn(url, context);
-    const userMessage = `Generate the ${tool} output for ${url}. ${context ? `Additional context: ${context}` : ""} Be thorough and provide production-ready code.`;
-
-    let lastError = "";
-    for (const model of FREE_MODELS) {
-      try {
-        const result = await callOpenRouter(model, systemPrompt, userMessage);
-        if (result) {
-          return NextResponse.json({ result, tool, model });
-        }
-      } catch (err: any) {
-        lastError = err.message;
-        continue;
-      }
+    try {
+      new URL(url);
+    } catch {
+      return NextResponse.json(
+        {
+          error:
+            "Invalid URL format. Provide a full URL (e.g., https://example.com)",
+        },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ error: `All models failed: ${lastError}` }, { status: 500 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const toolName = tool as ToolName;
+    const systemPrompt = TOOL_SYSTEM_PROMPTS[toolName];
+    const userPrompt = buildUserPrompt(toolName, url, context);
+
+    const result = await callOpenRouter(systemPrompt, userPrompt);
+
+    return NextResponse.json({ result, tool: toolName });
+  } catch (error: any) {
+    console.error("SEO tools API error:", error);
+    return NextResponse.json(
+      { error: error.message || "Tool execution failed" },
+      { status: 500 }
+    );
   }
 }
