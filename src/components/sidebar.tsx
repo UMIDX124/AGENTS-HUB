@@ -9,7 +9,7 @@ import type { RoleName } from "@/types";
 import {
   LayoutDashboard, Search, Settings, FolderOpen, ListTodo,
   Users, FileText, Pin, LogOut, Cog, Link2, FileEdit, Target, Zap,
-  ChevronRight,
+  ChevronRight, Wrench,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -59,6 +59,7 @@ export function Sidebar({ user }: SidebarProps) {
   }));
 
   const managementItems = [
+    { href: "/tools",    icon: Wrench,      label: "SEO Tools" },
     { href: "/projects", icon: FolderOpen,  label: "Projects" },
     { href: "/tasks",    icon: ListTodo,    label: "Tasks" },
     ...(roleConfig.can.includes("manage_team")
