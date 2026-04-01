@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
+import { MarkdownView } from "@/components/markdown-view";
 import {
   Code2, Globe, Sparkles, Loader2, Copy, Check,
   Tag, Braces, PenTool, Bot, ListOrdered, MapPin,
@@ -232,9 +233,9 @@ export default function ToolsPage() {
                 {copied ? "Copied!" : "Copy All"}
               </button>
             </div>
-            <pre className="p-3 sm:p-5 text-[11px] sm:text-xs text-white/70 font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-[60vh] overflow-y-auto break-safe">
-              {result}
-            </pre>
+            <div className="p-3 sm:p-5 max-h-[60vh] overflow-y-auto">
+              <MarkdownView content={result} />
+            </div>
           </div>
         )}
 

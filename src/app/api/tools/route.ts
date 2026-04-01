@@ -332,7 +332,7 @@ async function callGitHubModels(
         body: JSON.stringify({
           model,
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + "\n\nIMPORTANT: Output ONLY the requested content. Do NOT add conversational phrases like 'Let me know if you need anything', 'Feel free to ask', 'I hope this helps', 'Here is the output', or any chatbot-style responses. Just deliver the content directly." },
             { role: "user", content: userPrompt },
           ],
           temperature: 0.7,
