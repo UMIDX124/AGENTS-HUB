@@ -125,7 +125,7 @@ export default function AuditPage() {
               <Globe className="h-4 w-4 text-indigo-400" />
               <span className="text-xs font-semibold uppercase tracking-wider text-white/30">Target Website</span>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <input
                 type="url"
                 placeholder="https://example.com"
@@ -137,10 +137,10 @@ export default function AuditPage() {
               <button
                 onClick={runAllAgents}
                 disabled={runningAll || !url}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap flex-shrink-0"
               >
                 {runningAll ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Running All...</>
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Running...</>
                 ) : (
                   <><Zap className="h-4 w-4" /> Run All 5 Agents</>
                 )}
