@@ -39,9 +39,10 @@ const agentGrads: Record<string, string> = {
 
 interface SidebarProps {
   user: { name: string; role: RoleName; image?: string | null };
+  onNavigate?: () => void;
 }
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, onNavigate }: SidebarProps) {
   const pathname = usePathname();
   const roleConfig = PERMISSIONS[user.role];
 
@@ -100,6 +101,7 @@ export function Sidebar({ user }: SidebarProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onNavigate}
                 className={cn(
                   "nav-item relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                   isActive

@@ -19,7 +19,7 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#04050b]/80 px-6 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#04050b]/80 pl-14 pr-4 lg:px-6 backdrop-blur-xl">
       <div>
         {subtitle ? (
           <>
