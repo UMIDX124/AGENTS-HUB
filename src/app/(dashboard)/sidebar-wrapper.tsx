@@ -20,6 +20,7 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
         {/* Mobile hamburger */}
         <button
           onClick={() => setOpen(true)}
+          aria-label="Open navigation menu"
           className="fixed left-3 top-3.5 z-50 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-[#04050b]/90 text-white/60 backdrop-blur-sm lg:hidden"
         >
           <Menu className="h-4 w-4" />

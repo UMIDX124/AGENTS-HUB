@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { MarkdownView } from "@/components/markdown-view";
+import { ErrorState } from "@/components/error-state";
 import {
   Code2, Globe, Sparkles, Loader2, Copy, Check,
   Tag, Braces, PenTool, Bot, ListOrdered, MapPin,
@@ -52,6 +53,7 @@ export default function ToolsPage() {
   const [context, setContext] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
+  const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -83,11 +85,14 @@ export default function ToolsPage() {
       const data = await res.json();
       if (res.ok) {
         setResult(data.result);
+        setError("");
       } else {
-        setResult(`Error: ${data.error || "Tool failed — try again"}`);
+        setError(data.error || "Tool failed — try again");
+        setResult("");
       }
     } catch {
-      setResult("Network error — check your connection and try again");
+      setError("Network error — check your connection and try again");
+      setResult("");
     } finally {
       setLoading(false);
     }
@@ -214,6 +219,11 @@ export default function ToolsPage() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Error with retry */}
+        {error && !loading && (
+          <ErrorState message={error} onRetry={runTool} />
         )}
 
         {/* Result area */}
