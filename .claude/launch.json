@@ -5,7 +5,7 @@
       "name": "seo-agents-hub",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "port": 3011
     }
   ]
 }
