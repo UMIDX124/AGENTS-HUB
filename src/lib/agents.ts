@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { type AgentTypeName, type AgentConfig, type AgentResult } from "@/types";
 
 export const AGENTS: Record<AgentTypeName, AgentConfig> = {
@@ -49,11 +49,11 @@ function getSystemPrompt(agent: AgentTypeName, url: string): string {
 
   const baseInstruction = `You are an expert SEO analyst performing a ${config.name} audit for the website: ${url}.
 
-Use your web_search tool to gather real data about this website. Search for the site, check its properties, find information about its SEO performance, backlinks, competitors, and any other relevant data.
+Analyze the website based on your knowledge and provide a comprehensive SEO audit. Consider what you know about common SEO patterns, best practices, and typical issues for websites.
 
 ${config.description}
 
-You MUST respond with valid JSON only. No markdown, no explanation, just the JSON object.
+You MUST respond with valid JSON only. No markdown, no explanation, no code fences, just the raw JSON object.
 
 The JSON must have this exact structure:
 {
@@ -78,7 +78,9 @@ The JSON must have this exact structure:
   "topics": [
     { "topic": "<topic>", "relevance": "<high|medium|low>", "coverage": "<good|partial|missing>" }
   ]
-}`
+}
+
+Provide at least 5 keywords and 5 topics. Make volume and difficulty realistic estimates.`
     );
   }
 
@@ -89,11 +91,13 @@ The JSON must have this exact structure:
   "competitors": [
     { "name": "<competitor name>", "url": "<competitor url>", "strength": "<description>", "threat": "<high|medium|low>" }
   ]
-}`
+}
+
+Identify 3-5 real competitors based on the website's niche.`
     );
   }
 
-  return baseInstruction + "\n}";
+  return baseInstruction + "\n}\n\nProvide at least 5 highlights and 8 findings with actionable recommendations.";
 }
 
 // Simple in-memory rate limiter
@@ -120,36 +124,39 @@ export async function runAgent(
     throw new Error("Rate limit exceeded. Max 10 requests per minute.");
   }
 
-  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY is not configured. Add it to your environment variables.");
+  }
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash",
+    generationConfig: {
+      temperature: 0.7,
+      maxOutputTokens: 4096,
+      responseMimeType: "application/json",
+    },
+  });
+
   const systemPrompt = getSystemPrompt(agentType, url);
 
   try {
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
-      system: systemPrompt,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-          max_uses: 5,
-        } as any,
-      ],
-      messages: [
+    const result = await model.generateContent({
+      systemInstruction: systemPrompt,
+      contents: [
         {
           role: "user",
-          content: `Perform a comprehensive ${AGENTS[agentType].name} audit for ${url}. Use web search to gather real data about this website, then provide your analysis as the specified JSON format.`,
+          parts: [
+            {
+              text: `Perform a comprehensive ${AGENTS[agentType].name} audit for ${url}. Provide detailed, actionable SEO analysis as JSON.`,
+            },
+          ],
         },
       ],
     });
 
-    // Extract text from response
-    let text = "";
-    for (const block of response.content) {
-      if (block.type === "text") {
-        text += block.text;
-      }
-    }
+    const text = result.response.text();
 
     // Try to parse JSON from the response
     const jsonMatch = text.match(/\{[\s\S]*\}/);
@@ -157,8 +164,8 @@ export async function runAgent(
       throw new Error("No JSON found in agent response");
     }
 
-    const result: AgentResult = JSON.parse(jsonMatch[0]);
-    return result;
+    const parsed: AgentResult = JSON.parse(jsonMatch[0]);
+    return parsed;
   } catch (error: any) {
     console.error(`Agent ${agentType} error:`, error);
     throw new Error(`Agent failed: ${error.message}`);

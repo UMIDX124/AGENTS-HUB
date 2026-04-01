@@ -35,8 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# SQLite database files
-*.db
+# SQLite database journal files (keep dev.db for Vercel bundling)
 *.db-journal
 *.db-shm
 *.db-wal
