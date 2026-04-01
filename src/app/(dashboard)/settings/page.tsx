@@ -3,12 +3,18 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
-import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, Mail } from "lucide-react";
+import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
   const user = session?.user as any;
 
+  // Profile edit
+  const [editName, setEditName] = useState(false);
+  const [newName, setNewName] = useState(user?.name || "");
+  const [nameStatus, setNameStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  // Password
   const [apiKeyStatus, setApiKeyStatus] = useState<"idle" | "checking" | "valid" | "invalid">("idle");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -17,6 +23,14 @@ export default function SettingsPage() {
   const [showNew, setShowNew] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwStatus, setPwStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  // Employee creation (OWNER only)
+  const [empName, setEmpName] = useState("");
+  const [empEmail, setEmpEmail] = useState("");
+  const [empPassword, setEmpPassword] = useState("");
+  const [empRole, setEmpRole] = useState("SPECIALIST");
+  const [empLoading, setEmpLoading] = useState(false);
+  const [empStatus, setEmpStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   function checkApiKey() {
     setApiKeyStatus("checking");
@@ -27,6 +41,22 @@ export default function SettingsPage() {
     }).then((res) => {
       setApiKeyStatus(res.status === 200 || res.status === 400 ? "valid" : "invalid");
     }).catch(() => setApiKeyStatus("invalid"));
+  }
+
+  async function saveName() {
+    setNameStatus(null);
+    const res = await fetch("/api/settings/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newName }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setNameStatus({ ok: true, msg: "Name updated! Refresh to see changes." });
+      setEditName(false);
+    } else {
+      setNameStatus({ ok: false, msg: data.error });
+    }
   }
 
   async function changePassword(e: React.FormEvent) {
@@ -51,9 +81,33 @@ export default function SettingsPage() {
         setPwStatus({ ok: false, msg: data.error || "Failed to update password" });
       }
     } catch {
-      setPwStatus({ ok: false, msg: "Network error — try again" });
+      setPwStatus({ ok: false, msg: "Network error" });
     } finally {
       setPwLoading(false);
+    }
+  }
+
+  async function createEmployee(e: React.FormEvent) {
+    e.preventDefault();
+    setEmpStatus(null);
+    setEmpLoading(true);
+    try {
+      const res = await fetch("/api/settings/employees", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: empName, email: empEmail, password: empPassword, role: empRole }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setEmpStatus({ ok: true, msg: `${data.user.name} (${data.user.role}) created!` });
+        setEmpName(""); setEmpEmail(""); setEmpPassword(""); setEmpRole("SPECIALIST");
+      } else {
+        setEmpStatus({ ok: false, msg: data.error });
+      }
+    } catch {
+      setEmpStatus({ ok: false, msg: "Network error" });
+    } finally {
+      setEmpLoading(false);
     }
   }
 
@@ -63,36 +117,115 @@ export default function SettingsPage() {
 
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 max-w-2xl">
 
-        {/* Profile info (read-only) */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
-          <div className="mb-4 flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
-              <User className="h-4 w-4 text-indigo-400" />
+        {/* Profile */}
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
+                <User className="h-4 w-4 text-indigo-400" />
+              </div>
+              <h2 className="text-sm font-semibold text-white">Profile</h2>
             </div>
-            <h2 className="text-sm font-semibold text-white">Profile</h2>
+            {!editName && (
+              <button onClick={() => { setEditName(true); setNewName(user?.name || ""); }}
+                className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300">
+                <Pencil className="h-3 w-3" /> Edit
+              </button>
+            )}
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Name</p>
-              <p className="text-sm font-medium text-white">{user?.name || "—"}</p>
+
+          {editName ? (
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1 block">Display Name</label>
+                <input value={newName} onChange={(e) => setNewName(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50" />
+              </div>
+              <div className="flex gap-2">
+                <button onClick={saveName}
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-semibold text-white">
+                  Save
+                </button>
+                <button onClick={() => setEditName(false)}
+                  className="flex items-center gap-1 rounded-xl border border-white/10 px-4 py-2 text-xs text-white/40 hover:text-white/60">
+                  <X className="h-3 w-3" /> Cancel
+                </button>
+              </div>
+              {nameStatus && (
+                <p className={`text-xs ${nameStatus.ok ? "text-emerald-400" : "text-red-400"}`}>{nameStatus.msg}</p>
+              )}
             </div>
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Email</p>
-              <p className="text-sm font-medium text-white">{user?.email || "—"}</p>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Name</p>
+                <p className="text-sm font-medium text-white">{user?.name || "—"}</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Email</p>
+                <p className="text-sm font-medium text-white truncate">{user?.email || "—"}</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Role</p>
+                <p className="text-sm font-medium text-white capitalize">{user?.role?.toLowerCase() || "—"}</p>
+              </div>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">User ID</p>
+                <p className="text-xs font-mono text-white/40 truncate">{user?.id || "—"}</p>
+              </div>
             </div>
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Role</p>
-              <p className="text-sm font-medium text-white capitalize">{user?.role?.toLowerCase() || "—"}</p>
-            </div>
-            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-              <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">User ID</p>
-              <p className="text-xs font-mono text-white/40 truncate">{user?.id || "—"}</p>
-            </div>
-          </div>
+          )}
         </div>
 
+        {/* Create Employee (OWNER only) */}
+        {user?.role === "OWNER" && (
+          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15">
+                <UserPlus className="h-4 w-4 text-emerald-400" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-white">Create New Employee</h2>
+                <p className="text-xs text-white/30">Add team members with login credentials</p>
+              </div>
+            </div>
+            <form onSubmit={createEmployee} className="space-y-3">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input placeholder="Full name" value={empName} onChange={(e) => setEmpName(e.target.value)} required
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                <input type="email" placeholder="Email address" value={empEmail} onChange={(e) => setEmpEmail(e.target.value)} required
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input type="password" placeholder="Password (min 6 chars)" value={empPassword} onChange={(e) => setEmpPassword(e.target.value)} required
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                <select value={empRole} onChange={(e) => setEmpRole(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-[#08090f] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
+                  <option value="SPECIALIST">SEO Specialist</option>
+                  <option value="MANAGER">Manager</option>
+                  <option value="OWNER">Owner</option>
+                  <option value="CLIENT">Client (view only)</option>
+                </select>
+              </div>
+
+              {empStatus && (
+                <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${empStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
+                  {empStatus.ok ? <CheckCircle2 className="h-4 w-4 flex-shrink-0" /> : <AlertCircle className="h-4 w-4 flex-shrink-0" />}
+                  {empStatus.msg}
+                </div>
+              )}
+
+              <button type="submit" disabled={empLoading}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition-all hover:brightness-110 disabled:opacity-60">
+                <UserPlus className="h-3.5 w-3.5" />
+                {empLoading ? "Creating..." : "Create Employee"}
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Change Password */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/15">
               <Lock className="h-4 w-4 text-purple-400" />
@@ -104,41 +237,26 @@ export default function SettingsPage() {
           </div>
           <form onSubmit={changePassword} className="space-y-3">
             <div className="relative">
-              <input
-                type={showCurrent ? "text" : "password"}
-                placeholder="Current password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
-              />
+              <input type={showCurrent ? "text" : "password"} placeholder="Current password" value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)} required
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
               <button type="button" onClick={() => setShowCurrent(!showCurrent)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             <div className="relative">
-              <input
-                type={showNew ? "text" : "password"}
-                placeholder="New password (min 6 chars)"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
-              />
+              <input type={showNew ? "text" : "password"} placeholder="New password (min 6 chars)" value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)} required
+                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
               <button type="button" onClick={() => setShowNew(!showNew)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            <input
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
-            />
+            <input type="password" placeholder="Confirm new password" value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)} required
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
 
             {pwStatus && (
               <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${pwStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
@@ -147,11 +265,8 @@ export default function SettingsPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={pwLoading}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
-            >
+            <button type="submit" disabled={pwLoading}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60">
               <Lock className="h-3.5 w-3.5" />
               {pwLoading ? "Updating..." : "Update Password"}
             </button>
@@ -159,7 +274,7 @@ export default function SettingsPage() {
         </div>
 
         {/* GitHub Models API */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15">
               <Key className="h-4 w-4 text-amber-400" />
@@ -169,7 +284,6 @@ export default function SettingsPage() {
               <p className="text-xs text-white/30">GPT-5, DeepSeek V3, Llama 4 — via GitHub PAT</p>
             </div>
           </div>
-
           <div className="mb-4 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
             <div className="flex items-center justify-between">
               <span className="text-xs text-white/40 font-mono">GITHUB_MODELS_TOKEN</span>
@@ -177,13 +291,9 @@ export default function SettingsPage() {
             </div>
             <p className="mt-1 text-sm text-white/50">github_pat_••••••••••••••••••••••</p>
           </div>
-
           <div className="flex items-center gap-3">
-            <button
-              onClick={checkApiKey}
-              disabled={apiKeyStatus === "checking"}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white disabled:opacity-50"
-            >
+            <button onClick={checkApiKey} disabled={apiKeyStatus === "checking"}
+              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white disabled:opacity-50">
               <Zap className="h-3.5 w-3.5" />
               {apiKeyStatus === "checking" ? "Checking..." : "Test Connection"}
             </button>
@@ -194,14 +304,14 @@ export default function SettingsPage() {
             )}
             {apiKeyStatus === "invalid" && (
               <span className="flex items-center gap-1.5 text-sm text-red-400">
-                <AlertCircle className="h-4 w-4" /> Key missing or invalid — update .env.local
+                <AlertCircle className="h-4 w-4" /> Key missing or invalid
               </span>
             )}
           </div>
         </div>
 
         {/* Security info */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15">
               <Shield className="h-4 w-4 text-emerald-400" />
@@ -214,7 +324,7 @@ export default function SettingsPage() {
               { label: "Password Hashing", value: "bcrypt (cost factor 12)", ok: true },
               { label: "Session Strategy", value: "JWT (encrypted)", ok: true },
               { label: "Database", value: "SQLite (Prisma ORM)", ok: true },
-            ].map(({ label, value, ok }) => (
+            ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
                 <span className="text-xs text-white/40">{label}</span>
                 <div className="flex items-center gap-1.5">

@@ -209,7 +209,7 @@ export default function ToolsPage() {
                   <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 animate-pulse" style={{ width: `${Math.min(95, elapsed * 3)}%`, transition: "width 1s ease" }} />
                 </div>
                 <p className="text-[11px] text-white/25">
-                  {elapsed < 5 ? "Connecting to AI model..." : elapsed < 15 ? "AI is analyzing your website..." : elapsed < 30 ? "Generating optimized code..." : "Almost done — finalizing output..."}
+                  {elapsed < 3 ? "Waking up GPT-5..." : elapsed < 8 ? "Crawling your website for real data..." : elapsed < 15 ? "Crunching SEO signals & patterns..." : elapsed < 25 ? "Crafting expert recommendations..." : "Polishing the final output..."}
                 </p>
               </div>
             )}
