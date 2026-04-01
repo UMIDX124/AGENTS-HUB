@@ -154,6 +154,28 @@ async function callGitHubModels(model: string, systemPrompt: string, userMessage
   return data.choices?.[0]?.message?.content || "";
 }
 
+async function scrapeWebsite(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "SEOAgentsHub/1.0 (SEO Audit Bot)" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return "";
+    const html = await res.text();
+    const strip = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+    const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i);
+    const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/gi);
+    const h2Match = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi);
+    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    let bodyText = "";
+    if (bodyMatch) {
+      bodyText = bodyMatch[1].replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().substring(0, 2000);
+    }
+    return `\n=== LIVE WEBSITE DATA ===\nTitle: ${titleMatch ? strip(titleMatch[1]) : "N/A"}\nMeta: ${metaDescMatch ? metaDescMatch[1] : "N/A"}\nH1: ${h1Match ? h1Match.map(strip).join(", ") : "N/A"}\nH2: ${h2Match ? h2Match.slice(0, 8).map(strip).join(", ") : "N/A"}\nContent: ${bodyText}\n=== END ===`;
+  } catch { return ""; }
+}
+
 export async function runAgent(
   agentType: AgentTypeName,
   url: string,
@@ -164,7 +186,8 @@ export async function runAgent(
   }
 
   const systemPrompt = getSystemPrompt(agentType, url);
-  const userMessage = `Perform a comprehensive ${AGENTS[agentType].name} audit for ${url}. Provide detailed, actionable SEO analysis as JSON.`;
+  const scraped = await scrapeWebsite(url);
+  const userMessage = `Perform a comprehensive ${AGENTS[agentType].name} audit for ${url}. ${scraped ? `\n\nHere is the REAL scraped data from the website — use this for accurate analysis:\n${scraped}\n\nBase your analysis on this REAL data, not assumptions.` : ""} Provide detailed, actionable SEO analysis as JSON.`;
 
   let lastError = "";
 

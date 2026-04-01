@@ -242,16 +242,71 @@ Generate:
 Format as a professional report template that can be filled in weekly. Include placeholder data.`,
 };
 
+async function scrapeWebsite(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "SEOAgentsHub/1.0 (SEO Audit Bot)" },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return `[Could not fetch: HTTP ${res.status}]`;
+    const html = await res.text();
+
+    // Extract useful text from HTML
+    const titleMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+    const metaDescMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i);
+    const h1Match = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/gi);
+    const h2Match = html.match(/<h2[^>]*>([\s\S]*?)<\/h2>/gi);
+
+    // Strip HTML tags helper
+    const strip = (s: string) => s.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+
+    // Get body text (strip scripts, styles, tags)
+    const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    let bodyText = "";
+    if (bodyMatch) {
+      bodyText = bodyMatch[1]
+        .replace(/<script[\s\S]*?<\/script>/gi, "")
+        .replace(/<style[\s\S]*?<\/style>/gi, "")
+        .replace(/<nav[\s\S]*?<\/nav>/gi, "")
+        .replace(/<footer[\s\S]*?<\/footer>/gi, "")
+        .replace(/<[^>]*>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .substring(0, 2000);
+    }
+
+    const title = titleMatch ? strip(titleMatch[1]) : "N/A";
+    const metaDesc = metaDescMatch ? metaDescMatch[1] : "N/A";
+    const headings1 = h1Match ? h1Match.map(strip).join(", ") : "N/A";
+    const headings2 = h2Match ? h2Match.slice(0, 8).map(strip).join(", ") : "N/A";
+
+    return `
+=== REAL WEBSITE DATA (scraped live) ===
+Title: ${title}
+Meta Description: ${metaDesc}
+H1 Headings: ${headings1}
+H2 Headings: ${headings2}
+Page Content (first 2000 chars): ${bodyText}
+=== END WEBSITE DATA ===`;
+  } catch (err: any) {
+    return `[Scrape failed: ${err.message}]`;
+  }
+}
+
 function buildUserPrompt(
   tool: ToolName,
   url: string,
-  context?: string
+  context?: string,
+  scrapedContent?: string
 ): string {
-  const base = `Website URL: ${url}`;
-  if (context) {
-    return `${base}\n\nAdditional context: ${context}`;
+  let prompt = `Website URL: ${url}`;
+  if (scrapedContent) {
+    prompt += `\n\n${scrapedContent}\n\nIMPORTANT: Use the REAL website data above to make your output highly specific and personalized. Do NOT generate generic content — reference actual services, products, and content from the website.`;
   }
-  return base;
+  if (context) {
+    prompt += `\n\nAdditional context from user: ${context}`;
+  }
+  return prompt;
 }
 
 async function callGitHubModels(
@@ -359,7 +414,10 @@ export async function POST(req: NextRequest) {
 
     const toolName = tool as ToolName;
     const systemPrompt = TOOL_SYSTEM_PROMPTS[toolName];
-    const userPrompt = buildUserPrompt(toolName, url, context);
+
+    // Scrape real website content first
+    const scrapedContent = await scrapeWebsite(url);
+    const userPrompt = buildUserPrompt(toolName, url, context, scrapedContent);
 
     const result = await callGitHubModels(systemPrompt, userPrompt);
 
