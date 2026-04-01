@@ -20,9 +20,9 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
         {/* Mobile hamburger */}
         <button
           onClick={() => setOpen(true)}
-          className="fixed left-3 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#04050b] text-white/60 lg:hidden"
+          className="fixed left-3 top-3.5 z-50 flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-[#04050b]/90 text-white/60 backdrop-blur-sm lg:hidden"
         >
-          <Menu className="h-5 w-5" />
+          <Menu className="h-4 w-4" />
         </button>
 
         {/* Mobile overlay */}
@@ -33,14 +33,17 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
           />
         )}
 
-        {/* Sidebar — hidden on mobile, slide-in when open */}
-        <div className={`fixed inset-y-0 left-0 z-50 transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"} lg:block`}>
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 z-50 w-[240px] transform transition-transform duration-300 ease-in-out ${
+            open ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0`}
+        >
           <Sidebar user={user} onNavigate={() => setOpen(false)} />
-          {/* Mobile close button */}
           {open && (
             <button
               onClick={() => setOpen(false)}
-              className="absolute right-2 top-3 flex h-8 w-8 items-center justify-center rounded-lg text-white/40 hover:text-white lg:hidden"
+              className="absolute right-2 top-4 flex h-7 w-7 items-center justify-center rounded-lg text-white/30 hover:text-white/60 lg:hidden"
             >
               <X className="h-4 w-4" />
             </button>
@@ -48,11 +51,7 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
         </div>
 
         {/* Main content */}
-        <main className="flex-1 min-w-0 lg:ml-[240px]">
-          {/* Mobile spacer for hamburger */}
-          <div className="h-0 lg:h-0" />
-          {children}
-        </main>
+        <main className="flex-1 min-w-0 lg:ml-[240px]">{children}</main>
       </div>
     </SessionProvider>
   );
