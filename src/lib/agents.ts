@@ -43,11 +43,11 @@ export const AGENTS: Record<AgentTypeName, AgentConfig> = {
   },
 };
 
-// 3 FREE models — auto-fallback chain
-const FREE_MODELS = [
-  "nvidia/nemotron-3-super:free",
-  "qwen/qwen-3.6-plus-preview:free",
-  "openai/gpt-oss-120b:free",
+// GitHub Models — FREE with GitHub PAT
+const GITHUB_MODELS = [
+  "openai/gpt-5",
+  "deepseek/DeepSeek-V3-0324",
+  "meta/Llama-4-Scout-17B-16E-Instruct",
 ];
 
 function getSystemPrompt(agent: AgentTypeName, url: string): string {
@@ -121,19 +121,18 @@ function checkRateLimit(userId: string): boolean {
   return true;
 }
 
-async function callOpenRouter(model: string, systemPrompt: string, userMessage: string): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is not configured.");
+async function callGitHubModels(model: string, systemPrompt: string, userMessage: string): Promise<string> {
+  const token = process.env.GITHUB_MODELS_TOKEN;
+  if (!token) {
+    throw new Error("GITHUB_MODELS_TOKEN is not configured.");
   }
 
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const res = await fetch("https://models.github.ai/inference/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${apiKey}`,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3011",
-      "X-Title": "SEO Agents Hub",
+      "X-GitHub-Api-Version": "2026-03-10",
     },
     body: JSON.stringify({
       model,
@@ -148,7 +147,7 @@ async function callOpenRouter(model: string, systemPrompt: string, userMessage: 
 
   if (!res.ok) {
     const errBody = await res.text();
-    throw new Error(`OpenRouter ${model} failed (${res.status}): ${errBody}`);
+    throw new Error(`GitHub Models ${model} failed (${res.status}): ${errBody}`);
   }
 
   const data = await res.json();
@@ -169,13 +168,11 @@ export async function runAgent(
 
   let lastError = "";
 
-  // Try each model in the fallback chain
-  for (const model of FREE_MODELS) {
+  for (const model of GITHUB_MODELS) {
     try {
-      console.log(`[Agent] Trying model: ${model} for ${agentType}...`);
-      const text = await callOpenRouter(model, systemPrompt, userMessage);
+      console.log(`[Agent] Trying GitHub Models: ${model} for ${agentType}...`);
+      const text = await callGitHubModels(model, systemPrompt, userMessage);
 
-      // Try to parse JSON from the response
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) {
         throw new Error("No JSON found in response");

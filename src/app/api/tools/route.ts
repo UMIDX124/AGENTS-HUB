@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
+const GITHUB_MODELS_URL = "https://models.github.ai/inference/chat/completions";
 
 const MODELS_FALLBACK_CHAIN = [
-  "nvidia/nemotron-3-super:free",
-  "qwen/qwen-3.6-plus-preview:free",
-  "openai/gpt-oss-120b:free",
+  "openai/gpt-5",
+  "deepseek/DeepSeek-V3-0324",
+  "meta/Llama-4-Scout-17B-16E-Instruct",
 ];
 
 const VALID_TOOLS = [
@@ -254,26 +254,25 @@ function buildUserPrompt(
   return base;
 }
 
-async function callOpenRouter(
+async function callGitHubModels(
   systemPrompt: string,
   userPrompt: string
 ): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY is not configured");
+  const token = process.env.GITHUB_MODELS_TOKEN;
+  if (!token) {
+    throw new Error("GITHUB_MODELS_TOKEN is not configured");
   }
 
   let lastError: Error | null = null;
 
   for (const model of MODELS_FALLBACK_CHAIN) {
     try {
-      const response = await fetch(OPENROUTER_API_URL, {
+      const response = await fetch(GITHUB_MODELS_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-          "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3000",
-          "X-Title": "SEO Agents Hub - Tools",
+          "Authorization": `Bearer ${token}`,
+          "X-GitHub-Api-Version": "2026-03-10",
         },
         body: JSON.stringify({
           model,
@@ -289,7 +288,7 @@ async function callOpenRouter(
       if (!response.ok) {
         const errorBody = await response.text();
         throw new Error(
-          `OpenRouter API error (${response.status}): ${errorBody}`
+          `GitHub Models API error (${response.status}): ${errorBody}`
         );
       }
 
@@ -362,7 +361,7 @@ export async function POST(req: NextRequest) {
     const systemPrompt = TOOL_SYSTEM_PROMPTS[toolName];
     const userPrompt = buildUserPrompt(toolName, url, context);
 
-    const result = await callOpenRouter(systemPrompt, userPrompt);
+    const result = await callGitHubModels(systemPrompt, userPrompt);
 
     return NextResponse.json({ result, tool: toolName });
   } catch (error: any) {
