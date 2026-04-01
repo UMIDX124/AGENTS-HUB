@@ -7,7 +7,7 @@ import { ScoreRing } from "@/components/score-ring";
 import { AGENTS } from "@/lib/agents";
 import { formatDate } from "@/lib/utils";
 import type { AgentTypeName } from "@/types";
-import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe } from "lucide-react";
+import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe, Trash2 } from "lucide-react";
 import { pdf } from "@react-pdf/renderer";
 import { ReportPDF } from "@/components/report-pdf";
 
@@ -38,6 +38,16 @@ export default function ReportsPage() {
   const filtered = audits.filter((a) =>
     !search || a.url?.toLowerCase().includes(search.toLowerCase())
   );
+
+  async function deleteAudit(auditId: string) {
+    if (!confirm("Delete this report? This cannot be undone.")) return;
+    await fetch("/api/reports", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ auditId }),
+    });
+    setAudits((prev) => prev.filter((a) => a.id !== auditId));
+  }
 
   async function exportPDF(audit: any) {
     setExporting(audit.id);
@@ -147,14 +157,23 @@ export default function ReportsPage() {
                         </div>
                       </div>
                     </div>
-                    <button
-                      onClick={() => exportPDF(audit)}
-                      disabled={exporting === audit.id}
-                      className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2 text-xs font-medium text-white/40 transition-all hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-40 ml-4 flex-shrink-0"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      {exporting === audit.id ? "Exporting..." : "Export PDF"}
-                    </button>
+                    <div className="flex items-center gap-2 ml-4 flex-shrink-0">
+                      <button
+                        onClick={() => exportPDF(audit)}
+                        disabled={exporting === audit.id}
+                        className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-xs font-medium text-white/40 transition-all hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-40"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">{exporting === audit.id ? "Exporting..." : "PDF"}</span>
+                      </button>
+                      <button
+                        onClick={() => deleteAudit(audit.id)}
+                        className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-xs font-medium text-white/40 transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Delete</span>
+                      </button>
+                    </div>
                   </div>
                 );
               })}

@@ -49,3 +49,37 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const user = session.user as any;
+    const { auditId } = await req.json();
+
+    if (!auditId) {
+      return NextResponse.json({ error: "auditId required" }, { status: 400 });
+    }
+
+    // Only OWNER can delete, or user can delete their own
+    const audit = await prisma.audit.findUnique({ where: { id: auditId } });
+    if (!audit) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (user.role !== "OWNER" && audit.userId !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // Delete related tasks first
+    await prisma.task.deleteMany({ where: { auditId } });
+    await prisma.audit.delete({ where: { id: auditId } });
+
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
