@@ -125,12 +125,12 @@ export default function ToolsPage() {
               className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all whitespace-nowrap ${
                 category === cat.id
                   ? "bg-indigo-500/15 border border-indigo-500/30 text-indigo-400"
-                  : "border border-white/[0.07] text-white/40 hover:bg-white/[0.04] hover:text-white/60"
+                  : "border border-border text-muted-foreground hover:bg-muted/60 hover:text-muted-foreground"
               }`}
             >
               {cat.label}
               <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                category === cat.id ? "bg-indigo-500/20" : "bg-white/[0.06]"
+                category === cat.id ? "bg-indigo-500/20" : "bg-muted/80"
               }`}>{cat.count}</span>
             </button>
           ))}
@@ -148,7 +148,7 @@ export default function ToolsPage() {
                 className={`text-left rounded-2xl border p-4 transition-all group ${
                   isActive
                     ? "border-white/20 bg-white/[0.05] shadow-lg"
-                    : "border-white/[0.07] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.03]"
+                    : "border-border bg-muted/40 hover:border-white/[0.12] hover:bg-muted/50"
                 }`}
               >
                 <div className="flex items-center gap-2.5 mb-2">
@@ -158,7 +158,7 @@ export default function ToolsPage() {
                   </div>
                   <h3 className="text-xs font-semibold text-white leading-tight">{tool.name}</h3>
                 </div>
-                <p className="text-[11px] text-white/30 leading-relaxed">{tool.description}</p>
+                <p className="text-[11px] text-muted-foreground/70 leading-relaxed">{tool.description}</p>
               </button>
             );
           })}
@@ -166,17 +166,17 @@ export default function ToolsPage() {
 
         {/* Tool input area */}
         {selectedTool && activeTool && (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 space-y-4">
+          <div className="rounded-2xl border border-border bg-muted/40 p-5 space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-indigo-400" />
-                <h3 className="text-sm font-semibold text-white">{activeTool.name}</h3>
+                <h3 className="text-sm font-semibold text-foreground">{activeTool.name}</h3>
               </div>
               <ProviderSelect value={provider} onChange={setProvider} />
             </div>
             <div>
               {loading && (
-                <span className="ml-auto flex items-center gap-1.5 text-xs text-white/40">
+                <span className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
                   <div className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
                   {elapsed}s — AI is generating...
                 </span>
@@ -185,13 +185,13 @@ export default function ToolsPage() {
 
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <div className="flex-1 relative">
-                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/20" />
+                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50" />
                 <input
                   placeholder="https://example.com"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && runTool()}
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] pl-10 pr-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-10 pr-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
                 />
               </div>
               <button
@@ -210,17 +210,17 @@ export default function ToolsPage() {
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && runTool()}
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
               />
             )}
 
             {/* Loading progress bar */}
             {loading && (
               <div className="space-y-2">
-                <div className="h-1 w-full rounded-full bg-white/[0.06] overflow-hidden">
+                <div className="h-1 w-full rounded-full bg-muted/80 overflow-hidden">
                   <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 animate-pulse" style={{ width: `${Math.min(95, elapsed * 3)}%`, transition: "width 1s ease" }} />
                 </div>
-                <p className="text-[11px] text-white/25">
+                <p className="text-[11px] text-muted-foreground/60">
                   {elapsed < 3 ? "Waking up GPT-5..." : elapsed < 8 ? "Crawling your website for real data..." : elapsed < 15 ? "Crunching SEO signals & patterns..." : elapsed < 25 ? "Crafting expert recommendations..." : "Polishing the final output..."}
                 </p>
               </div>
@@ -235,16 +235,16 @@ export default function ToolsPage() {
 
         {/* Result area */}
         {result && !loading && (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.05]">
+          <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border/60">
               <div className="flex items-center gap-2">
                 <Code2 className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-white">Generated Output</h3>
-                <span className="text-xs text-white/20">— generated in {elapsed}s</span>
+                <h3 className="text-sm font-semibold text-foreground">Generated Output</h3>
+                <span className="text-xs text-muted-foreground/50">— generated in {elapsed}s</span>
               </div>
               <button
                 onClick={copyResult}
-                className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white"
+                className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/50 px-3 py-1.5 text-xs font-medium text-muted-foreground transition-all hover:bg-muted/80 hover:text-foreground"
               >
                 {copied ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
                 {copied ? "Copied!" : "Copy All"}
@@ -258,12 +258,12 @@ export default function ToolsPage() {
 
         {/* Empty state */}
         {!selectedTool && (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] py-14 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-14 text-center">
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10">
               <Code2 className="h-7 w-7 text-indigo-400" />
             </div>
-            <h3 className="text-base font-semibold text-white">Select a Tool Above</h3>
-            <p className="mt-1 text-sm text-white/30">14 powerful SEO tools — all FREE, all generate ready-to-use output</p>
+            <h3 className="text-base font-semibold text-foreground">Select a Tool Above</h3>
+            <p className="mt-1 text-sm text-muted-foreground/70">14 powerful SEO tools — all FREE, all generate ready-to-use output</p>
           </div>
         )}
       </div>

@@ -7,7 +7,7 @@ import { ScoreRing } from "@/components/score-ring";
 import { AGENTS } from "@/lib/agents";
 import { formatDate } from "@/lib/utils";
 import type { AgentTypeName } from "@/types";
-import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe, Trash2 } from "lucide-react";
+import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe, Trash2, FileSpreadsheet } from "lucide-react";
 import { pdf } from "@react-pdf/renderer";
 import { ReportPDF } from "@/components/report-pdf";
 
@@ -86,14 +86,14 @@ export default function ReportsPage() {
               { label: "Avg. SEO Score", value: `${avgScore}/100`, icon: TrendingUp, color: "#34d399" },
               { label: "Agents Used", value: new Set(audits.map((a) => a.agent)).size, icon: Filter, color: "#fbbf24" },
             ].map(({ label, value, icon: Icon, color }) => (
-              <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3 sm:p-4 flex items-center gap-3">
+              <div key={label} className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-xl flex-shrink-0"
                   style={{ backgroundColor: `${color}18`, color }}>
                   <Icon className="h-4.5 w-4.5" />
                 </div>
                 <div>
-                  <p className="text-base sm:text-lg font-bold text-white">{value}</p>
-                  <p className="text-xs text-white/30">{label}</p>
+                  <p className="text-base sm:text-lg font-bold text-foreground">{value}</p>
+                  <p className="text-xs text-muted-foreground/70">{label}</p>
                 </div>
               </div>
             ))}
@@ -103,41 +103,55 @@ export default function ReportsPage() {
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
             <input
               placeholder="Search by URL..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/[0.03] pl-9 pr-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
+              className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
             />
           </div>
           <select
             value={filterAgent}
             onChange={(e) => setFilterAgent(e.target.value)}
-            className="rounded-xl border border-white/10 bg-[#08090f] px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-500/50"
+            className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
           >
             <option value="">All Agents</option>
             {(Object.keys(AGENTS) as AgentTypeName[]).map((key) => (
               <option key={key} value={key}>{AGENTS[key].name}</option>
             ))}
           </select>
+          {audits.length > 0 && (
+            <button
+              onClick={() => {
+                const a = document.createElement("a");
+                a.href = "/api/reports/export-csv";
+                a.download = "seo-reports.csv";
+                a.click();
+              }}
+              className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-4 py-2.5 text-xs font-medium text-muted-foreground transition-all hover:border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              Export CSV
+            </button>
+          )}
         </div>
 
         {/* Report list */}
         {filtered.length > 0 ? (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+          <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
             <div className="divide-y divide-white/[0.04]">
               {filtered.map((audit) => {
                 const agentConfig = AGENTS[audit.agent as AgentTypeName];
                 const color = AGENT_COLORS[audit.agent] || "#94a3b8";
                 return (
-                  <div key={audit.id} className="flex items-center justify-between px-3 sm:px-5 py-3 sm:py-4 transition-all hover:bg-white/[0.02] group">
+                  <div key={audit.id} className="flex items-center justify-between px-3 sm:px-5 py-3 sm:py-4 transition-all hover:bg-muted/40 group">
                     <div className="flex items-center gap-4 flex-1 min-w-0">
                       <ScoreRing score={audit.score} grade={audit.grade} size={52} />
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
-                          <Globe className="h-3.5 w-3.5 text-white/30 flex-shrink-0" />
-                          <p className="text-sm font-semibold text-white/90 truncate">{audit.url}</p>
+                          <Globe className="h-3.5 w-3.5 text-muted-foreground/70 flex-shrink-0" />
+                          <p className="text-sm font-semibold text-foreground/90 truncate">{audit.url}</p>
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="rounded-md px-2 py-0.5 text-[10px] font-semibold"
@@ -145,14 +159,14 @@ export default function ReportsPage() {
                             {agentConfig?.icon} {agentConfig?.name}
                           </span>
                           {audit.project && (
-                            <span className="text-xs text-white/30">• {audit.project.name}</span>
+                            <span className="text-xs text-muted-foreground/70">• {audit.project.name}</span>
                           )}
-                          <span className="flex items-center gap-1 text-xs text-white/20">
+                          <span className="flex items-center gap-1 text-xs text-muted-foreground/50">
                             <Calendar className="h-3 w-3" />
                             {formatDate(audit.createdAt)}
                           </span>
                           {audit.user?.name && (
-                            <span className="text-xs text-white/20">by {audit.user.name}</span>
+                            <span className="text-xs text-muted-foreground/50">by {audit.user.name}</span>
                           )}
                         </div>
                       </div>
@@ -161,14 +175,14 @@ export default function ReportsPage() {
                       <button
                         onClick={() => exportPDF(audit)}
                         disabled={exporting === audit.id}
-                        className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-xs font-medium text-white/40 transition-all hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-40"
+                        className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-40"
                       >
                         <Download className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">{exporting === audit.id ? "Exporting..." : "PDF"}</span>
                       </button>
                       <button
                         onClick={() => deleteAudit(audit.id)}
-                        className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2 text-xs font-medium text-white/40 transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
+                        className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">Delete</span>
@@ -180,14 +194,14 @@ export default function ReportsPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] py-20 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
               <FileText className="h-8 w-8 text-indigo-400" />
             </div>
-            <h3 className="text-base font-semibold text-white">No reports yet</h3>
-            <p className="mt-1 text-sm text-white/30">Run an audit to generate your first SEO report</p>
+            <h3 className="text-base font-semibold text-foreground">No reports yet</h3>
+            <p className="mt-1 text-sm text-muted-foreground/70">Run an audit to generate your first SEO report</p>
             <a href="/audit"
-              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20">
+              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-foreground shadow-lg shadow-indigo-500/20">
               Run Your First Audit
             </a>
           </div>

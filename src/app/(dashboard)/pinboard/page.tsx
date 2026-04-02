@@ -78,11 +78,11 @@ export default function PinboardPage() {
                 <button
                   key={severity}
                   onClick={() => setFilter(filter === severity ? "" : severity)}
-                  className={`rounded-2xl border p-4 text-left transition-all ${filter === severity ? "border-white/20" : "border-white/[0.07] hover:border-white/[0.12]"}`}
+                  className={`rounded-2xl border p-4 text-left transition-all ${filter === severity ? "border-white/20" : "border-border hover:border-white/[0.12]"}`}
                   style={{ backgroundColor: filter === severity ? `${color}10` : "rgba(255,255,255,0.01)" }}
                 >
                   <p className="text-2xl font-bold" style={{ color }}>{count}</p>
-                  <p className="text-xs text-white/30 mt-0.5">{label}</p>
+                  <p className="text-xs text-muted-foreground/70 mt-0.5">{label}</p>
                 </button>
               ))}
             </div>
@@ -90,15 +90,15 @@ export default function PinboardPage() {
             {/* Search + filter bar */}
             <div className="flex items-center gap-3">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/20" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground/50" />
                 <input
                   placeholder="Search pins..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.03] pl-9 pr-4 py-2.5 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
                 />
               </div>
-              <p className="text-xs text-white/30 flex-shrink-0">{filtered.length} of {pins.length} pins</p>
+              <p className="text-xs text-muted-foreground/70 flex-shrink-0">{filtered.length} of {pins.length} pins</p>
             </div>
           </>
         )}
@@ -113,7 +113,7 @@ export default function PinboardPage() {
               return (
                 <div
                   key={pin.id}
-                  className="mb-4 break-inside-avoid rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-all hover:border-white/[0.12] hover:bg-white/[0.03] group"
+                  className="mb-4 break-inside-avoid rounded-2xl border border-border bg-muted/40 p-4 transition-all hover:border-white/[0.12] hover:bg-muted/50 group"
                 >
                   {/* Header */}
                   <div className="mb-3 flex items-start justify-between gap-2">
@@ -125,47 +125,47 @@ export default function PinboardPage() {
                     </div>
                     <button
                       onClick={() => removePin(pin.id)}
-                      className="rounded-lg p-1 text-white/20 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 hover:text-red-400"
+                      className="rounded-lg p-1 text-muted-foreground/50 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500/10 hover:text-red-400"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-sm font-semibold text-white/90 leading-snug">{pin.title}</h3>
+                  <h3 className="text-sm font-semibold text-foreground/90 leading-snug">{pin.title}</h3>
                   {pin.detail && pin.detail !== pin.title && (
-                    <p className="mt-1.5 text-xs text-white/40 leading-relaxed">{pin.detail}</p>
+                    <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{pin.detail}</p>
                   )}
 
                   {/* Footer */}
-                  <div className="mt-3 flex items-center justify-between pt-3 border-t border-white/[0.05]">
+                  <div className="mt-3 flex items-center justify-between pt-3 border-t border-border/60">
                     <div className="flex items-center gap-1.5">
                       <SevIcon className="h-3 w-3 flex-shrink-0" style={{ color: sevConfig.color }} />
                       <span className="text-[10px] font-semibold capitalize" style={{ color: sevConfig.color }}>
                         {sevConfig.label}
                       </span>
                     </div>
-                    <span className="text-[10px] text-white/20">{formatDate(pin.createdAt)}</span>
+                    <span className="text-[10px] text-muted-foreground/50">{formatDate(pin.createdAt)}</span>
                   </div>
                 </div>
               );
             })}
           </div>
         ) : pins.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] py-20 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
               <Pin className="h-8 w-8 text-indigo-400" />
             </div>
-            <h3 className="text-base font-semibold text-white">No pinned findings</h3>
-            <p className="mt-1 text-sm text-white/30">Pin important findings from audit results to review here</p>
+            <h3 className="text-base font-semibold text-foreground">No pinned findings</h3>
+            <p className="mt-1 text-sm text-muted-foreground/70">Pin important findings from audit results to review here</p>
             <a href="/audit"
               className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20">
               Run an Audit
             </a>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] py-12 text-center">
-            <p className="text-sm text-white/30">No pins match your filters</p>
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-12 text-center">
+            <p className="text-sm text-muted-foreground/70">No pins match your filters</p>
             <button onClick={() => { setFilter(""); setSearch(""); }} className="mt-2 text-xs text-indigo-400 hover:text-indigo-300">
               Clear filters
             </button>

@@ -56,14 +56,14 @@ export default function LoginPage() {
             <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 opacity-20 blur-sm -z-10" />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-tight text-white">SEO Agents Hub</h1>
-            <p className="mt-1 text-sm text-white/40">AI-Powered SEO Command Center</p>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">SEO Agents Hub</h1>
+            <p className="mt-1 text-sm text-muted-foreground">AI-Powered SEO Command Center</p>
           </div>
         </div>
 
         {/* Card */}
         <div className="glass-strong rounded-2xl p-8 shadow-2xl">
-          <h2 className="mb-6 text-base font-semibold text-white/90">Sign in to your account</h2>
+          <h2 className="mb-6 text-base font-semibold text-foreground/90">Sign in to your account</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none transition-all focus:border-indigo-500/50 focus:bg-white/[0.06]"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80"
               />
             </div>
 
@@ -87,12 +87,12 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-12 text-sm text-white placeholder-white/20 outline-none transition-all focus:border-indigo-500/50 focus:bg-white/[0.06]"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-12 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPwd(!showPwd)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors text-xs font-medium"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 hover:text-muted-foreground transition-colors text-xs font-medium"
                 >
                   {showPwd ? "HIDE" : "SHOW"}
                 </button>
@@ -126,7 +126,7 @@ export default function LoginPage() {
           <div className="mt-6">
             <button
               onClick={() => setShowDemo(!showDemo)}
-              className="flex w-full items-center justify-between text-xs text-white/30 hover:text-white/60 transition-colors"
+              className="flex w-full items-center justify-between text-xs text-muted-foreground/70 hover:text-muted-foreground transition-colors"
             >
               <span className="flex items-center gap-1.5">
                 <span className="h-px w-6 bg-white/10" />
@@ -142,7 +142,7 @@ export default function LoginPage() {
                   <button
                     key={account.email}
                     onClick={() => { setEmail(account.email); setPassword(""); }}
-                    className="flex w-full items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-left transition-all hover:border-white/[0.1] hover:bg-white/[0.04]"
+                    className="flex w-full items-center gap-3 rounded-xl border border-border/70 bg-muted/40 p-3 text-left transition-all hover:border-white/[0.1] hover:bg-muted/60"
                   >
                     <div
                       className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-xs font-bold"
@@ -151,8 +151,8 @@ export default function LoginPage() {
                       {account.name.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-white/80 truncate">{account.name}</p>
-                      <p className="text-[10px] text-white/30 truncate">{account.email}</p>
+                      <p className="text-xs font-semibold text-foreground/80 truncate">{account.name}</p>
+                      <p className="text-[10px] text-muted-foreground/70 truncate">{account.email}</p>
                     </div>
                     <span
                       className="rounded-md px-2 py-0.5 text-[10px] font-semibold flex-shrink-0"

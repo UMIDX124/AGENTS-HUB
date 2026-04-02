@@ -21,6 +21,7 @@ model User {
   createdTasks Task[]          @relation("CreatedTasks")
   pins         Pin[]
   projects     ProjectMember[]
+  activities   ActivityLog[]
 }
 
 model Project {
@@ -93,4 +94,17 @@ model Pin {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  detail    String?
+  metadata  String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@index([createdAt])
+  @@index([userId])
 }

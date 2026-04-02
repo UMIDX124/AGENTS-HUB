@@ -47,8 +47,8 @@ export default function ProjectsPage() {
         {/* Header row */}
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold tracking-tight text-white">{projects.length} Project{projects.length !== 1 ? "s" : ""}</h2>
-            <p className="text-xs text-white/30 mt-0.5">Manage your client websites</p>
+            <h2 className="text-lg font-bold tracking-tight text-foreground">{projects.length} Project{projects.length !== 1 ? "s" : ""}</h2>
+            <p className="text-xs text-muted-foreground/70 mt-0.5">Manage your client websites</p>
           </div>
           {canCreate && (
             <button
@@ -64,8 +64,8 @@ export default function ProjectsPage() {
         {showForm && (
           <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-white">Create New Project</h3>
-              <button onClick={() => setShowForm(false)} className="text-white/30 hover:text-white/60">
+              <h3 className="text-sm font-semibold text-foreground">Create New Project</h3>
+              <button onClick={() => setShowForm(false)} className="text-muted-foreground/70 hover:text-muted-foreground">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -75,20 +75,20 @@ export default function ProjectsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50 focus:bg-white/[0.06]"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Website URL (e.g. https://acme.com)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50 focus:bg-white/[0.06]"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50 focus:bg-white/[0.06]"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
               />
               <div className="flex gap-2">
                 <button
@@ -101,7 +101,7 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="rounded-xl border border-white/10 px-4 py-2 text-sm text-white/50 transition-all hover:text-white"
+                  className="rounded-xl border border-border px-4 py-2 text-sm text-white/50 transition-all hover:text-foreground"
                 >
                   Cancel
                 </button>
@@ -118,12 +118,12 @@ export default function ProjectsPage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.01] py-20 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
             <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10">
               <FolderOpen className="h-8 w-8 text-purple-400" />
             </div>
-            <h3 className="text-base font-semibold text-white">No projects yet</h3>
-            <p className="mt-1 text-sm text-white/30">Create your first client project to start tracking SEO</p>
+            <h3 className="text-base font-semibold text-foreground">No projects yet</h3>
+            <p className="mt-1 text-sm text-muted-foreground/70">Create your first client project to start tracking SEO</p>
             {canCreate && (
               <button
                 onClick={() => setShowForm(true)}

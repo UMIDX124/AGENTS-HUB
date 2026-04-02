@@ -4,6 +4,7 @@ import { runAgent } from "@/lib/agents";
 import { prisma } from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
 import { type AgentTypeName } from "@/types";
+import { logActivity } from "@/lib/activity";
 
 export async function POST(req: NextRequest) {
   try {
@@ -56,6 +57,8 @@ export async function POST(req: NextRequest) {
         projectId: projectId || null,
       },
     });
+
+    logActivity(user.id, "audit_run", `${agent} audit on ${validUrl} — Score: ${result.score}`, { auditId: audit.id, agent, url: validUrl });
 
     return NextResponse.json({ audit, result });
   } catch (error: any) {

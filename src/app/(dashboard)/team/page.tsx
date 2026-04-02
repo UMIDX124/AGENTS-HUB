@@ -59,16 +59,16 @@ export default function TeamPage() {
 
         {/* Tab switcher + action */}
         <div className="flex items-center justify-between">
-          <div className="flex rounded-xl border border-white/[0.07] bg-white/[0.02] p-1">
+          <div className="flex rounded-xl border border-border bg-muted/40 p-1">
             <button
               onClick={() => setActiveTab("members")}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "members" ? "bg-indigo-500/20 text-indigo-300" : "text-white/40 hover:text-white/70"}`}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "members" ? "bg-indigo-500/20 text-indigo-300" : "text-muted-foreground hover:text-foreground/70"}`}
             >
               <Users className="h-3.5 w-3.5" /> Members ({members.length})
             </button>
             <button
               onClick={() => setActiveTab("permissions")}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "permissions" ? "bg-indigo-500/20 text-indigo-300" : "text-white/40 hover:text-white/70"}`}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "permissions" ? "bg-indigo-500/20 text-indigo-300" : "text-muted-foreground hover:text-foreground/70"}`}
             >
               <ShieldCheck className="h-3.5 w-3.5" /> Permissions
             </button>
@@ -88,18 +88,18 @@ export default function TeamPage() {
             {showForm && (
               <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-white">Add New Team Member</h3>
-                  <button onClick={() => setShowForm(false)} className="text-white/30 hover:text-white/60"><X className="h-4 w-4" /></button>
+                  <h3 className="text-sm font-semibold text-foreground">Add New Team Member</h3>
+                  <button onClick={() => setShowForm(false)} className="text-muted-foreground/70 hover:text-muted-foreground"><X className="h-4 w-4" /></button>
                 </div>
                 <form onSubmit={addMember} className="grid gap-3 sm:grid-cols-2">
                   <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
                   <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} required
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
                   <input type="password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                    className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
                   <select value={role} onChange={(e) => setRole(e.target.value as RoleName)}
-                    className="rounded-xl border border-white/10 bg-[#08090f] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
+                    className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
                     <option value="SPECIALIST">SEO Specialist</option>
                     <option value="MANAGER">Manager</option>
                     <option value="CLIENT">Client</option>
@@ -110,27 +110,27 @@ export default function TeamPage() {
                       {loading ? "Adding..." : "Add Member"}
                     </button>
                     <button type="button" onClick={() => setShowForm(false)}
-                      className="rounded-xl border border-white/10 px-4 py-2 text-sm text-white/50 hover:text-white">Cancel</button>
+                      className="rounded-xl border border-border px-4 py-2 text-sm text-white/50 hover:text-foreground">Cancel</button>
                   </div>
                 </form>
               </div>
             )}
 
             {members.length > 0 ? (
-              <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] overflow-hidden">
+              <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
                 <div className="divide-y divide-white/[0.04]">
                   {members.map((m) => {
                     const config = PERMISSIONS[m.role as RoleName];
                     return (
-                      <div key={m.id} className="flex items-center justify-between px-5 py-4 transition-all hover:bg-white/[0.02]">
+                      <div key={m.id} className="flex items-center justify-between px-5 py-4 transition-all hover:bg-muted/40">
                         <div className="flex items-center gap-4">
                           <div className="flex h-10 w-10 items-center justify-center rounded-xl text-base font-bold"
                             style={{ backgroundColor: `${config?.color}20`, color: config?.color }}>
                             {m.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-white/90">{m.name}</p>
-                            <p className="text-xs text-white/30">{m.email}</p>
+                            <p className="text-sm font-semibold text-foreground/90">{m.name}</p>
+                            <p className="text-xs text-muted-foreground/70">{m.email}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -138,20 +138,20 @@ export default function TeamPage() {
                             style={{ backgroundColor: `${config?.color}18`, color: config?.color }}>
                             {config?.label}
                           </span>
-                          <span className="hidden text-xs text-white/20 sm:block">
+                          <span className="hidden text-xs text-muted-foreground/50 sm:block">
                             {new Date(m.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
                           </span>
                           {user?.role === "OWNER" && m.id !== user?.id && (
                             <div className="flex items-center gap-1">
                               <select value={m.role} onChange={(e) => changeRole(m.id, e.target.value as RoleName)}
-                                className="h-8 rounded-lg border border-white/[0.07] bg-[#08090f] px-2 text-xs text-white outline-none">
+                                className="h-8 rounded-lg border border-border bg-card px-2 text-xs text-white outline-none">
                                 <option value="OWNER">Owner</option>
                                 <option value="MANAGER">Manager</option>
                                 <option value="SPECIALIST">Specialist</option>
                                 <option value="CLIENT">Client</option>
                               </select>
                               <button onClick={() => removeMember(m.id)}
-                                className="rounded-lg p-1.5 text-white/20 transition-all hover:bg-red-500/10 hover:text-red-400">
+                                className="rounded-lg p-1.5 text-muted-foreground/50 transition-all hover:bg-red-500/10 hover:text-red-400">
                                 <Trash2 className="h-3.5 w-3.5" />
                               </button>
                             </div>
@@ -163,19 +163,19 @@ export default function TeamPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/[0.08] py-16 text-center">
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
                 <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10">
                   <Users className="h-7 w-7 text-indigo-400" />
                 </div>
-                <p className="text-sm font-semibold text-white">No team members yet</p>
-                <p className="mt-1 text-xs text-white/30">Add your first team member to collaborate</p>
+                <p className="text-sm font-semibold text-foreground">No team members yet</p>
+                <p className="mt-1 text-xs text-muted-foreground/70">Add your first team member to collaborate</p>
               </div>
             )}
           </>
         )}
 
         {activeTab === "permissions" && (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+          <div className="rounded-2xl border border-border bg-muted/40 p-5">
             <PermissionMatrix />
           </div>
         )}

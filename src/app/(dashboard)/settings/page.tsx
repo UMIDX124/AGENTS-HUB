@@ -118,13 +118,13 @@ export default function SettingsPage() {
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 max-w-2xl">
 
         {/* Profile */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+        <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
                 <User className="h-4 w-4 text-indigo-400" />
               </div>
-              <h2 className="text-sm font-semibold text-white">Profile</h2>
+              <h2 className="text-sm font-semibold text-foreground">Profile</h2>
             </div>
             {!editName && (
               <button onClick={() => { setEditName(true); setNewName(user?.name || ""); }}
@@ -137,17 +137,17 @@ export default function SettingsPage() {
           {editName ? (
             <div className="space-y-3">
               <div>
-                <label className="text-[10px] text-white/30 uppercase tracking-wider mb-1 block">Display Name</label>
+                <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Display Name</label>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50" />
               </div>
               <div className="flex gap-2">
                 <button onClick={saveName}
-                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-semibold text-white">
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-semibold text-foreground">
                   Save
                 </button>
                 <button onClick={() => setEditName(false)}
-                  className="flex items-center gap-1 rounded-xl border border-white/10 px-4 py-2 text-xs text-white/40 hover:text-white/60">
+                  className="flex items-center gap-1 rounded-xl border border-border px-4 py-2 text-xs text-muted-foreground hover:text-muted-foreground">
                   <X className="h-3 w-3" /> Cancel
                 </button>
               </div>
@@ -157,21 +157,21 @@ export default function SettingsPage() {
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Name</p>
-                <p className="text-sm font-medium text-white">{user?.name || "—"}</p>
+              <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1">Name</p>
+                <p className="text-sm font-medium text-foreground">{user?.name || "—"}</p>
               </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Email</p>
+              <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1">Email</p>
                 <p className="text-sm font-medium text-white truncate">{user?.email || "—"}</p>
               </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Role</p>
+              <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1">Role</p>
                 <p className="text-sm font-medium text-white capitalize">{user?.role?.toLowerCase() || "—"}</p>
               </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
-                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">User ID</p>
-                <p className="text-xs font-mono text-white/40 truncate">{user?.id || "—"}</p>
+              <div className="rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
+                <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1">User ID</p>
+                <p className="text-xs font-mono text-muted-foreground truncate">{user?.id || "—"}</p>
               </div>
             </div>
           )}
@@ -179,28 +179,28 @@ export default function SettingsPage() {
 
         {/* Create Employee (OWNER only) */}
         {user?.role === "OWNER" && (
-          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+          <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15">
                 <UserPlus className="h-4 w-4 text-emerald-400" />
               </div>
               <div>
-                <h2 className="text-sm font-semibold text-white">Create New Employee</h2>
-                <p className="text-xs text-white/30">Add team members with login credentials</p>
+                <h2 className="text-sm font-semibold text-foreground">Create New Employee</h2>
+                <p className="text-xs text-muted-foreground/70">Add team members with login credentials</p>
               </div>
             </div>
             <form onSubmit={createEmployee} className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <input placeholder="Full name" value={empName} onChange={(e) => setEmpName(e.target.value)} required
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
                 <input type="email" placeholder="Email address" value={empEmail} onChange={(e) => setEmpEmail(e.target.value)} required
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <input type="password" placeholder="Password (min 6 chars)" value={empPassword} onChange={(e) => setEmpPassword(e.target.value)} required
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
                 <select value={empRole} onChange={(e) => setEmpRole(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-[#08090f] px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
+                  className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
                   <option value="SPECIALIST">SEO Specialist</option>
                   <option value="MANAGER">Manager</option>
                   <option value="OWNER">Owner</option>
@@ -225,38 +225,38 @@ export default function SettingsPage() {
         )}
 
         {/* Change Password */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+        <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/15">
               <Lock className="h-4 w-4 text-purple-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">Change Password</h2>
-              <p className="text-xs text-white/30">Update your account password</p>
+              <h2 className="text-sm font-semibold text-foreground">Change Password</h2>
+              <p className="text-xs text-muted-foreground/70">Update your account password</p>
             </div>
           </div>
           <form onSubmit={changePassword} className="space-y-3">
             <div className="relative">
               <input type={showCurrent ? "text" : "password"} placeholder="Current password" value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)} required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
               <button type="button" onClick={() => setShowCurrent(!showCurrent)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-white/50">
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             <div className="relative">
               <input type={showNew ? "text" : "password"} placeholder="New password (min 6 chars)" value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)} required
-                className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 pr-10 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
               <button type="button" onClick={() => setShowNew(!showNew)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/50">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-white/50">
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             <input type="password" placeholder="Confirm new password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} required
-              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-indigo-500/50" />
+              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
 
             {pwStatus && (
               <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${pwStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
@@ -274,26 +274,26 @@ export default function SettingsPage() {
         </div>
 
         {/* GitHub Models API */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+        <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15">
               <Key className="h-4 w-4 text-amber-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-white">GitHub Models API</h2>
-              <p className="text-xs text-white/30">GPT-5, DeepSeek V3, Llama 4 — via GitHub PAT</p>
+              <h2 className="text-sm font-semibold text-foreground">GitHub Models API</h2>
+              <p className="text-xs text-muted-foreground/70">GPT-5, DeepSeek V3, Llama 4 — via GitHub PAT</p>
             </div>
           </div>
-          <div className="mb-4 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3">
+          <div className="mb-4 rounded-xl border border-border/70 bg-muted/40 px-4 py-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-white/40 font-mono">GITHUB_MODELS_TOKEN</span>
-              <span className="text-xs text-white/20">.env.local</span>
+              <span className="text-xs text-muted-foreground font-mono">GITHUB_MODELS_TOKEN</span>
+              <span className="text-xs text-muted-foreground/50">.env.local</span>
             </div>
             <p className="mt-1 text-sm text-white/50">github_pat_••••••••••••••••••••••</p>
           </div>
           <div className="flex items-center gap-3">
             <button onClick={checkApiKey} disabled={apiKeyStatus === "checking"}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-white/60 transition-all hover:bg-white/[0.06] hover:text-white disabled:opacity-50">
+              className="flex items-center gap-2 rounded-xl border border-border bg-muted/50 px-4 py-2.5 text-sm font-medium text-muted-foreground transition-all hover:bg-muted/80 hover:text-white disabled:opacity-50">
               <Zap className="h-3.5 w-3.5" />
               {apiKeyStatus === "checking" ? "Checking..." : "Test Connection"}
             </button>
@@ -311,12 +311,12 @@ export default function SettingsPage() {
         </div>
 
         {/* Security info */}
-        <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 sm:p-5">
+        <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-3 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15">
               <Shield className="h-4 w-4 text-emerald-400" />
             </div>
-            <h2 className="text-sm font-semibold text-white">Security</h2>
+            <h2 className="text-sm font-semibold text-foreground">Security</h2>
           </div>
           <div className="space-y-2">
             {[
@@ -325,11 +325,11 @@ export default function SettingsPage() {
               { label: "Session Strategy", value: "JWT (encrypted)", ok: true },
               { label: "Database", value: "SQLite (Prisma ORM)", ok: true },
             ].map(({ label, value }) => (
-              <div key={label} className="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
-                <span className="text-xs text-white/40">{label}</span>
+              <div key={label} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                <span className="text-xs text-muted-foreground">{label}</span>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-3 w-3 text-emerald-400" />
-                  <span className="text-xs text-white/60">{value}</span>
+                  <span className="text-xs text-muted-foreground">{value}</span>
                 </div>
               </div>
             ))}

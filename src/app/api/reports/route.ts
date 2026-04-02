@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
+import { logActivity } from "@/lib/activity";
 
 export async function GET(req: NextRequest) {
   try {
@@ -77,6 +78,8 @@ export async function DELETE(req: NextRequest) {
     // Delete related tasks first
     await prisma.task.deleteMany({ where: { auditId } });
     await prisma.audit.delete({ where: { id: auditId } });
+
+    logActivity(user.id, "audit_deleted", `Deleted audit for ${audit.url} (${audit.agent})`);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

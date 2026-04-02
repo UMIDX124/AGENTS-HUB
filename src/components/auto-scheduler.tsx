@@ -229,7 +229,7 @@ export function AutoScheduler() {
             <Button
               size="sm"
               onClick={startScheduler}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="bg-emerald-600 hover:bg-emerald-700 text-foreground"
             >
               <Play className="size-3.5" /> Start 24/7
             </Button>

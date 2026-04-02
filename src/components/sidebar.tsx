@@ -26,6 +26,8 @@ import {
   FileText,
   Pin,
   LogOut,
+  Activity,
+  GitCompareArrows,
   Cog,
   Link2,
   FileEdit,
@@ -82,6 +84,8 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
       : []),
     { href: "/reports", icon: FileText, label: "Reports" },
     { href: "/pinboard", icon: Pin, label: "Pinboard" },
+    { href: "/compare", icon: GitCompareArrows, label: "Compare" },
+    { href: "/activity", icon: Activity, label: "Activity Log" },
   ];
 
   const isAuditActive = pathname === "/audit";
