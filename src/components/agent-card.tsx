@@ -26,35 +26,39 @@ export function AgentCard({
     <Card
       onClick={onClick}
       className={cn(
-        "card-hover group relative cursor-pointer overflow-hidden text-center transition-all",
+        "hover-lift group relative cursor-pointer overflow-hidden text-center transition-all",
         isActive
-          ? "border-primary/30 bg-primary/5"
-          : "hover:border-border/80 hover:bg-accent/30"
+          ? "border-primary/30 bg-primary/5 shadow-lg"
+          : "hover:border-border/80"
       )}
+      style={isActive ? { boxShadow: `0 0 30px ${agent.color}15` } : undefined}
     >
       <CardContent className="relative flex flex-col items-center gap-3 p-5">
         {/* Active dot */}
         {hasResults && (
           <div
-            className="absolute right-3 top-3 size-2 rounded-full shadow-lg"
+            className="absolute right-3 top-3 size-2 rounded-full pulse-dot"
             style={{
               backgroundColor: agent.color,
-              boxShadow: `0 0 8px ${agent.color}`,
+              boxShadow: `0 0 10px ${agent.color}`,
             }}
           />
         )}
 
-        {/* Icon */}
+        {/* Icon with glow */}
         <div className="relative">
           <div
-            className="flex size-12 items-center justify-center rounded-xl text-2xl transition-transform duration-200 group-hover:scale-110"
-            style={{ backgroundColor: `${agent.color}12` }}
+            className="flex size-12 items-center justify-center rounded-xl text-2xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+            style={{
+              backgroundColor: `${agent.color}12`,
+              boxShadow: isActive ? `0 0 20px ${agent.color}30` : undefined,
+            }}
           >
             {agent.icon}
           </div>
           {isActive && (
             <div
-              className="absolute -inset-1 rounded-xl blur-sm opacity-30"
+              className="absolute -inset-2 rounded-xl blur-md opacity-20 animate-pulse"
               style={{ backgroundColor: agent.color }}
             />
           )}

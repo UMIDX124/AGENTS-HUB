@@ -155,13 +155,14 @@
 
 /* ── Card hover effect ─────────────────────── */
 .card-hover {
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 0.2s ease,
-              box-shadow 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(20, 184, 166, 0.08), 0 4px 12px rgba(0,0,0,0.2);
+  border-color: hsl(168 76% 47% / 0.15);
 }
 @media (max-width: 640px) {
   .card-hover:hover { transform: none; box-shadow: none; }
@@ -265,6 +266,177 @@
   * { box-shadow: none !important; }
 }
 .print-only { display: none; }
+
+/* ── VIBRANT VISUAL SYSTEM ─────────────────── */
+
+/* Animated gradient border (for hero cards) */
+@keyframes border-rotate {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+.border-animated {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+.border-animated::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle, 0deg), #14b8a6, #06b6d4, #8b5cf6, #14b8a6);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+  animation: border-rotate 4s linear infinite;
+  pointer-events: none;
+  opacity: 0.4;
+}
+.border-animated:hover::before {
+  opacity: 0.8;
+}
+
+/* Dot grid background */
+.dot-grid {
+  background-image: radial-gradient(circle, hsl(var(--muted-foreground) / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Animated gradient background for sections */
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.gradient-bg-animated {
+  background: linear-gradient(135deg,
+    rgba(20,184,166,0.05) 0%,
+    rgba(6,182,212,0.03) 25%,
+    rgba(139,92,246,0.05) 50%,
+    rgba(6,182,212,0.03) 75%,
+    rgba(20,184,166,0.05) 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-move 15s ease infinite;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid hsl(var(--border));
+}
+
+/* Vibrant icon container */
+.icon-vibrant {
+  position: relative;
+}
+.icon-vibrant::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: inherit;
+  filter: blur(10px);
+  opacity: 0.4;
+  z-index: -1;
+}
+
+/* Staggered animation delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+
+/* Hover lift effect for interactive cards */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 40px rgba(20,184,166,0.06);
+}
+
+/* Pulse dot indicator */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Score high glow */
+.score-glow-high {
+  filter: drop-shadow(0 0 12px rgba(52, 211, 153, 0.4));
+}
+.score-glow-mid {
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.3));
+}
+.score-glow-low {
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.3));
+}
+
+/* Sidebar item hover beam */
+.sidebar-item-hover {
+  position: relative;
+  transition: all 0.2s ease;
+}
+.sidebar-item-hover:hover {
+  background: hsl(var(--accent) / 0.8);
+}
+.sidebar-item-hover:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, hsl(var(--primary)), transparent);
+  border-radius: 2px;
+}
+
+/* Topbar bottom glow line */
+.topbar-glow {
+  position: relative;
+}
+.topbar-glow::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.3), transparent);
+}
+
+/* Input focus ring animation */
+@keyframes focus-ring-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2); }
+  50% { box-shadow: 0 0 0 4px hsl(var(--primary) / 0.1); }
+}
+input:focus, textarea:focus, select:focus {
+  animation: focus-ring-pulse 2s ease-in-out infinite;
+}
+
+/* Empty state floating animation */
+@keyframes empty-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-6px) rotate(1deg); }
+  75% { transform: translateY(-3px) rotate(-1deg); }
+}
+.empty-float {
+  animation: empty-float 5s ease-in-out infinite;
+}
 
 :root:not(.dark) .shimmer {
   background: linear-gradient(90deg,

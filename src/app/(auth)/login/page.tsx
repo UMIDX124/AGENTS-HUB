@@ -41,45 +41,61 @@ export default function LoginPage() {
       {/* Aurora background */}
       <div className="aurora-bg absolute inset-0 -z-10" />
 
+      {/* Grid pattern */}
+      <div className="pointer-events-none absolute inset-0 -z-10" style={{
+        backgroundImage: "linear-gradient(rgba(20,184,166,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.03) 1px, transparent 1px)",
+        backgroundSize: "60px 60px",
+      }} />
+
       {/* Animated orbs */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-teal-500/8 blur-[120px] animate-pulse" />
-      <div className="pointer-events-none absolute -right-32 -bottom-32 h-96 w-96 rounded-full bg-cyan-500/6 blur-[120px] animate-pulse" style={{ animationDelay: "1.5s" }} />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-violet-500/4 blur-[100px]" />
+      <div className="pointer-events-none absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-teal-500/[0.07] blur-[140px] animate-pulse" />
+      <div className="pointer-events-none absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.05] blur-[140px] animate-pulse" style={{ animationDelay: "1.5s" }} />
+      <div className="pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 h-64 w-64 rounded-full bg-violet-500/[0.04] blur-[100px]" />
 
       <div className="animate-scale-in w-full max-w-md">
         {/* Brand */}
         <div className="mb-8 flex flex-col items-center gap-4">
           <div className="animate-float relative">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 text-2xl font-black text-white shadow-2xl shadow-teal-500/30">
-              S
-            </div>
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 opacity-15 blur-sm -z-10" />
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 drop-shadow-[0_0_30px_rgba(20,184,166,0.4)]">
+              <defs>
+                <linearGradient id="login-logo-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#14b8a6" />
+                  <stop offset="100%" stopColor="#06b6d4" />
+                </linearGradient>
+              </defs>
+              <rect width="64" height="64" rx="18" fill="url(#login-logo-grad)" />
+              <path d="M18 32C18 24.3 24.3 18 32 18C36.2 18 40 19.8 42.7 22.7" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+              <path d="M46 32C46 39.7 39.7 46 32 46C27.8 46 24 44.2 21.3 41.3" stroke="white" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7" />
+              <path d="M32 25V32L37 35.5" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              <circle cx="42.7" cy="22.7" r="2.5" fill="white" />
+              <circle cx="21.3" cy="41.3" r="2" fill="white" opacity="0.7" />
+            </svg>
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">SEO Agents Hub</h1>
-            <p className="mt-1 text-sm text-muted-foreground">AI-Powered SEO Command Center</p>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Agents Hub</h1>
+            <p className="mt-1 text-sm gradient-text font-semibold">SEO Intelligence Platform</p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="glass-strong rounded-2xl p-8 shadow-2xl">
+        <div className="relative rounded-2xl border border-border bg-card/80 backdrop-blur-xl p-8 shadow-2xl shadow-black/20 border-glow">
           <h2 className="mb-6 text-base font-semibold text-foreground/90">Sign in to your account</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/50">Email address</label>
+              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Email address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/50">Password</label>
+              <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Password</label>
               <div className="relative">
                 <input
                   type={showPwd ? "text" : "password"}
@@ -87,7 +103,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-12 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-12 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
                 />
                 <button
                   type="button"
@@ -167,8 +183,8 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="mt-6 text-center text-[10px] text-white/15">
-          © 2025 SEO Agents Hub · Digital Point LLC
+        <p className="mt-6 text-center text-[10px] text-muted-foreground/30">
+          © 2026 Agents Hub · Digital Point LLC
         </p>
       </div>
     </div>

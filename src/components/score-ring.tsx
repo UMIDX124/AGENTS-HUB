@@ -36,7 +36,7 @@ export function ScoreRing({ score, grade, size = 120 }: ScoreRingProps) {
 
   return (
     <div
-      className="relative inline-flex items-center justify-center flex-shrink-0"
+      className={`relative inline-flex items-center justify-center flex-shrink-0 ${score >= 80 ? "score-glow-high" : score >= 50 ? "score-glow-mid" : "score-glow-low"}`}
       style={{ width: size, height: size }}
     >
       {/* Glow effect behind ring */}
@@ -54,7 +54,7 @@ export function ScoreRing({ score, grade, size = 120 }: ScoreRingProps) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.05)"
+          stroke="hsl(var(--muted))"
           strokeWidth={strokeWidth}
         />
         {/* Progress */}

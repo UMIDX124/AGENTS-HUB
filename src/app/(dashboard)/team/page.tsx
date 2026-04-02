@@ -103,13 +103,13 @@ export default function TeamPage() {
                 </div>
                 <form onSubmit={addMember} className="grid gap-3 sm:grid-cols-2">
                   <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <input type="password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <select value={role} onChange={(e) => setRole(e.target.value as RoleName)}
-                    className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50">
+                    className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none focus:border-teal-500/50">
                     <option value="SPECIALIST">SEO Specialist</option>
                     <option value="MANAGER">Manager</option>
                     <option value="CLIENT">Client</option>

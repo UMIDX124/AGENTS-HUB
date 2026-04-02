@@ -187,7 +187,7 @@ export default function SettingsPage() {
               <div>
                 <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Display Name</label>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground outline-none focus:border-teal-500/50" />
               </div>
               <div className="flex gap-2">
                 <button onClick={saveName}
@@ -304,15 +304,15 @@ export default function SettingsPage() {
             <form onSubmit={createEmployee} className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <input placeholder="Full name" value={empName} onChange={(e) => setEmpName(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                 <input type="email" placeholder="Email address" value={empEmail} onChange={(e) => setEmpEmail(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <input type="password" placeholder="Password (min 6 chars)" value={empPassword} onChange={(e) => setEmpPassword(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                 <select value={empRole} onChange={(e) => setEmpRole(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50">
+                  className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none focus:border-teal-500/50">
                   <option value="SPECIALIST">SEO Specialist</option>
                   <option value="MANAGER">Manager</option>
                   <option value="OWNER">Owner</option>
@@ -368,7 +368,7 @@ export default function SettingsPage() {
             </div>
             <input type="password" placeholder="Confirm new password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} required
-              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
+              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
 
             {pwStatus && (
               <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${pwStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>

@@ -61,14 +61,15 @@ export function AuditHistoryChart({ data }: AuditHistoryChartProps) {
           <Line
             type="monotone"
             dataKey="score"
-            stroke="oklch(0.488 0.243 264.376)"
-            strokeWidth={2}
+            stroke="#14b8a6"
+            strokeWidth={2.5}
             dot={{
-              fill: "oklch(0.488 0.243 264.376)",
+              fill: "#14b8a6",
               r: 4,
-              strokeWidth: 0,
+              strokeWidth: 2,
+              stroke: "#0d9488",
             }}
-            activeDot={{ r: 6 }}
+            activeDot={{ r: 7, fill: "#14b8a6", stroke: "#fff", strokeWidth: 2 }}
           />
         </LineChart>
       </ResponsiveContainer>

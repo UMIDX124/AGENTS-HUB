@@ -191,7 +191,7 @@ export default function ToolsPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && runTool()}
-                  className="w-full rounded-xl border border-border bg-muted/50 pl-10 pr-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-10 pr-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <button
@@ -210,7 +210,7 @@ export default function ToolsPage() {
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && runTool()}
-                className="w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
+                className="w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
               />
             )}
 

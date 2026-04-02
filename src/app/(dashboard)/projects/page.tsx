@@ -77,20 +77,20 @@ export default function ProjectsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Website URL (e.g. https://acme.com)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <div className="flex gap-2">
                 <button
@@ -103,7 +103,7 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="rounded-xl border border-border px-4 py-2 text-sm text-white/50 transition-all hover:text-foreground"
+                  className="rounded-xl border border-border px-4 py-2 text-sm text-muted-foreground transition-all hover:text-foreground"
                 >
                   Cancel
                 </button>

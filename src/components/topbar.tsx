@@ -30,7 +30,7 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 pl-14 pr-4 backdrop-blur-xl lg:pl-6 lg:pr-6">
+    <header className="topbar-glow sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-background/80 pl-14 pr-4 backdrop-blur-xl lg:pl-6 lg:pr-6">
       <div>
         {subtitle ? (
           <>
@@ -84,35 +84,48 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
               <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary ring-2 ring-background" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent align="end" className="w-72 p-0">
+          <PopoverContent align="end" className="w-80 p-0">
             <div className="flex items-center justify-between px-4 py-3 border-b border-border">
               <h3 className="text-xs font-semibold text-foreground">
                 Notifications
               </h3>
+              <span className="text-[10px] text-primary font-medium">3 new</span>
             </div>
             <div className="p-2 space-y-1">
               {[
                 {
-                  text: "Welcome to SEO Agents Hub!",
+                  text: "Welcome to Agents Hub!",
                   sub: "Run your first audit to get started",
+                  time: "Just now",
+                  color: "#14b8a6",
                 },
                 {
-                  text: "14 SEO Tools available",
+                  text: "14 SEO Tools Ready",
                   sub: "Generate meta tags, schema, content & more",
+                  time: "2h ago",
+                  color: "#06b6d4",
                 },
                 {
-                  text: "AI-Powered Analysis",
-                  sub: "Multi-provider intelligence engine",
+                  text: "AI Chat Available",
+                  sub: "Ask questions about your SEO data",
+                  time: "Today",
+                  color: "#a78bfa",
                 },
               ].map((n, i) => (
                 <div
                   key={i}
-                  className="rounded-md bg-muted/50 p-3 transition-colors hover:bg-muted"
+                  className="rounded-lg bg-muted/50 p-3 transition-all hover:bg-muted hover:translate-x-0.5 cursor-pointer"
                 >
-                  <p className="text-xs text-foreground/80">{n.text}</p>
-                  <p className="mt-0.5 text-[10px] text-muted-foreground">
-                    {n.sub}
-                  </p>
+                  <div className="flex items-start gap-2.5">
+                    <div className="mt-0.5 h-2 w-2 rounded-full shrink-0 pulse-dot" style={{ backgroundColor: n.color }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs font-medium text-foreground/90">{n.text}</p>
+                        <span className="text-[9px] text-muted-foreground/50 ml-2 whitespace-nowrap">{n.time}</span>
+                      </div>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">{n.sub}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

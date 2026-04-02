@@ -97,7 +97,7 @@ export default function PinboardPage() {
                   placeholder="Search pins..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <p className="text-xs text-muted-foreground/70 flex-shrink-0">{filtered.length} of {pins.length} pins</p>
