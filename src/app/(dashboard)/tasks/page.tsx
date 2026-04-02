@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { TaskBoard } from "@/components/task-board";
-import { ListTodo, Plus, X } from "lucide-react";
+import { ListTodo, Plus, X, Trash2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
@@ -29,7 +29,17 @@ export default function TasksPage() {
     });
     if (res.ok) {
       setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
+      toast.success(`Task moved to ${newStatus.replace("_", " ")}`);
     }
+  }
+
+  async function bulkMarkDone() {
+    const doneTasks = tasks.filter(t => t.status !== "DONE");
+    for (const t of doneTasks) {
+      await fetch("/api/tasks", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: t.id, status: "DONE" }) });
+    }
+    setTasks((prev) => prev.map(t => ({ ...t, status: "DONE" })));
+    toast.success(`${doneTasks.length} tasks marked as done`);
   }
 
   async function createTask(e: React.FormEvent) {
@@ -44,6 +54,7 @@ export default function TasksPage() {
       setTasks((prev) => [...prev, newTask]);
       setShowForm(false);
       setTitle(""); setDescription(""); setPriority("MEDIUM");
+      toast.success("Task created");
     }
   }
 
@@ -73,12 +84,22 @@ export default function TasksPage() {
               <span className="text-xs text-muted-foreground">{doneCount} Done</span>
             </div>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110"
-          >
-            <Plus className="h-4 w-4" /> New Task
-          </button>
+          <div className="flex items-center gap-2">
+            {tasks.filter(t => t.status !== "DONE").length > 0 && (
+              <button
+                onClick={bulkMarkDone}
+                className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-xs font-medium text-muted-foreground transition-all hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" /> Mark All Done
+              </button>
+            )}
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110"
+            >
+              <Plus className="h-4 w-4" /> New Task
+            </button>
+          </div>
         </div>
 
         {/* Quick add form */}

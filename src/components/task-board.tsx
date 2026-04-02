@@ -28,7 +28,7 @@ interface TaskBoardProps {
 
 const COLUMNS = [
   { key: "TODO", label: "To Do", color: "#64748b" },
-  { key: "IN_PROGRESS", label: "In Progress", color: "#818cf8" },
+  { key: "IN_PROGRESS", label: "In Progress", color: "#14b8a6" },
   { key: "IN_REVIEW", label: "In Review", color: "#fbbf24" },
   { key: "DONE", label: "Done", color: "#34d399" },
 ];
@@ -41,7 +41,7 @@ const priorityVariant: Record<string, "destructive" | "warning" | "secondary" | 
 };
 
 const agentColors: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
