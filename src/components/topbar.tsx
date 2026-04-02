@@ -87,8 +87,8 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
                   sub: "Generate meta tags, schema, content & more",
                 },
                 {
-                  text: "Powered by GPT-5",
-                  sub: "Free AI via GitHub Models",
+                  text: "AI-Powered Analysis",
+                  sub: "Multi-provider intelligence engine",
                 },
               ].map((n, i) => (
                 <div

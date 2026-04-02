@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
-import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X } from "lucide-react";
+import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X, Palette, Building2 } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
@@ -23,6 +23,44 @@ export default function SettingsPage() {
   const [showNew, setShowNew] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwStatus, setPwStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  // White-label settings (OWNER only)
+  const [wlCompany, setWlCompany] = useState("");
+  const [wlLogo, setWlLogo] = useState("");
+  const [wlAccent, setWlAccent] = useState("#818cf8");
+  const [wlLoading, setWlLoading] = useState(false);
+  const [wlStatus, setWlStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  useState(() => {
+    fetch("/api/settings/whitelabel").then((r) => r.json()).then((data) => {
+      if (data.companyName) setWlCompany(data.companyName);
+      if (data.logoUrl) setWlLogo(data.logoUrl);
+      if (data.accentColor) setWlAccent(data.accentColor);
+    }).catch(() => {});
+  });
+
+  async function saveWhiteLabel(e: React.FormEvent) {
+    e.preventDefault();
+    setWlLoading(true);
+    setWlStatus(null);
+    try {
+      const res = await fetch("/api/settings/whitelabel", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ companyName: wlCompany, logoUrl: wlLogo, accentColor: wlAccent }),
+      });
+      if (res.ok) {
+        setWlStatus({ ok: true, msg: "White-label settings saved! PDF exports will use these." });
+      } else {
+        const data = await res.json();
+        setWlStatus({ ok: false, msg: data.error });
+      }
+    } catch {
+      setWlStatus({ ok: false, msg: "Network error" });
+    } finally {
+      setWlLoading(false);
+    }
+  }
 
   // Employee creation (OWNER only)
   const [empName, setEmpName] = useState("");
@@ -177,6 +215,70 @@ export default function SettingsPage() {
           )}
         </div>
 
+        {/* White-Label PDF (OWNER only) */}
+        {user?.role === "OWNER" && (
+          <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/15">
+                <Building2 className="h-4 w-4 text-violet-400" />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-foreground">White-Label PDF</h2>
+                <p className="text-xs text-muted-foreground/70">Customize PDF exports with your brand</p>
+              </div>
+            </div>
+            <form onSubmit={saveWhiteLabel} className="space-y-3">
+              <div>
+                <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Company Name</label>
+                <input
+                  value={wlCompany}
+                  onChange={(e) => setWlCompany(e.target.value)}
+                  placeholder="Your Company Name"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Logo URL</label>
+                <input
+                  value={wlLogo}
+                  onChange={(e) => setWlLogo(e.target.value)}
+                  placeholder="https://your-site.com/logo.png"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                />
+              </div>
+              <div>
+                <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Accent Color</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={wlAccent}
+                    onChange={(e) => setWlAccent(e.target.value)}
+                    className="h-10 w-14 rounded-lg border border-border cursor-pointer"
+                  />
+                  <input
+                    value={wlAccent}
+                    onChange={(e) => setWlAccent(e.target.value)}
+                    className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                  />
+                </div>
+              </div>
+
+              {wlStatus && (
+                <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${wlStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
+                  {wlStatus.ok ? <CheckCircle2 className="h-4 w-4 flex-shrink-0" /> : <AlertCircle className="h-4 w-4 flex-shrink-0" />}
+                  {wlStatus.msg}
+                </div>
+              )}
+
+              <button type="submit" disabled={wlLoading}
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-60">
+                <Palette className="h-3.5 w-3.5" />
+                {wlLoading ? "Saving..." : "Save White-Label Settings"}
+              </button>
+            </form>
+          </div>
+        )}
+
         {/* Create Employee (OWNER only) */}
         {user?.role === "OWNER" && (
           <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
@@ -273,15 +375,15 @@ export default function SettingsPage() {
           </form>
         </div>
 
-        {/* GitHub Models API */}
+        {/* AI Provider Configuration */}
         <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/15">
               <Key className="h-4 w-4 text-amber-400" />
             </div>
             <div>
-              <h2 className="text-sm font-semibold text-foreground">GitHub Models API</h2>
-              <p className="text-xs text-muted-foreground/70">GPT-5, DeepSeek V3, Llama 4 — via GitHub PAT</p>
+              <h2 className="text-sm font-semibold text-foreground">AI Provider</h2>
+              <p className="text-xs text-muted-foreground/70">Multi-model AI engine configuration</p>
             </div>
           </div>
           <div className="mb-4 rounded-xl border border-border/70 bg-muted/40 px-4 py-3">

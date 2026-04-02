@@ -11,25 +11,25 @@ export const AI_PROVIDERS: Record<AIProvider, {
     name: "Gemini",
     models: ["gemini-2.5-flash", "gemini-3.1-flash-lite", "gemini-3-flash"],
     color: "#4285f4",
-    badge: "FREE",
+    badge: "FAST",
   },
   github: {
-    name: "GitHub Models",
+    name: "GitHub AI",
     models: ["openai/gpt-4o", "deepseek/DeepSeek-V3-0324", "meta/Llama-4-Scout-17B-16E-Instruct"],
     color: "#34d399",
-    badge: "FREE",
+    badge: "AUTO",
   },
   openrouter: {
     name: "OpenRouter",
     models: ["deepseek/deepseek-chat-v3-0324:free", "meta-llama/llama-4-scout:free", "qwen/qwen3-235b-a22b:free"],
     color: "#818cf8",
-    badge: "FREE",
+    badge: "MULTI",
   },
   claude: {
     name: "Claude",
     models: ["claude-sonnet-4-20250514"],
     color: "#fbbf24",
-    badge: "PAID",
+    badge: "PRO",
   },
 };
 
@@ -51,7 +51,7 @@ export async function callAI(
   } catch (primaryErr: any) {
     console.warn(`[AI] Primary ${provider} failed: ${primaryErr.message}`);
 
-    // Auto-fallback to other free providers
+    // Auto-fallback to other providers
     for (const fallback of FALLBACK_ORDER) {
       if (fallback === provider) continue;
       try {

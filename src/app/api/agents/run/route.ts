@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { hasPermission } from "@/lib/permissions";
 import { type AgentTypeName } from "@/types";
 import { logActivity } from "@/lib/activity";
+import { sendAuditCompleteEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -59,6 +60,11 @@ export async function POST(req: NextRequest) {
     });
 
     logActivity(user.id, "audit_run", `${agent} audit on ${validUrl} — Score: ${result.score}`, { auditId: audit.id, agent, url: validUrl });
+
+    // Send email notification (fire and forget)
+    if (user.email) {
+      sendAuditCompleteEmail(user.email, user.name || "User", validUrl, agent, result.score, result.grade);
+    }
 
     return NextResponse.json({ audit, result });
   } catch (error: any) {

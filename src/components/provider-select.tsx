@@ -18,7 +18,7 @@ const PROVIDERS: {
   {
     id: "gemini",
     name: "Gemini",
-    badge: "FREE",
+    badge: "FAST",
     badgeVariant: "success",
     icon: Flame,
     desc: "Fast & generous limits",
@@ -26,15 +26,15 @@ const PROVIDERS: {
   {
     id: "github",
     name: "GitHub",
-    badge: "FREE",
+    badge: "AUTO",
     badgeVariant: "success",
     icon: Bot,
-    desc: "GPT-4o, DeepSeek V3",
+    desc: "Multi-model routing",
   },
   {
     id: "openrouter",
     name: "OpenRouter",
-    badge: "FREE",
+    badge: "MULTI",
     badgeVariant: "default",
     icon: Cpu,
     desc: "DeepSeek, Llama 4",
@@ -42,7 +42,7 @@ const PROVIDERS: {
   {
     id: "claude",
     name: "Claude",
-    badge: "PAID",
+    badge: "PRO",
     badgeVariant: "warning",
     icon: Sparkles,
     desc: "Best quality",

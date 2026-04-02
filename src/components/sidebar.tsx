@@ -28,6 +28,7 @@ import {
   LogOut,
   Activity,
   GitCompareArrows,
+  Shield,
   Cog,
   Link2,
   FileEdit,
@@ -77,6 +78,7 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
 
   const managementItems = [
     { href: "/tools", icon: Wrench, label: "SEO Tools" },
+    { href: "/search-console", icon: Search, label: "Search Console" },
     { href: "/projects", icon: FolderOpen, label: "Projects" },
     { href: "/tasks", icon: ListTodo, label: "Tasks" },
     ...(roleConfig.can.includes("manage_team")
@@ -86,6 +88,9 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
     { href: "/pinboard", icon: Pin, label: "Pinboard" },
     { href: "/compare", icon: GitCompareArrows, label: "Compare" },
     { href: "/activity", icon: Activity, label: "Activity Log" },
+    ...(user.role === "CLIENT"
+      ? [{ href: "/portal", icon: Shield, label: "Client Portal" }]
+      : []),
   ];
 
   const isAuditActive = pathname === "/audit";
@@ -151,17 +156,29 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
       {/* Brand */}
       <Link
         href="/"
-        className="flex items-center gap-3 px-5 py-5 border-b border-sidebar-border"
+        className="flex items-center gap-3 px-5 py-5 border-b border-sidebar-border group"
       >
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-black text-primary-foreground shadow-md shadow-primary/30">
-          S
+        <div className="relative flex size-9 shrink-0 items-center justify-center">
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-9">
+            <defs>
+              <linearGradient id="logo-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#6366f1" />
+                <stop offset="100%" stopColor="#a855f7" />
+              </linearGradient>
+            </defs>
+            <rect width="36" height="36" rx="10" fill="url(#logo-grad)" />
+            <path d="M11 13.5C11 11.5 12.8 10 15.5 10C18.2 10 20 11.5 20 13.5C20 15.2 18.8 16.2 17 16.8L17 18.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+            <path d="M19 21C19 19.5 20.5 18.5 22.5 18C24.5 17.5 26 18.5 26 20.5C26 22.5 24.2 24 22 24.5L19 25.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.7" />
+            <circle cx="17" cy="22" r="1.5" fill="white" />
+            <circle cx="22" cy="28" r="1.2" fill="white" opacity="0.7" />
+          </svg>
         </div>
         <div>
           <p className="text-sm font-bold tracking-tight text-foreground">
-            SEO Agents
+            Agents Hub
           </p>
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-            Hub
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground/60">
+            SEO Intelligence
           </p>
         </div>
       </Link>

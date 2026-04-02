@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
 });
 
 interface ReportPDFProps {
+  companyName?: string;
+  accentColor?: string;
   audit: {
     url: string;
     agent: string;
@@ -34,11 +36,14 @@ interface ReportPDFProps {
   };
 }
 
-export function ReportPDF({ audit }: ReportPDFProps) {
+export function ReportPDF({ audit, companyName, accentColor }: ReportPDFProps) {
+  const headerColor = accentColor || "#818cf8";
+  const brandName = companyName || "SEO Agents Hub";
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.header}>SEO Agents Hub Report</Text>
+        <Text style={[styles.header, { color: headerColor }]}>{brandName} Report</Text>
         <View style={styles.row}>
           <Text style={styles.text}>URL: {audit.url}</Text>
           <Text style={styles.text}>Agent: {audit.agent}</Text>

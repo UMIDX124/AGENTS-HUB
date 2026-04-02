@@ -221,7 +221,7 @@ export default function ToolsPage() {
                   <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 animate-pulse" style={{ width: `${Math.min(95, elapsed * 3)}%`, transition: "width 1s ease" }} />
                 </div>
                 <p className="text-[11px] text-muted-foreground/60">
-                  {elapsed < 3 ? "Waking up GPT-5..." : elapsed < 8 ? "Crawling your website for real data..." : elapsed < 15 ? "Crunching SEO signals & patterns..." : elapsed < 25 ? "Crafting expert recommendations..." : "Polishing the final output..."}
+                  {elapsed < 3 ? "Initializing AI engine..." : elapsed < 8 ? "Crawling your website for real data..." : elapsed < 15 ? "Crunching SEO signals & patterns..." : elapsed < 25 ? "Crafting expert recommendations..." : "Polishing the final output..."}
                 </p>
               </div>
             )}
@@ -263,7 +263,7 @@ export default function ToolsPage() {
               <Code2 className="h-7 w-7 text-indigo-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">Select a Tool Above</h3>
-            <p className="mt-1 text-sm text-muted-foreground/70">14 powerful SEO tools — all FREE, all generate ready-to-use output</p>
+            <p className="mt-1 text-sm text-muted-foreground/70">14 powerful SEO tools — generate ready-to-use output instantly</p>
           </div>
         )}
       </div>

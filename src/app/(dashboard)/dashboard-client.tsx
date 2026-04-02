@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Topbar } from "@/components/topbar";
 import { AgentCard } from "@/components/agent-card";
@@ -26,6 +27,8 @@ import {
   Zap,
   TrendingUp,
   ArrowUpRight,
+  GripVertical,
+  RotateCcw,
 } from "lucide-react";
 
 interface DashboardClientProps {
@@ -94,6 +97,37 @@ const agentAccentColors: Record<string, string> = {
   COMPETITOR: "#fbbf24",
 };
 
+const DEFAULT_WIDGET_ORDER = ["totalAudits", "avgScore", "projects", "pendingTasks"];
+const WIDGET_STORAGE_KEY = "seo-hub-widget-order";
+
+function useWidgetOrder() {
+  const [order, setOrder] = useState<string[]>(DEFAULT_WIDGET_ORDER);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(WIDGET_STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === DEFAULT_WIDGET_ORDER.length) {
+          setOrder(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  const saveOrder = useCallback((newOrder: string[]) => {
+    setOrder(newOrder);
+    localStorage.setItem(WIDGET_STORAGE_KEY, JSON.stringify(newOrder));
+  }, []);
+
+  const resetOrder = useCallback(() => {
+    setOrder(DEFAULT_WIDGET_ORDER);
+    localStorage.removeItem(WIDGET_STORAGE_KEY);
+  }, []);
+
+  return { order, saveOrder, resetOrder };
+}
+
 export function DashboardClient({
   user,
   stats,
@@ -101,6 +135,26 @@ export function DashboardClient({
   chartData,
 }: DashboardClientProps) {
   const showFullDashboard = user.role === "OWNER" || user.role === "MANAGER";
+  const { order, saveOrder, resetOrder } = useWidgetOrder();
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+
+  function handleDragStart(idx: number) {
+    setDragIdx(idx);
+  }
+
+  function handleDragOver(e: React.DragEvent, idx: number) {
+    e.preventDefault();
+    if (dragIdx === null || dragIdx === idx) return;
+    const newOrder = [...order];
+    const [moved] = newOrder.splice(dragIdx, 1);
+    newOrder.splice(idx, 0, moved);
+    saveOrder(newOrder);
+    setDragIdx(idx);
+  }
+
+  const statConfigMap = Object.fromEntries(getStatConfig(stats).map((s) => [s.key, s]));
+  const orderedStats = order.map((key) => statConfigMap[key]).filter(Boolean);
+  const isCustomOrder = JSON.stringify(order) !== JSON.stringify(DEFAULT_WIDGET_ORDER);
 
   return (
     <div className="min-h-screen">
@@ -109,40 +163,60 @@ export function DashboardClient({
       <div className="p-4 sm:p-6 space-y-6">
         {/* Stats grid */}
         {showFullDashboard && (
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {getStatConfig(stats).map(
-              ({ key, label, icon: Icon, color, trend, href }) => (
-                <Link key={key} href={href}>
-                  <Card className="card-hover relative overflow-hidden transition-colors hover:bg-accent/30">
-                    {/* Gradient accent blob */}
-                    <div
-                      className="absolute -right-6 -top-6 size-24 rounded-full blur-2xl opacity-20"
-                      style={{ backgroundColor: color }}
-                    />
-                    <CardContent className="relative p-4 sm:p-5">
-                      <div className="mb-3 flex items-center justify-between">
-                        <div
-                          className="rounded-lg p-2"
-                          style={{ backgroundColor: `${color}15` }}
-                        >
-                          <Icon className="size-4" style={{ color }} />
-                        </div>
-                        <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-                          <ArrowUpRight className="size-3" />
-                          {trend}
-                        </span>
-                      </div>
-                      <p className="text-2xl font-bold tracking-tight text-foreground tabular-nums">
-                        {stats[key as keyof typeof stats]}
-                      </p>
-                      <p className="mt-0.5 text-xs text-muted-foreground">
-                        {label}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
+          <div>
+            {isCustomOrder && (
+              <div className="mb-2 flex justify-end">
+                <button
+                  onClick={resetOrder}
+                  className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <RotateCcw className="size-3" /> Reset layout
+                </button>
+              </div>
             )}
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              {orderedStats.map(
+                ({ key, label, icon: Icon, color, trend, href }, idx) => (
+                  <div
+                    key={key}
+                    draggable
+                    onDragStart={() => handleDragStart(idx)}
+                    onDragOver={(e) => handleDragOver(e, idx)}
+                    onDragEnd={() => setDragIdx(null)}
+                    className={`cursor-grab active:cursor-grabbing ${dragIdx === idx ? "opacity-50" : ""}`}
+                  >
+                    <Link href={href}>
+                      <Card className="card-hover relative overflow-hidden transition-colors hover:bg-accent/30">
+                        <div
+                          className="absolute -right-6 -top-6 size-24 rounded-full blur-2xl opacity-20"
+                          style={{ backgroundColor: color }}
+                        />
+                        <CardContent className="relative p-4 sm:p-5">
+                          <div className="mb-3 flex items-center justify-between">
+                            <div
+                              className="rounded-lg p-2"
+                              style={{ backgroundColor: `${color}15` }}
+                            >
+                              <Icon className="size-4" style={{ color }} />
+                            </div>
+                            <span className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
+                              <ArrowUpRight className="size-3" />
+                              {trend}
+                            </span>
+                          </div>
+                          <p className="text-2xl font-bold tracking-tight text-foreground tabular-nums">
+                            {stats[key as keyof typeof stats]}
+                          </p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">
+                            {label}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </div>
+                )
+              )}
+            </div>
           </div>
         )}
 
