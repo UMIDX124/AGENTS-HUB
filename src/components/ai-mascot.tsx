@@ -225,7 +225,7 @@ export function AIMascot() {
     <>
       {/* Chat popup */}
       {open && (
-        <div className="fixed bottom-28 right-6 z-[90] w-[360px] max-h-[500px] rounded-2xl border border-border bg-card shadow-2xl shadow-black/30 flex flex-col animate-scale-in overflow-hidden">
+        <div className="fixed bottom-32 right-6 z-[90] w-[360px] max-h-[500px] rounded-2xl border border-border bg-card shadow-2xl shadow-black/30 flex flex-col animate-scale-in overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
             <div className="flex items-center gap-2">
@@ -333,7 +333,7 @@ export function AIMascot() {
         style={{ animationDuration: "4s" }}
       >
         <div className="relative">
-          <MascotSVG mood={mood} size={72} />
+          <MascotSVG mood={mood} size={90} />
 
           {/* Notification dot */}
           {!open && messages.length === 0 && (
