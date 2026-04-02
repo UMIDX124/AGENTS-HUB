@@ -33,6 +33,7 @@ import {
   CreditCard,
   Clock,
   MessageSquare,
+  BookOpen,
   Cog,
   Link2,
   FileEdit,
@@ -95,6 +96,7 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
     { href: "/chat", icon: MessageSquare, label: "AI Chat" },
     { href: "/scheduled", icon: Clock, label: "Scheduled" },
     { href: "/docs", icon: Code, label: "API Docs" },
+    { href: "/user-guide.html", icon: BookOpen, label: "User Guide" },
     { href: "/billing", icon: CreditCard, label: "Billing" },
     ...(user.role === "CLIENT"
       ? [{ href: "/portal", icon: Shield, label: "Client Portal" }]
