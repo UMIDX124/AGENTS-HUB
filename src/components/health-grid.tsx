@@ -33,24 +33,30 @@ const statusConfig = {
 
 export function HealthGrid({ highlights }: HealthGridProps) {
   return (
-    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-2.5 sm:grid-cols-2">
       {highlights.map((h, i) => {
         const config = statusConfig[h.status];
         const Icon = config.icon;
         return (
           <Card key={i} className="transition-colors hover:bg-accent/20">
-            <CardContent className="flex items-start gap-3 p-4">
-              <div className={`rounded-lg p-2 ${config.bgClass}`}>
+            <CardContent className="flex items-center gap-3 p-4">
+              <div className={`shrink-0 rounded-lg p-2 ${config.bgClass}`}>
                 <Icon className="size-4" style={{ color: config.color }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-sm font-semibold text-foreground leading-snug">
                   {h.metric}
                 </p>
-                <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed">
                   {h.value}
                 </p>
               </div>
+              <span
+                className="shrink-0 rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+                style={{ backgroundColor: `${config.color}18`, color: config.color }}
+              >
+                {h.status}
+              </span>
             </CardContent>
           </Card>
         );

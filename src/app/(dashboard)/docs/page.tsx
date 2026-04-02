@@ -52,7 +52,7 @@ export default function DocsPage() {
     }
   }
 
-  const baseUrl = "https://agents-hub-fawn.vercel.app";
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   const endpoints = [
     {
