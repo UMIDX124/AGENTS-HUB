@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { CommandPalette } from "@/components/command-palette";
+import { SessionTimeout } from "@/components/session-timeout";
 import type { RoleName } from "@/types";
 
 interface SidebarWrapperProps {
@@ -49,6 +50,8 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
 
         {/* Command palette (Ctrl+K) */}
         <CommandPalette />
+        {/* Session timeout (30 min inactivity) */}
+        <SessionTimeout />
       </div>
     </SessionProvider>
   );

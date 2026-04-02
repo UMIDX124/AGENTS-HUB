@@ -52,6 +52,7 @@ export const metadata: Metadata = {
       "AI-Powered SEO Command Center — 5 agents, 14 tools.",
   },
   robots: { index: true, follow: true },
+  manifest: "/manifest.json",
   metadataBase: new URL("https://agents-hub-fawn.vercel.app"),
 };
 

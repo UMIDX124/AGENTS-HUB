@@ -6,6 +6,7 @@ import { hasPermission } from "@/lib/permissions";
 import { type AgentTypeName } from "@/types";
 import { logActivity } from "@/lib/activity";
 import { sendAuditCompleteEmail } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +18,12 @@ export async function POST(req: NextRequest) {
     const user = session.user as any;
     if (!hasPermission(user.role, "run_agents")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // Rate limit: 10 audits per minute per user
+    const rl = rateLimit(`audit:${user.id}`, 10, 60000);
+    if (!rl.ok) {
+      return NextResponse.json({ error: "Rate limit exceeded. Try again in 1 minute." }, { status: 429 });
     }
 
     const { url, agent, projectId, provider } = await req.json();
