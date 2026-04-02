@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X, Palette, Building2, Smartphone } from "lucide-react";
@@ -39,13 +39,13 @@ export default function SettingsPage() {
   const [wlLoading, setWlLoading] = useState(false);
   const [wlStatus, setWlStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
-  useState(() => {
+  useEffect(() => {
     fetch("/api/settings/whitelabel").then((r) => r.json()).then((data) => {
       if (data.companyName) setWlCompany(data.companyName);
       if (data.logoUrl) setWlLogo(data.logoUrl);
       if (data.accentColor) setWlAccent(data.accentColor);
     }).catch(() => {});
-  });
+  }, []);
 
   async function saveWhiteLabel(e: React.FormEvent) {
     e.preventDefault();
