@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { PermissionMatrix } from "@/components/permission-matrix";
 import { PERMISSIONS } from "@/lib/permissions";
-import { Plus, Trash2, Users, X, ShieldCheck } from "lucide-react";
+import { Plus, Trash2, Users, X, ShieldCheck, Trophy, BarChart3 } from "lucide-react";
 import { toast } from "sonner";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import type { RoleName } from "@/types";
@@ -20,10 +20,12 @@ export default function TeamPage() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<RoleName>("SPECIALIST");
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"members" | "permissions">("members");
+  const [activeTab, setActiveTab] = useState<"members" | "permissions" | "leaderboard">("members");
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
   useEffect(() => {
     fetch("/api/team").then((r) => r.json()).then((data) => { if (Array.isArray(data)) setMembers(data); });
+    fetch("/api/team/stats").then((r) => r.json()).then((data) => { if (Array.isArray(data)) setLeaderboard(data); }).catch(() => {});
   }, []);
 
   async function addMember(e: React.FormEvent) {
@@ -73,6 +75,12 @@ export default function TeamPage() {
               className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "permissions" ? "bg-teal-500/20 text-teal-300" : "text-muted-foreground hover:text-foreground/70"}`}
             >
               <ShieldCheck className="h-3.5 w-3.5" /> Permissions
+            </button>
+            <button
+              onClick={() => setActiveTab("leaderboard")}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "leaderboard" ? "bg-teal-500/20 text-teal-300" : "text-muted-foreground hover:text-foreground/70"}`}
+            >
+              <Trophy className="h-3.5 w-3.5" /> Leaderboard
             </button>
           </div>
           {activeTab === "members" && (
@@ -179,6 +187,49 @@ export default function TeamPage() {
         {activeTab === "permissions" && (
           <div className="rounded-2xl border border-border bg-muted/40 p-5">
             <PermissionMatrix />
+          </div>
+        )}
+
+        {activeTab === "leaderboard" && (
+          <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
+            <div className="px-5 py-3 border-b border-border/50 flex items-center gap-2">
+              <Trophy className="h-4 w-4 text-amber-400" />
+              <h3 className="text-sm font-semibold text-foreground">Team Leaderboard</h3>
+            </div>
+            {leaderboard.length > 0 ? (
+              <div className="divide-y divide-border/50">
+                {leaderboard.map((member, idx) => {
+                  const medal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
+                  return (
+                    <div key={member.id} className="flex items-center justify-between px-5 py-3 hover:bg-muted/60 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <span className="text-base w-8 text-center">{medal}</span>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{member.name}</p>
+                          <p className="text-[10px] text-muted-foreground capitalize">{member.role.toLowerCase()}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs">
+                        <div className="text-center">
+                          <p className="font-bold text-foreground tabular-nums">{member.totalAudits}</p>
+                          <p className="text-[10px] text-muted-foreground">Audits</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="font-bold text-foreground tabular-nums">{member.weeklyAudits}</p>
+                          <p className="text-[10px] text-muted-foreground">This Week</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="font-bold text-foreground tabular-nums">{member.totalTasks}</p>
+                          <p className="text-[10px] text-muted-foreground">Tasks</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="p-8 text-center text-sm text-muted-foreground">No data yet — run some audits to see the leaderboard</p>
+            )}
           </div>
         )}
       </div>

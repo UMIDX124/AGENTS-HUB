@@ -21,6 +21,7 @@ import { CopyButton } from "@/components/copy-button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ScoreBreakdown } from "@/components/score-breakdown";
 import { fireConfetti } from "@/lib/confetti";
+import { FavoriteUrls } from "@/components/favorite-urls";
 
 export default function AuditPage() {
   const { data: session } = useSession();
@@ -256,6 +257,11 @@ export default function AuditPage() {
                 )}
               </>
             )}
+          </div>
+
+          {/* Bookmarked URLs */}
+          <div className="mt-3">
+            <FavoriteUrls currentUrl={url} onSelect={(u) => setUrl(u)} />
           </div>
         </div>
 
