@@ -7,7 +7,7 @@ import { ScoreRing } from "@/components/score-ring";
 import { AGENTS } from "@/lib/agents";
 import { formatDate } from "@/lib/utils";
 import type { AgentTypeName } from "@/types";
-import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe, Trash2, FileSpreadsheet } from "lucide-react";
+import { Download, FileText, Filter, Search, TrendingUp, Calendar, Globe, Trash2, FileSpreadsheet, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { pdf } from "@react-pdf/renderer";
@@ -175,6 +175,16 @@ export default function ReportsPage() {
                     </div>
                     <div className="flex items-center gap-2 ml-4 flex-shrink-0">
                       <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${window.location.origin}/audit/${audit.id}`);
+                          toast.success("Audit link copied!");
+                        }}
+                        className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-400"
+                      >
+                        <Link2 className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Share</span>
+                      </button>
+                      <button
                         onClick={() => exportPDF(audit)}
                         disabled={exporting === audit.id}
                         className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-400 disabled:opacity-40"
@@ -183,7 +193,7 @@ export default function ReportsPage() {
                         <span className="hidden sm:inline">{exporting === audit.id ? "Exporting..." : "PDF"}</span>
                       </button>
                       <button
-                        onClick={() => deleteAudit(audit.id)}
+                        onClick={() => { deleteAudit(audit.id); toast.success("Report deleted"); }}
                         className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400"
                       >
                         <Trash2 className="h-3.5 w-3.5" />

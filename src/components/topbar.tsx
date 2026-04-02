@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import type { RoleName } from "@/types";
-import { Bell, Sparkles, X } from "lucide-react";
+import { Bell, Sparkles, X, Search } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LocaleToggle } from "@/components/locale-toggle";
 
@@ -59,6 +59,16 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
             </span>
           </span>
         </div>
+
+        {/* Search shortcut hint */}
+        <button
+          onClick={() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
+          className="hidden items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted/60 lg:flex"
+        >
+          <Search className="size-3" />
+          <span>Search...</span>
+          <kbd className="rounded border border-border bg-background px-1 py-0.5 text-[10px] font-mono">Ctrl K</kbd>
+        </button>
 
         {/* Language toggle */}
         <LocaleToggle />

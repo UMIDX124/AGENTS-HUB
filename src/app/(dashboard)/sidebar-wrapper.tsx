@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { CommandPalette } from "@/components/command-palette";
 import type { RoleName } from "@/types";
 
 interface SidebarWrapperProps {
@@ -45,6 +46,9 @@ export function SidebarWrapper({ user, children }: SidebarWrapperProps) {
 
         {/* Main content */}
         <main className="flex-1 min-w-0 lg:ml-[260px]">{children}</main>
+
+        {/* Command palette (Ctrl+K) */}
+        <CommandPalette />
       </div>
     </SessionProvider>
   );
