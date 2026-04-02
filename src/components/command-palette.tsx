@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   LayoutDashboard, Search, Wrench, FileText, FolderOpen, ListTodo,
   Users, Pin, Settings, Activity, GitCompareArrows, Globe, Shield,
-  Code, CreditCard, Clock, Zap, Cog, Link2, FileEdit, Target,
+  Code, CreditCard, Clock, MessageSquare, Zap, Cog, Link2, FileEdit, Target,
 } from "lucide-react";
 
 const COMMANDS = [
@@ -22,6 +22,7 @@ const COMMANDS = [
   { label: "Compare Audits", href: "/compare", icon: GitCompareArrows, section: "Navigation" },
   { label: "Search Console", href: "/search-console", icon: Globe, section: "Navigation" },
   { label: "API Docs", href: "/docs", icon: Code, section: "Navigation" },
+  { label: "AI Chat", href: "/chat", icon: MessageSquare, section: "Navigation" },
   { label: "Billing", href: "/billing", icon: CreditCard, section: "Navigation" },
   { label: "Scheduled Audits", href: "/scheduled", icon: Clock, section: "Navigation" },
   { label: "On-Page Audit", href: "/audit?agent=ONPAGE", icon: Search, section: "Agents" },
