@@ -256,6 +256,16 @@
     hsl(var(--background));
 }
 
+/* ── Print styles ───────────────────────────── */
+@media print {
+  aside, header, .no-print { display: none !important; }
+  main { margin-left: 0 !important; }
+  body { background: white !important; color: black !important; }
+  .print-only { display: block !important; }
+  * { box-shadow: none !important; }
+}
+.print-only { display: none; }
+
 :root:not(.dark) .shimmer {
   background: linear-gradient(90deg,
     rgba(0,0,0,0.03) 25%,

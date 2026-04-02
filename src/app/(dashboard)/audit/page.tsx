@@ -19,6 +19,7 @@ import { Loader2, Zap, Globe, CheckCircle2, ListTodo, Pin, List, X, RotateCcw, D
 import { toast } from "sonner";
 import { CopyButton } from "@/components/copy-button";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ScoreBreakdown } from "@/components/score-breakdown";
 import { fireConfetti } from "@/lib/confetti";
 
 export default function AuditPage() {
@@ -416,6 +417,7 @@ export default function AuditPage() {
                 <TabsList>
                   <TabsTrigger value="health">Health Check</TabsTrigger>
                   <TabsTrigger value="findings">Findings ({currentResult.findings?.length || 0})</TabsTrigger>
+                  <TabsTrigger value="breakdown">Score Breakdown</TabsTrigger>
                   {currentResult.keywords && <TabsTrigger value="keywords">Keywords</TabsTrigger>}
                   {currentResult.competitors && <TabsTrigger value="competitors">Competitors</TabsTrigger>}
                   {currentResult.topics && <TabsTrigger value="topics">Topics</TabsTrigger>}
@@ -425,6 +427,9 @@ export default function AuditPage() {
                 </TabsContent>
                 <TabsContent value="findings" className="mt-4">
                   <FindingsList findings={currentResult.findings} onPin={pinFinding} />
+                </TabsContent>
+                <TabsContent value="breakdown" className="mt-4">
+                  <ScoreBreakdown findings={currentResult.findings || []} score={currentResult.score} />
                 </TabsContent>
                 {currentResult.keywords && (
                   <TabsContent value="keywords" className="mt-4">
