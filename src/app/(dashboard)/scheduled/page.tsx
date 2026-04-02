@@ -16,6 +16,8 @@ import {
   ToggleRight,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 const AGENT_COLORS: Record<string, string> = {
   ONPAGE: "#14b8a6", TECHNICAL: "#22d3ee", OFFSITE: "#a78bfa", CONTENT: "#34d399", COMPETITOR: "#fbbf24",

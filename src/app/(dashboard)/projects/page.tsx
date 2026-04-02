@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { ProjectCard } from "@/components/project-card";
 import { Plus, FolderOpen, Globe, X } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function ProjectsPage() {
   const { data: session } = useSession();

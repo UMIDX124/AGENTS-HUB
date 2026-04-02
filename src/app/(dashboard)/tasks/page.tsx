@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { TaskBoard } from "@/components/task-board";
 import { ListTodo, Plus, X } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function TasksPage() {
   const { data: session } = useSession();

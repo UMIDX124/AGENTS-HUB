@@ -16,6 +16,8 @@ import {
   Globe,
   Calendar,
 } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 const AGENT_COLORS: Record<string, string> = {
   ONPAGE: "#14b8a6",

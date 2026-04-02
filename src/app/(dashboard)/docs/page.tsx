@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { Code, Key, Copy, Check, Plus, Trash2, FileText, FolderOpen, Zap } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function DocsPage() {
   const { data: session } = useSession();

@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { PLANS, type PlanName } from "@/lib/billing";
 import { CreditCard, Check, Zap, Crown, Sparkles, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function BillingPage() {
   const { data: session } = useSession();

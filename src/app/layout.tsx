@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -68,6 +69,14 @@ export default function RootLayout({
       <body className="antialiased">
         <ThemeProvider>
           <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              className: "!bg-card !text-foreground !border-border",
+            }}
+            richColors
+            closeButton
+          />
         </ThemeProvider>
       </body>
     </html>

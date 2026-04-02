@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Topbar } from "@/components/topbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +15,11 @@ import { AGENTS } from "@/lib/agents";
 import { ProviderSelect, useProvider } from "@/components/provider-select";
 import type { AgentTypeName, AgentResult } from "@/types";
 import { useSession } from "next-auth/react";
-import { Loader2, Zap, Globe, CheckCircle2, ListTodo, Pin, List, X } from "lucide-react";
+import { Loader2, Zap, Globe, CheckCircle2, ListTodo, Pin, List, X, RotateCcw, Download, Copy } from "lucide-react";
+import { toast } from "sonner";
+import { CopyButton } from "@/components/copy-button";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { fireConfetti } from "@/lib/confetti";
 
 export default function AuditPage() {
   const { data: session } = useSession();
@@ -36,6 +40,8 @@ export default function AuditPage() {
   const [bulkUrls, setBulkUrls] = useState("");
   const [bulkResults, setBulkResults] = useState<Array<{ url: string; score: number; grade: string; agent: string; status: "pending" | "running" | "done" | "error"; error?: string }>>([]);
   const [bulkRunning, setBulkRunning] = useState(false);
+  const [lastTab, setLastTab] = useState("health");
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   function validateUrl(input: string): string | null {
     let u = input.trim();
@@ -59,8 +65,12 @@ export default function AuditPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setResults((prev) => ({ ...prev, [agentType]: data.result }));
+      toast.success(`${AGENTS[agentType].name} complete — Score: ${data.result.score}/100`);
+      if (data.result.score >= 90) fireConfetti();
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
     } catch (err: any) {
       setError(err.message);
+      toast.error(`Audit failed: ${err.message}`);
     } finally {
       setLoading((prev) => ({ ...prev, [agentType]: false }));
     }
@@ -172,6 +182,7 @@ export default function AuditPage() {
       <Topbar user={{ name: user?.name || "User", role: user?.role || "SPECIALIST" }} title="AI Audit" subtitle="SEO Intelligence" />
 
       <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <Breadcrumbs />
 
         {/* URL Input Card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-muted/40 p-3 sm:p-5">
@@ -349,9 +360,9 @@ export default function AuditPage() {
 
         {/* Results */}
         {currentResult && !isLoading && activeAgent && (
-          <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
+          <div ref={resultsRef} className="rounded-2xl border border-border bg-muted/40 overflow-hidden animate-slide-up">
             {/* Result header */}
-            <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/60 px-5 py-4 gap-3">
               <div className="flex items-center gap-4">
                 <ScoreRing score={currentResult.score} grade={currentResult.grade} size={80} />
                 <div>
@@ -359,16 +370,39 @@ export default function AuditPage() {
                   <p className="mt-1 text-sm text-muted-foreground max-w-lg">{currentResult.summary}</p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
+                {/* Re-audit */}
                 <button
-                  onClick={() => pinFinding({ title: currentResult.summary, detail: currentResult.summary, severity: "good" })}
+                  onClick={() => { setResults((prev) => { const n = {...prev}; delete n[activeAgent]; return n; }); runSingleAgent(activeAgent); }}
+                  className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-muted/80 hover:text-foreground"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" /> Re-audit
+                </button>
+                {/* Copy summary */}
+                <CopyButton text={currentResult.summary} label="Copy" />
+                {/* JSON export */}
+                <button
+                  onClick={() => {
+                    const blob = new Blob([JSON.stringify(currentResult, null, 2)], { type: "application/json" });
+                    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+                    a.download = `audit-${activeAgent.toLowerCase()}-${Date.now()}.json`; a.click();
+                    toast.success("JSON exported");
+                  }}
+                  className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-muted/80 hover:text-foreground"
+                >
+                  <Download className="h-3.5 w-3.5" /> JSON
+                </button>
+                {/* Pin */}
+                <button
+                  onClick={() => { pinFinding({ title: currentResult.summary, detail: currentResult.summary, severity: "good" }); toast.success("Pinned to board"); }}
                   className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:bg-muted/80 hover:text-foreground"
                 >
                   <Pin className="h-3.5 w-3.5" />
                   {pinSuccess ? "Pinned!" : "Pin"}
                 </button>
+                {/* Create Tasks */}
                 <button
-                  onClick={createTasksFromFindings}
+                  onClick={() => { createTasksFromFindings(); toast.success("Tasks created from findings"); }}
                   className="flex items-center gap-1.5 rounded-xl border border-teal-500/25 bg-teal-500/10 px-3 py-2 text-xs font-semibold text-teal-400 transition-all hover:bg-teal-500/20"
                 >
                   <ListTodo className="h-3.5 w-3.5" />
@@ -378,7 +412,7 @@ export default function AuditPage() {
             </div>
 
             <div className="p-5">
-              <Tabs defaultValue="health">
+              <Tabs defaultValue={lastTab} onValueChange={setLastTab}>
                 <TabsList>
                   <TabsTrigger value="health">Health Check</TabsTrigger>
                   <TabsTrigger value="findings">Findings ({currentResult.findings?.length || 0})</TabsTrigger>

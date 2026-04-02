@@ -14,6 +14,8 @@ import {
   FileText,
   Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function SearchConsolePage() {
   const { data: session } = useSession();

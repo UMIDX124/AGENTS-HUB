@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { formatDate } from "@/lib/utils";
 import { Trash2, Pin, AlertTriangle, CheckCircle2, AlertCircle, Search } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 const SEVERITY_CONFIG: Record<string, { color: string; label: string; icon: any }> = {
   critical: { color: "#f87171", label: "Critical", icon: AlertCircle },

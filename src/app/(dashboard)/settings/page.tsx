@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
 import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X, Palette, Building2, Smartphone } from "lucide-react";
+import { toast } from "sonner";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
