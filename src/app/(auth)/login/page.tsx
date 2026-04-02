@@ -5,8 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const TEAM_ACCOUNTS = [
-  { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "Owner", color: "#818cf8" },
-  { name: "Umi",                  email: "umidx932@gmail.com",             role: "Owner", color: "#818cf8" },
+  { name: "Faizan (Faizi Yoyo)", email: "backupsolutions1122@gmail.com", role: "Owner", color: "#14b8a6" },
+  { name: "Umi",                  email: "umidx932@gmail.com",             role: "Owner", color: "#14b8a6" },
   { name: "Ali Hassan",           email: "ali@digitalpointllc.com",        role: "Specialist", color: "#22d3ee" },
   { name: "Client Demo",          email: "client@example.com",            role: "Client", color: "#fbbf24" },
 ];
@@ -42,18 +42,18 @@ export default function LoginPage() {
       <div className="aurora-bg absolute inset-0 -z-10" />
 
       {/* Animated orbs */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-indigo-600/10 blur-[100px] animate-pulse" />
-      <div className="pointer-events-none absolute -right-32 -bottom-32 h-96 w-96 rounded-full bg-purple-600/10 blur-[100px] animate-pulse" style={{ animationDelay: "1.5s" }} />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-cyan-600/05 blur-[80px]" />
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-teal-500/8 blur-[120px] animate-pulse" />
+      <div className="pointer-events-none absolute -right-32 -bottom-32 h-96 w-96 rounded-full bg-cyan-500/6 blur-[120px] animate-pulse" style={{ animationDelay: "1.5s" }} />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-violet-500/4 blur-[100px]" />
 
       <div className="animate-scale-in w-full max-w-md">
         {/* Brand */}
         <div className="mb-8 flex flex-col items-center gap-4">
           <div className="animate-float relative">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-2xl font-black shadow-2xl shadow-indigo-500/40">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 text-2xl font-black text-white shadow-2xl shadow-teal-500/30">
               S
             </div>
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 opacity-20 blur-sm -z-10" />
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 opacity-15 blur-sm -z-10" />
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-bold tracking-tight text-foreground">SEO Agents Hub</h1>
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
               />
             </div>
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-12 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-12 text-sm text-white placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
                 />
                 <button
                   type="button"
@@ -109,7 +109,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all hover:shadow-indigo-500/40 hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40 hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

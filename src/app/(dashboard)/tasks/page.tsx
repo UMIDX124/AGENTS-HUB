@@ -63,7 +63,7 @@ export default function TasksPage() {
               <span className="text-xs text-muted-foreground">{todoCount} Todo</span>
             </div>
             <div className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-3 py-2">
-              <span className="h-2 w-2 rounded-full bg-indigo-400" />
+              <span className="h-2 w-2 rounded-full bg-teal-400" />
               <span className="text-xs text-muted-foreground">{inProgressCount} In Progress</span>
             </div>
             <div className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 px-3 py-2">
@@ -73,7 +73,7 @@ export default function TasksPage() {
           </div>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110"
+            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110"
           >
             <Plus className="h-4 w-4" /> New Task
           </button>
@@ -81,7 +81,7 @@ export default function TasksPage() {
 
         {/* Quick add form */}
         {showForm && (
-          <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
+          <div className="rounded-2xl border border-teal-500/20 bg-teal-500/5 p-5">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">Add New Task</h3>
               <button onClick={() => setShowForm(false)} className="text-muted-foreground/70 hover:text-muted-foreground"><X className="h-4 w-4" /></button>
@@ -92,18 +92,18 @@ export default function TasksPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
               />
               <input
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
               />
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50"
               >
                 <option value="LOW">Low Priority</option>
                 <option value="MEDIUM">Medium Priority</option>
@@ -111,7 +111,7 @@ export default function TasksPage() {
                 <option value="CRITICAL">Critical</option>
               </select>
               <div className="flex gap-2">
-                <button type="submit" className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110">
+                <button type="submit" className="rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110">
                   Create Task
                 </button>
                 <button type="button" onClick={() => setShowForm(false)} className="rounded-xl border border-border px-4 py-2 text-sm text-white/50 hover:text-foreground">
@@ -126,14 +126,14 @@ export default function TasksPage() {
           <TaskBoard tasks={tasks} onStatusChange={handleStatusChange} />
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <ListTodo className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <ListTodo className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No tasks yet</h3>
             <p className="mt-1 text-sm text-muted-foreground/70">Create a task manually or run an audit to auto-generate tasks</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20"
+              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20"
             >
               <Plus className="h-4 w-4" /> Add First Task
             </button>

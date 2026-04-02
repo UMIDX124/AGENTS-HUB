@@ -15,7 +15,7 @@ import {
 
 const TOOLS = [
   // === Code Generators ===
-  { id: "meta-tags", name: "Meta Tags Generator", description: "Title, description & OG tags — copy paste into HTML", icon: Tag, color: "#818cf8", category: "generate", needsContext: false },
+  { id: "meta-tags", name: "Meta Tags Generator", description: "Title, description & OG tags — copy paste into HTML", icon: Tag, color: "#14b8a6", category: "generate", needsContext: false },
   { id: "schema-markup", name: "Schema Markup", description: "JSON-LD structured data for Google rich results", icon: Braces, color: "#22d3ee", category: "generate", needsContext: false },
   { id: "robots-txt", name: "Robots.txt Generator", description: "Optimized crawl rules for search engines", icon: Bot, color: "#a78bfa", category: "generate", needsContext: false },
   { id: "sitemap-fix", name: "Sitemap Generator", description: "Complete XML sitemap ready to upload", icon: MapPin, color: "#f87171", category: "generate", needsContext: false },
@@ -27,7 +27,7 @@ const TOOLS = [
   { id: "outreach-email", name: "Outreach Emails", description: "Backlink request emails that actually get replies", icon: Mail, color: "#fb923c", category: "content", contextLabel: "What you want backlinks for (page/topic)", needsContext: true },
 
   // === Research & Analysis ===
-  { id: "keyword-research", name: "Keyword Research", description: "Find high-volume, low-difficulty keywords in your niche", icon: Search, color: "#818cf8", category: "research", contextLabel: "Seed keyword or niche (optional)", needsContext: true },
+  { id: "keyword-research", name: "Keyword Research", description: "Find high-volume, low-difficulty keywords in your niche", icon: Search, color: "#14b8a6", category: "research", contextLabel: "Seed keyword or niche (optional)", needsContext: true },
   { id: "backlink-finder", name: "Backlink Opportunities", description: "Find where competitors get backlinks — target same sites", icon: Link2, color: "#a78bfa", category: "research", needsContext: false },
   { id: "internal-linking", name: "Internal Linking Plan", description: "Optimal internal link structure for your website", icon: TrendingUp, color: "#34d399", category: "research", needsContext: false },
   { id: "site-audit", name: "Technical Site Audit", description: "Find broken links, missing tags, speed issues, crawl errors", icon: Bug, color: "#f87171", category: "research", needsContext: false },
@@ -124,13 +124,13 @@ export default function ToolsPage() {
               onClick={() => setCategory(cat.id)}
               className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all whitespace-nowrap ${
                 category === cat.id
-                  ? "bg-indigo-500/15 border border-indigo-500/30 text-indigo-400"
+                  ? "bg-teal-500/15 border border-teal-500/30 text-teal-400"
                   : "border border-border text-muted-foreground hover:bg-muted/60 hover:text-muted-foreground"
               }`}
             >
               {cat.label}
               <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                category === cat.id ? "bg-indigo-500/20" : "bg-muted/80"
+                category === cat.id ? "bg-teal-500/20" : "bg-muted/80"
               }`}>{cat.count}</span>
             </button>
           ))}
@@ -169,7 +169,7 @@ export default function ToolsPage() {
           <div className="rounded-2xl border border-border bg-muted/40 p-5 space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-indigo-400" />
+                <Sparkles className="h-4 w-4 text-teal-400" />
                 <h3 className="text-sm font-semibold text-foreground">{activeTool.name}</h3>
               </div>
               <ProviderSelect value={provider} onChange={setProvider} />
@@ -177,7 +177,7 @@ export default function ToolsPage() {
             <div>
               {loading && (
                 <span className="ml-auto flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <div className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-teal-400 animate-pulse" />
                   {elapsed}s — AI is generating...
                 </span>
               )}
@@ -191,13 +191,13 @@ export default function ToolsPage() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && runTool()}
-                  className="w-full rounded-xl border border-border bg-muted/50 pl-10 pr-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-10 pr-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <button
                 onClick={runTool}
                 disabled={loading || !url}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110 disabled:opacity-40 flex-shrink-0 whitespace-nowrap"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110 disabled:opacity-40 flex-shrink-0 whitespace-nowrap"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 {loading ? `${elapsed}s` : "Generate"}
@@ -210,7 +210,7 @@ export default function ToolsPage() {
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && runTool()}
-                className="w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-muted/50 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
               />
             )}
 
@@ -218,7 +218,7 @@ export default function ToolsPage() {
             {loading && (
               <div className="space-y-2">
                 <div className="h-1 w-full rounded-full bg-muted/80 overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 animate-pulse" style={{ width: `${Math.min(95, elapsed * 3)}%`, transition: "width 1s ease" }} />
+                  <div className="h-full rounded-full bg-gradient-to-r from-teal-500 to-purple-500 animate-pulse" style={{ width: `${Math.min(95, elapsed * 3)}%`, transition: "width 1s ease" }} />
                 </div>
                 <p className="text-[11px] text-muted-foreground/60">
                   {elapsed < 3 ? "Initializing AI engine..." : elapsed < 8 ? "Crawling your website for real data..." : elapsed < 15 ? "Crunching SEO signals & patterns..." : elapsed < 25 ? "Crafting expert recommendations..." : "Polishing the final output..."}
@@ -259,8 +259,8 @@ export default function ToolsPage() {
         {/* Empty state */}
         {!selectedTool && (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-14 text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <Code2 className="h-7 w-7 text-indigo-400" />
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10">
+              <Code2 className="h-7 w-7 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">Select a Tool Above</h3>
             <p className="mt-1 text-sm text-muted-foreground/70">14 powerful SEO tools — generate ready-to-use output instantly</p>

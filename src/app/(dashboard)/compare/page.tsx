@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 const AGENT_COLORS: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
@@ -89,7 +89,7 @@ export default function ComparePage() {
         {/* Selection */}
         <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-4">
-            <GitCompareArrows className="h-4 w-4 text-indigo-400" />
+            <GitCompareArrows className="h-4 w-4 text-teal-400" />
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
               Select Two Audits to Compare
             </span>
@@ -100,7 +100,7 @@ export default function ComparePage() {
               <select
                 value={idA}
                 onChange={(e) => setIdA(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
               >
                 <option value="">Select audit...</option>
                 {audits.map((a) => (
@@ -116,7 +116,7 @@ export default function ComparePage() {
               <select
                 value={idB}
                 onChange={(e) => setIdB(e.target.value)}
-                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+                className="w-full rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
               >
                 <option value="">Select audit...</option>
                 {audits.filter((a) => a.id !== idA).map((a) => (
@@ -129,7 +129,7 @@ export default function ComparePage() {
             <button
               onClick={compare}
               disabled={!idA || !idB || loading}
-              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110 disabled:opacity-50 whitespace-nowrap"
+              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110 disabled:opacity-50 whitespace-nowrap"
             >
               {loading ? "Comparing..." : "Compare"}
             </button>
@@ -301,8 +301,8 @@ export default function ComparePage() {
         {/* Empty state */}
         {!comparison && (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <GitCompareArrows className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <GitCompareArrows className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">Compare Audits</h3>
             <p className="mt-1 text-sm text-muted-foreground">

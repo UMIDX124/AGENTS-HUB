@@ -13,7 +13,7 @@ const SEVERITY_CONFIG: Record<string, { color: string; label: string; icon: any 
 };
 
 const AGENT_COLORS: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
@@ -95,7 +95,7 @@ export default function PinboardPage() {
                   placeholder="Search pins..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <p className="text-xs text-muted-foreground/70 flex-shrink-0">{filtered.length} of {pins.length} pins</p>
@@ -153,20 +153,20 @@ export default function PinboardPage() {
           </div>
         ) : pins.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <Pin className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <Pin className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No pinned findings</h3>
             <p className="mt-1 text-sm text-muted-foreground/70">Pin important findings from audit results to review here</p>
             <a href="/audit"
-              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20">
+              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20">
               Run an Audit
             </a>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-12 text-center">
             <p className="text-sm text-muted-foreground/70">No pins match your filters</p>
-            <button onClick={() => { setFilter(""); setSearch(""); }} className="mt-2 text-xs text-indigo-400 hover:text-indigo-300">
+            <button onClick={() => { setFilter(""); setSearch(""); }} className="mt-2 text-xs text-teal-400 hover:text-teal-300">
               Clear filters
             </button>
           </div>

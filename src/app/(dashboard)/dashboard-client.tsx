@@ -58,7 +58,7 @@ function getStatConfig(stats: DashboardClientProps["stats"]) {
       key: "totalAudits",
       label: "Total Audits",
       icon: BarChart3,
-      color: "#818cf8",
+      color: "#14b8a6",
       trend: stats.totalAudits > 0 ? `${stats.totalAudits} total` : "Run first audit",
       href: "/reports",
     },
@@ -66,7 +66,7 @@ function getStatConfig(stats: DashboardClientProps["stats"]) {
       key: "avgScore",
       label: "Avg SEO Score",
       icon: TrendingUp,
-      color: "#34d399",
+      color: "#06b6d4",
       trend: stats.avgScore > 0 ? `${stats.avgScore}/100` : "No data yet",
       href: "/audit",
     },
@@ -90,7 +90,7 @@ function getStatConfig(stats: DashboardClientProps["stats"]) {
 }
 
 const agentAccentColors: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",

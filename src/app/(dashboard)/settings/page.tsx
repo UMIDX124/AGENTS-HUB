@@ -35,7 +35,7 @@ export default function SettingsPage() {
   // White-label settings (OWNER only)
   const [wlCompany, setWlCompany] = useState("");
   const [wlLogo, setWlLogo] = useState("");
-  const [wlAccent, setWlAccent] = useState("#818cf8");
+  const [wlAccent, setWlAccent] = useState("#14b8a6");
   const [wlLoading, setWlLoading] = useState(false);
   const [wlStatus, setWlStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
@@ -167,14 +167,14 @@ export default function SettingsPage() {
         <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
-                <User className="h-4 w-4 text-indigo-400" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15">
+                <User className="h-4 w-4 text-teal-400" />
               </div>
               <h2 className="text-sm font-semibold text-foreground">Profile</h2>
             </div>
             {!editName && (
               <button onClick={() => { setEditName(true); setNewName(user?.name || ""); }}
-                className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300">
+                className="flex items-center gap-1 text-xs text-teal-400 hover:text-teal-300">
                 <Pencil className="h-3 w-3" /> Edit
               </button>
             )}
@@ -185,11 +185,11 @@ export default function SettingsPage() {
               <div>
                 <label className="text-[10px] text-muted-foreground/70 uppercase tracking-wider mb-1 block">Display Name</label>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50" />
               </div>
               <div className="flex gap-2">
                 <button onClick={saveName}
-                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-xs font-semibold text-foreground">
+                  className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2 text-xs font-semibold text-foreground">
                   Save
                 </button>
                 <button onClick={() => setEditName(false)}
@@ -242,7 +242,7 @@ export default function SettingsPage() {
                   value={wlCompany}
                   onChange={(e) => setWlCompany(e.target.value)}
                   placeholder="Your Company Name"
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <div>
@@ -251,7 +251,7 @@ export default function SettingsPage() {
                   value={wlLogo}
                   onChange={(e) => setWlLogo(e.target.value)}
                   placeholder="https://your-site.com/logo.png"
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
                 />
               </div>
               <div>
@@ -266,7 +266,7 @@ export default function SettingsPage() {
                   <input
                     value={wlAccent}
                     onChange={(e) => setWlAccent(e.target.value)}
-                    className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                    className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground font-mono outline-none focus:border-teal-500/50"
                   />
                 </div>
               </div>
@@ -302,15 +302,15 @@ export default function SettingsPage() {
             <form onSubmit={createEmployee} className="space-y-3">
               <div className="grid gap-3 sm:grid-cols-2">
                 <input placeholder="Full name" value={empName} onChange={(e) => setEmpName(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                 <input type="email" placeholder="Email address" value={empEmail} onChange={(e) => setEmpEmail(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <input type="password" placeholder="Password (min 6 chars)" value={empPassword} onChange={(e) => setEmpPassword(e.target.value)} required
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                 <select value={empRole} onChange={(e) => setEmpRole(e.target.value)}
-                  className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
+                  className="w-full rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50">
                   <option value="SPECIALIST">SEO Specialist</option>
                   <option value="MANAGER">Manager</option>
                   <option value="OWNER">Owner</option>
@@ -349,7 +349,7 @@ export default function SettingsPage() {
             <div className="relative">
               <input type={showCurrent ? "text" : "password"} placeholder="Current password" value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)} required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
               <button type="button" onClick={() => setShowCurrent(!showCurrent)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-white/50">
                 {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -358,7 +358,7 @@ export default function SettingsPage() {
             <div className="relative">
               <input type={showNew ? "text" : "password"} placeholder="New password (min 6 chars)" value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)} required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 pr-10 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
               <button type="button" onClick={() => setShowNew(!showNew)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-white/50">
                 {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -366,7 +366,7 @@ export default function SettingsPage() {
             </div>
             <input type="password" placeholder="Confirm new password" value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)} required
-              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
 
             {pwStatus && (
               <div className={`flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${pwStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
@@ -376,7 +376,7 @@ export default function SettingsPage() {
             )}
 
             <button type="submit" disabled={pwLoading}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60">
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60">
               <Lock className="h-3.5 w-3.5" />
               {pwLoading ? "Updating..." : "Update Password"}
             </button>
@@ -444,7 +444,7 @@ export default function SettingsPage() {
                   value={tfaToken}
                   onChange={(e) => setTfaToken(e.target.value)}
                   maxLength={6}
-                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-teal-500/50"
                 />
                 <button
                   onClick={async () => {
@@ -481,7 +481,7 @@ export default function SettingsPage() {
                   value={tfaToken}
                   onChange={(e) => setTfaToken(e.target.value)}
                   maxLength={6}
-                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-teal-500/50"
                 />
                 <button
                   onClick={async () => {

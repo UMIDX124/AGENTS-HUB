@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 const ACTION_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  audit_run: { label: "Audit Run", icon: Zap, color: "#818cf8" },
+  audit_run: { label: "Audit Run", icon: Zap, color: "#14b8a6" },
   audit_deleted: { label: "Audit Deleted", icon: Trash2, color: "#ef4444" },
   task_created: { label: "Task Created", icon: Plus, color: "#34d399" },
   task_updated: { label: "Task Updated", icon: FileText, color: "#fbbf24" },
@@ -88,7 +88,7 @@ export default function ActivityPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/15 text-teal-400">
               <Activity className="h-5 w-5" />
             </div>
             <div>
@@ -103,7 +103,7 @@ export default function ActivityPage() {
           <select
             value={filterAction}
             onChange={(e) => { setFilterAction(e.target.value); setPage(1); }}
-            className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+            className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
           >
             <option value="">All Actions</option>
             {Object.entries(ACTION_CONFIG).map(([key, cfg]) => (
@@ -168,8 +168,8 @@ export default function ActivityPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <Activity className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <Activity className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No activity yet</h3>
             <p className="mt-1 text-sm text-muted-foreground">

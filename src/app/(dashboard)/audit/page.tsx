@@ -175,11 +175,11 @@ export default function AuditPage() {
 
         {/* URL Input Card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-muted/40 p-3 sm:p-5">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-indigo-500/10 blur-3xl" />
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-teal-500/10 blur-3xl" />
           <div className="relative">
             <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
               <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-indigo-400" />
+                <Globe className="h-4 w-4 text-teal-400" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
                   {bulkMode ? "Bulk Audit" : "Target Website"}
                 </span>
@@ -189,8 +189,8 @@ export default function AuditPage() {
                   onClick={() => setBulkMode(!bulkMode)}
                   className={`flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-all ${
                     bulkMode
-                      ? "border-indigo-500/30 bg-indigo-500/10 text-indigo-400"
-                      : "border-border text-muted-foreground hover:border-indigo-500/20 hover:text-indigo-400"
+                      ? "border-teal-500/30 bg-teal-500/10 text-teal-400"
+                      : "border-border text-muted-foreground hover:border-teal-500/20 hover:text-teal-400"
                   }`}
                 >
                   <List className="h-3.5 w-3.5" />
@@ -207,7 +207,7 @@ export default function AuditPage() {
                   value={bulkUrls}
                   onChange={(e) => setBulkUrls(e.target.value)}
                   rows={5}
-                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80 resize-none font-mono"
+                  className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80 resize-none font-mono"
                 />
                 <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                   <span>{bulkUrls.split("\n").filter((u) => u.trim()).length} URLs entered</span>
@@ -222,12 +222,12 @@ export default function AuditPage() {
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && runAllAgents()}
-                    className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-indigo-500/50 focus:bg-muted/80"
+                    className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-teal-500/50 focus:bg-muted/80"
                   />
                   <button
                     onClick={runAllAgents}
                     disabled={runningAll || !url}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap flex-shrink-0"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 whitespace-nowrap flex-shrink-0"
                   >
                     {runningAll ? (
                       <><Loader2 className="h-4 w-4 animate-spin" /> Running...</>
@@ -298,7 +298,7 @@ export default function AuditPage() {
                       <ScoreRing score={result.score} grade={result.grade} size={40} />
                     ) : result.status === "running" ? (
                       <div className="flex h-10 w-10 items-center justify-center">
-                        <Loader2 className="h-5 w-5 animate-spin text-indigo-400" />
+                        <Loader2 className="h-5 w-5 animate-spin text-teal-400" />
                       </div>
                     ) : result.status === "error" ? (
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/10">
@@ -324,7 +324,7 @@ export default function AuditPage() {
                       result.status === "done"
                         ? "text-emerald-400"
                         : result.status === "running"
-                        ? "text-indigo-400"
+                        ? "text-teal-400"
                         : result.status === "error"
                         ? "text-red-400"
                         : "text-muted-foreground"
@@ -369,7 +369,7 @@ export default function AuditPage() {
                 </button>
                 <button
                   onClick={createTasksFromFindings}
-                  className="flex items-center gap-1.5 rounded-xl border border-indigo-500/25 bg-indigo-500/10 px-3 py-2 text-xs font-semibold text-indigo-400 transition-all hover:bg-indigo-500/20"
+                  className="flex items-center gap-1.5 rounded-xl border border-teal-500/25 bg-teal-500/10 px-3 py-2 text-xs font-semibold text-teal-400 transition-all hover:bg-teal-500/20"
                 >
                   <ListTodo className="h-3.5 w-3.5" />
                   {taskSuccess ? "Tasks Created!" : "Create Tasks"}

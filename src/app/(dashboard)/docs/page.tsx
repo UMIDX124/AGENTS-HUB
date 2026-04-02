@@ -107,9 +107,9 @@ export default function DocsPage() {
                 placeholder="Key name (e.g. Production)"
                 value={newKeyName}
                 onChange={(e) => setNewKeyName(e.target.value)}
-                className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+                className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
               />
-              <button onClick={createKey} className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-xs font-semibold text-white hover:brightness-110">
+              <button onClick={createKey} className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-xs font-semibold text-white hover:brightness-110">
                 <Plus className="h-3.5 w-3.5" /> Create Key
               </button>
             </div>
@@ -138,8 +138,8 @@ export default function DocsPage() {
         {/* API Reference */}
         <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
-              <Code className="h-4 w-4 text-indigo-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15">
+              <Code className="h-4 w-4 text-teal-400" />
             </div>
             <h2 className="text-sm font-semibold text-foreground">API Reference (v1)</h2>
           </div>

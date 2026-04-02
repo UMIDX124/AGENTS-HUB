@@ -53,7 +53,7 @@ export default function ProjectsPage() {
           {canCreate && (
             <button
               onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110"
             >
               <Plus className="h-4 w-4" /> New Project
             </button>
@@ -62,7 +62,7 @@ export default function ProjectsPage() {
 
         {/* Create form */}
         {showForm && (
-          <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
+          <div className="rounded-2xl border border-teal-500/20 bg-teal-500/5 p-5">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground">Create New Project</h3>
               <button onClick={() => setShowForm(false)} className="text-muted-foreground/70 hover:text-muted-foreground">
@@ -75,26 +75,26 @@ export default function ProjectsPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Website URL (e.g. https://acme.com)"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 required
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <input
                 placeholder="Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50 focus:bg-muted/80"
+                className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50 focus:bg-muted/80"
               />
               <div className="flex gap-2">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
+                  className="rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
                 >
                   {loading ? "Creating..." : "Create Project"}
                 </button>
@@ -127,7 +127,7 @@ export default function ProjectsPage() {
             {canCreate && (
               <button
                 onClick={() => setShowForm(true)}
-                className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20"
+                className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20"
               >
                 <Plus className="h-4 w-4" /> Create Project
               </button>

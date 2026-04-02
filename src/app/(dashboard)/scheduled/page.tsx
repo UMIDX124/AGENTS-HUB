@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 const AGENT_COLORS: Record<string, string> = {
-  ONPAGE: "#818cf8", TECHNICAL: "#22d3ee", OFFSITE: "#a78bfa", CONTENT: "#34d399", COMPETITOR: "#fbbf24",
+  ONPAGE: "#14b8a6", TECHNICAL: "#22d3ee", OFFSITE: "#a78bfa", CONTENT: "#34d399", COMPETITOR: "#fbbf24",
 };
 
 export default function ScheduledPage() {
@@ -84,8 +84,8 @@ export default function ScheduledPage() {
         {/* Create new schedule */}
         <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
-              <Clock className="h-4 w-4 text-indigo-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15">
+              <Clock className="h-4 w-4 text-teal-400" />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-foreground">Schedule New Audit</h2>
@@ -98,13 +98,13 @@ export default function ScheduledPage() {
               placeholder="https://example.com"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+              className="w-full rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
             />
             <div className="grid grid-cols-2 gap-3">
               <select
                 value={agent}
                 onChange={(e) => setAgent(e.target.value as AgentTypeName)}
-                className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+                className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
               >
                 {(Object.keys(AGENTS) as AgentTypeName[]).map((key) => (
                   <option key={key} value={key}>{AGENTS[key].name}</option>
@@ -113,7 +113,7 @@ export default function ScheduledPage() {
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value)}
-                className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+                className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -123,7 +123,7 @@ export default function ScheduledPage() {
             <button
               onClick={createSchedule}
               disabled={creating || !url.trim()}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 hover:brightness-110 disabled:opacity-50"
+              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 hover:brightness-110 disabled:opacity-50"
             >
               {creating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
               {creating ? "Creating..." : "Create Schedule"}
@@ -135,7 +135,7 @@ export default function ScheduledPage() {
         {schedules.length > 0 ? (
           <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
             <div className="px-4 py-3 border-b border-border/50 flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-indigo-400" />
+              <Calendar className="h-4 w-4 text-teal-400" />
               <h3 className="text-sm font-semibold text-foreground">Active Schedules ({schedules.length})</h3>
             </div>
             <div className="divide-y divide-border/50">
@@ -192,8 +192,8 @@ export default function ScheduledPage() {
           </div>
         ) : !loading ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <Clock className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <Clock className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No scheduled audits</h3>
             <p className="mt-1 text-sm text-muted-foreground">

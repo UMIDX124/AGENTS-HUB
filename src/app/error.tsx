@@ -17,7 +17,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         <p className="mt-1 text-sm text-muted-foreground">{error.message || "An unexpected error occurred"}</p>
         <button
           onClick={reset}
-          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20"
+          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20"
         >
           Try Again
         </button>

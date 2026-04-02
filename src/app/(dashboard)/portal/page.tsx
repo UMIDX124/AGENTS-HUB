@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 const AGENT_COLORS: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
@@ -59,8 +59,8 @@ export default function ClientPortalPage() {
         {/* Welcome */}
         <div className="rounded-2xl border border-border bg-muted/40 p-5">
           <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/15">
-              <Shield className="h-5 w-5 text-indigo-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/15">
+              <Shield className="h-5 w-5 text-teal-400" />
             </div>
             <div>
               <h2 className="text-sm font-semibold text-foreground">
@@ -76,7 +76,7 @@ export default function ClientPortalPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {[
-            { label: "Total Audits", value: audits.length, icon: BarChart3, color: "#818cf8" },
+            { label: "Total Audits", value: audits.length, icon: BarChart3, color: "#14b8a6" },
             { label: "Avg. Score", value: `${avgScore}/100`, icon: TrendingUp, color: "#34d399" },
             { label: "Projects", value: projects.length, icon: FolderOpen, color: "#a78bfa" },
           ].map(({ label, value, icon: Icon, color }) => (
@@ -96,7 +96,7 @@ export default function ClientPortalPage() {
         {projects.length > 0 && (
           <div className="rounded-2xl border border-border bg-muted/40 overflow-hidden">
             <div className="px-4 py-3 border-b border-border/50 flex items-center gap-2">
-              <FolderOpen className="h-4 w-4 text-indigo-400" />
+              <FolderOpen className="h-4 w-4 text-teal-400" />
               <h3 className="text-sm font-semibold text-foreground">Your Projects</h3>
             </div>
             <div className="divide-y divide-border/50">
@@ -153,8 +153,8 @@ export default function ClientPortalPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <BarChart3 className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <BarChart3 className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No audits yet</h3>
             <p className="mt-1 text-sm text-muted-foreground">

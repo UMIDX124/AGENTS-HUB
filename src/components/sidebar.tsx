@@ -51,7 +51,7 @@ const agentIcons: Record<string, React.ElementType> = {
 };
 
 const agentColors: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
@@ -168,15 +168,16 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-9">
             <defs>
               <linearGradient id="logo-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#6366f1" />
-                <stop offset="100%" stopColor="#a855f7" />
+                <stop offset="0%" stopColor="#14b8a6" />
+                <stop offset="100%" stopColor="#06b6d4" />
               </linearGradient>
             </defs>
             <rect width="36" height="36" rx="10" fill="url(#logo-grad)" />
-            <path d="M11 13.5C11 11.5 12.8 10 15.5 10C18.2 10 20 11.5 20 13.5C20 15.2 18.8 16.2 17 16.8L17 18.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-            <path d="M19 21C19 19.5 20.5 18.5 22.5 18C24.5 17.5 26 18.5 26 20.5C26 22.5 24.2 24 22 24.5L19 25.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.7" />
-            <circle cx="17" cy="22" r="1.5" fill="white" />
-            <circle cx="22" cy="28" r="1.2" fill="white" opacity="0.7" />
+            <path d="M10 18C10 13.6 13.6 10 18 10C20.4 10 22.5 11.1 24 12.8" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+            <path d="M26 18C26 22.4 22.4 26 18 26C15.6 26 13.5 24.9 12 23.2" stroke="white" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.7" />
+            <path d="M18 14V18L21 20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+            <circle cx="24" cy="12.8" r="1.4" fill="white" />
+            <circle cx="12" cy="23.2" r="1.2" fill="white" opacity="0.7" />
           </svg>
         </div>
         <div>

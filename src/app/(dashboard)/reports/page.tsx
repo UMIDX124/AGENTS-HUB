@@ -12,7 +12,7 @@ import { pdf } from "@react-pdf/renderer";
 import { ReportPDF } from "@/components/report-pdf";
 
 const AGENT_COLORS: Record<string, string> = {
-  ONPAGE: "#818cf8",
+  ONPAGE: "#14b8a6",
   TECHNICAL: "#22d3ee",
   OFFSITE: "#a78bfa",
   CONTENT: "#34d399",
@@ -82,7 +82,7 @@ export default function ReportsPage() {
         {audits.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
-              { label: "Total Reports", value: audits.length, icon: FileText, color: "#818cf8" },
+              { label: "Total Reports", value: audits.length, icon: FileText, color: "#14b8a6" },
               { label: "Avg. SEO Score", value: `${avgScore}/100`, icon: TrendingUp, color: "#34d399" },
               { label: "Agents Used", value: new Set(audits.map((a) => a.agent)).size, icon: Filter, color: "#fbbf24" },
             ].map(({ label, value, icon: Icon, color }) => (
@@ -108,13 +108,13 @@ export default function ReportsPage() {
               placeholder="Search by URL..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50"
+              className="w-full rounded-xl border border-border bg-muted/50 pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none focus:border-teal-500/50"
             />
           </div>
           <select
             value={filterAgent}
             onChange={(e) => setFilterAgent(e.target.value)}
-            className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-indigo-500/50"
+            className="rounded-xl border border-border bg-card px-4 py-2.5 text-sm text-foreground outline-none focus:border-teal-500/50"
           >
             <option value="">All Agents</option>
             {(Object.keys(AGENTS) as AgentTypeName[]).map((key) => (
@@ -175,7 +175,7 @@ export default function ReportsPage() {
                       <button
                         onClick={() => exportPDF(audit)}
                         disabled={exporting === audit.id}
-                        className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-indigo-500/30 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-40"
+                        className="flex items-center gap-1.5 rounded-lg border border-border bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground transition-all hover:border-teal-500/30 hover:bg-teal-500/10 hover:text-teal-400 disabled:opacity-40"
                       >
                         <Download className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">{exporting === audit.id ? "Exporting..." : "PDF"}</span>
@@ -195,13 +195,13 @@ export default function ReportsPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/30 py-20 text-center">
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-500/10">
-              <FileText className="h-8 w-8 text-indigo-400" />
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
+              <FileText className="h-8 w-8 text-teal-400" />
             </div>
             <h3 className="text-base font-semibold text-foreground">No reports yet</h3>
             <p className="mt-1 text-sm text-muted-foreground/70">Run an audit to generate your first SEO report</p>
             <a href="/audit"
-              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-foreground shadow-lg shadow-indigo-500/20">
+              className="mt-5 flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-2.5 text-sm font-semibold text-foreground shadow-lg shadow-teal-500/20">
               Run Your First Audit
             </a>
           </div>

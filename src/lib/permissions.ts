@@ -4,7 +4,7 @@ export const PERMISSIONS: Record<RoleName, RoleConfig> = {
   OWNER: {
     label: "Owner",
     icon: "\u{1F451}",
-    color: "#f59e0b",
+    color: "#14b8a6",
     can: [
       "run_agents", "view_all_audits", "view_own_audits",
       "manage_team", "add_users", "remove_users", "change_roles",

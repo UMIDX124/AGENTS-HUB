@@ -45,8 +45,8 @@ export default function BillingPage() {
           <div className="rounded-2xl border border-border bg-muted/40 p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/15">
-                  <CreditCard className="h-4 w-4 text-indigo-400" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15">
+                  <CreditCard className="h-4 w-4 text-teal-400" />
                 </div>
                 <div>
                   <h2 className="text-sm font-semibold text-foreground">Current Plan</h2>
@@ -87,7 +87,7 @@ export default function BillingPage() {
                 key={key}
                 className={`rounded-2xl border p-5 transition-all ${
                   isCurrent
-                    ? "border-indigo-500/40 bg-indigo-500/5 ring-1 ring-indigo-500/20"
+                    ? "border-teal-500/40 bg-teal-500/5 ring-1 ring-teal-500/20"
                     : "border-border bg-muted/40 hover:border-border/80"
                 }`}
               >
@@ -98,7 +98,7 @@ export default function BillingPage() {
                   <div>
                     <h3 className="text-sm font-bold text-foreground">{plan.name}</h3>
                     {isCurrent && (
-                      <span className="text-[10px] text-indigo-400 font-semibold">CURRENT</span>
+                      <span className="text-[10px] text-teal-400 font-semibold">CURRENT</span>
                     )}
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default function BillingPage() {
                   <button
                     onClick={() => changePlan(key)}
                     disabled={!!upgrading}
-                    className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 py-2.5 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-1.5"
+                    className="w-full rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 py-2.5 text-xs font-semibold text-white shadow-lg shadow-teal-500/20 hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-1.5"
                   >
                     {upgrading === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
                     {key === "FREE" ? "Downgrade" : "Upgrade"} to {plan.name}

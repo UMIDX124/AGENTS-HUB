@@ -62,13 +62,13 @@ export default function TeamPage() {
           <div className="flex rounded-xl border border-border bg-muted/40 p-1">
             <button
               onClick={() => setActiveTab("members")}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "members" ? "bg-indigo-500/20 text-indigo-300" : "text-muted-foreground hover:text-foreground/70"}`}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "members" ? "bg-teal-500/20 text-teal-300" : "text-muted-foreground hover:text-foreground/70"}`}
             >
               <Users className="h-3.5 w-3.5" /> Members ({members.length})
             </button>
             <button
               onClick={() => setActiveTab("permissions")}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "permissions" ? "bg-indigo-500/20 text-indigo-300" : "text-muted-foreground hover:text-foreground/70"}`}
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${activeTab === "permissions" ? "bg-teal-500/20 text-teal-300" : "text-muted-foreground hover:text-foreground/70"}`}
             >
               <ShieldCheck className="h-3.5 w-3.5" /> Permissions
             </button>
@@ -76,7 +76,7 @@ export default function TeamPage() {
           {activeTab === "members" && (
             <button
               onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:brightness-110"
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition-all hover:brightness-110"
             >
               <Plus className="h-4 w-4" /> Add Member
             </button>
@@ -86,27 +86,27 @@ export default function TeamPage() {
         {activeTab === "members" && (
           <>
             {showForm && (
-              <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5">
+              <div className="rounded-2xl border border-teal-500/20 bg-teal-500/5 p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="text-sm font-semibold text-foreground">Add New Team Member</h3>
                   <button onClick={() => setShowForm(false)} className="text-muted-foreground/70 hover:text-muted-foreground"><X className="h-4 w-4" /></button>
                 </div>
                 <form onSubmit={addMember} className="grid gap-3 sm:grid-cols-2">
                   <input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <input type="password" placeholder="Set password" value={password} onChange={(e) => setPassword(e.target.value)} required
-                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-indigo-500/50" />
+                    className="rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm text-white placeholder-muted-foreground/50 outline-none focus:border-teal-500/50" />
                   <select value={role} onChange={(e) => setRole(e.target.value as RoleName)}
-                    className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-indigo-500/50">
+                    className="rounded-xl border border-border bg-card px-4 py-3 text-sm text-white outline-none focus:border-teal-500/50">
                     <option value="SPECIALIST">SEO Specialist</option>
                     <option value="MANAGER">Manager</option>
                     <option value="CLIENT">Client</option>
                   </select>
                   <div className="col-span-2 flex gap-2">
                     <button type="submit" disabled={loading}
-                      className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60">
+                      className="rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60">
                       {loading ? "Adding..." : "Add Member"}
                     </button>
                     <button type="button" onClick={() => setShowForm(false)}
@@ -164,8 +164,8 @@ export default function TeamPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border py-16 text-center">
-                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/10">
-                  <Users className="h-7 w-7 text-indigo-400" />
+                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10">
+                  <Users className="h-7 w-7 text-teal-400" />
                 </div>
                 <p className="text-sm font-semibold text-foreground">No team members yet</p>
                 <p className="mt-1 text-xs text-muted-foreground/70">Add your first team member to collaborate</p>
