@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import type { RoleName } from "@/types";
 import { Bell, Sparkles, X } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LocaleToggle } from "@/components/locale-toggle";
 
 interface TopbarProps {
   user: { name: string; role: RoleName };
@@ -58,6 +59,9 @@ export function Topbar({ user, title, subtitle }: TopbarProps) {
             </span>
           </span>
         </div>
+
+        {/* Language toggle */}
+        <LocaleToggle />
 
         {/* Theme toggle */}
         <ThemeToggle />

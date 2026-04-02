@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Topbar } from "@/components/topbar";
-import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X, Palette, Building2 } from "lucide-react";
+import { CheckCircle2, AlertCircle, Key, Lock, Shield, Zap, Eye, EyeOff, User, UserPlus, Pencil, X, Palette, Building2, Smartphone } from "lucide-react";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
@@ -23,6 +23,14 @@ export default function SettingsPage() {
   const [showNew, setShowNew] = useState(false);
   const [pwLoading, setPwLoading] = useState(false);
   const [pwStatus, setPwStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  // 2FA
+  const [tfaEnabled, setTfaEnabled] = useState(false);
+  const [tfaQR, setTfaQR] = useState<string | null>(null);
+  const [tfaSecret, setTfaSecret] = useState("");
+  const [tfaToken, setTfaToken] = useState("");
+  const [tfaLoading, setTfaLoading] = useState(false);
+  const [tfaStatus, setTfaStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   // White-label settings (OWNER only)
   const [wlCompany, setWlCompany] = useState("");
@@ -410,6 +418,116 @@ export default function SettingsPage() {
               </span>
             )}
           </div>
+        </div>
+
+        {/* 2FA Authentication */}
+        <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/15">
+              <Smartphone className="h-4 w-4 text-cyan-400" />
+            </div>
+            <div>
+              <h2 className="text-sm font-semibold text-foreground">Two-Factor Authentication</h2>
+              <p className="text-xs text-muted-foreground/70">Add extra security with Google Authenticator</p>
+            </div>
+          </div>
+
+          {tfaEnabled ? (
+            <div>
+              <div className="flex items-center gap-2 mb-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 px-4 py-3">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                <span className="text-sm text-emerald-400">2FA is enabled</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  placeholder="Enter 6-digit code to disable"
+                  value={tfaToken}
+                  onChange={(e) => setTfaToken(e.target.value)}
+                  maxLength={6}
+                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                />
+                <button
+                  onClick={async () => {
+                    setTfaLoading(true);
+                    const res = await fetch("/api/settings/2fa", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token: tfaToken, action: "disable" }),
+                    });
+                    const data = await res.json();
+                    if (res.ok) { setTfaEnabled(false); setTfaStatus({ ok: true, msg: "2FA disabled" }); }
+                    else setTfaStatus({ ok: false, msg: data.error });
+                    setTfaLoading(false);
+                    setTfaToken("");
+                  }}
+                  disabled={tfaLoading || tfaToken.length !== 6}
+                  className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-500/20 disabled:opacity-50"
+                >
+                  Disable 2FA
+                </button>
+              </div>
+            </div>
+          ) : tfaQR ? (
+            <div className="space-y-3">
+              <p className="text-xs text-muted-foreground">Scan this QR code with Google Authenticator or any TOTP app:</p>
+              <div className="flex justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={tfaQR} alt="2FA QR Code" className="rounded-xl border border-border" width={200} height={200} />
+              </div>
+              <p className="text-[10px] text-muted-foreground text-center font-mono break-all">Manual key: {tfaSecret}</p>
+              <div className="flex items-center gap-2">
+                <input
+                  placeholder="Enter 6-digit verification code"
+                  value={tfaToken}
+                  onChange={(e) => setTfaToken(e.target.value)}
+                  maxLength={6}
+                  className="flex-1 rounded-xl border border-border bg-muted/60 px-4 py-2.5 text-sm text-foreground font-mono outline-none focus:border-indigo-500/50"
+                />
+                <button
+                  onClick={async () => {
+                    setTfaLoading(true);
+                    const res = await fetch("/api/settings/2fa", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token: tfaToken }),
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.enabled) { setTfaEnabled(true); setTfaQR(null); setTfaStatus({ ok: true, msg: "2FA enabled!" }); }
+                    else setTfaStatus({ ok: false, msg: data.error || "Invalid code" });
+                    setTfaLoading(false);
+                    setTfaToken("");
+                  }}
+                  disabled={tfaLoading || tfaToken.length !== 6}
+                  className="rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-xs font-semibold text-white hover:brightness-110 disabled:opacity-50"
+                >
+                  Verify & Enable
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={async () => {
+                setTfaLoading(true);
+                const res = await fetch("/api/settings/2fa");
+                const data = await res.json();
+                if (data.enabled) setTfaEnabled(true);
+                else { setTfaQR(data.qrCode); setTfaSecret(data.secret); }
+                setTfaLoading(false);
+              }}
+              disabled={tfaLoading}
+              className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 hover:brightness-110 disabled:opacity-50"
+            >
+              <Smartphone className="h-3.5 w-3.5" />
+              {tfaLoading ? "Loading..." : "Setup 2FA"}
+            </button>
+          )}
+
+          {tfaStatus && (
+            <div className={`mt-3 flex items-center gap-2 rounded-xl px-4 py-3 text-sm ${tfaStatus.ok ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
+              {tfaStatus.ok ? <CheckCircle2 className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+              {tfaStatus.msg}
+            </div>
+          )}
         </div>
 
         {/* Security info */}

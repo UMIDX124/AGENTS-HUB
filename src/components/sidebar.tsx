@@ -29,6 +29,9 @@ import {
   Activity,
   GitCompareArrows,
   Shield,
+  Code,
+  CreditCard,
+  Clock,
   Cog,
   Link2,
   FileEdit,
@@ -88,6 +91,9 @@ export function Sidebar({ user, onNavigate }: SidebarProps) {
     { href: "/pinboard", icon: Pin, label: "Pinboard" },
     { href: "/compare", icon: GitCompareArrows, label: "Compare" },
     { href: "/activity", icon: Activity, label: "Activity Log" },
+    { href: "/scheduled", icon: Clock, label: "Scheduled" },
+    { href: "/docs", icon: Code, label: "API Docs" },
+    { href: "/billing", icon: CreditCard, label: "Billing" },
     ...(user.role === "CLIENT"
       ? [{ href: "/portal", icon: Shield, label: "Client Portal" }]
       : []),
