@@ -94,3 +94,17 @@ model Pin {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
 }
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  hashedKey   String   @unique
+  prefix      String   // first 8 chars for display + log lookup
+  label       String
+  scope       String   // "public" | "internal"
+  rateLimit   Int      @default(60)  // requests per hour for "public" scope; ignored for "internal"
+  active      Boolean  @default(true)
+  lastUsedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([prefix])
+}
